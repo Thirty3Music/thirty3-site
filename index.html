@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>THIRTY3</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="video-wrapper">
+    <video autoplay muted loop playsinline preload="auto" class="bg-video">
+      <source src="background.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="overlay"></div>
+  <div class="content">
+    <h1 class="glitch-title">T H I R T Y 3</h1>
+    <p class="subtitle">noise // soul</p>
+    <p class="intro" id="typing-text"></p>
+    <nav>
+      <a href="https://www.instagram.com/_thirty3_/" target="_blank">INSTAGRAM</a>
+      <a href="https://open.spotify.com/artist/5ysVz3lhJomLapuhp6WVaQ?si=zXLmS2hBQxaxp_-K9jrkCA" target="_blank">SPOTIFY</a>
+      <a href="https://soundcloud.com/thirty_3" target="_blank">SOUNDCLOUD</a>
+      <a href="https://www.youtube.com/@thirty3473" target="_blank">YOUTUBE</a>
+      <a href="#">CONTACT</a>
+    </nav>
+  </div>
+  <script>
+    const text = "sound over style – emotion over ego – music that says what I don’t";
+    const target = document.getElementById("typing-text");
+    let index = 0;
+    function typeChar() {
+      if (index < text.length) {
+        target.textContent += text.charAt(index);
+        index++;
+        setTimeout(typeChar, 40);
+      }
+    }
+    window.addEventListener("load", () => {
+      setTimeout(typeChar, 1500);
+    });
+  </script>
+</body>
+</html>
