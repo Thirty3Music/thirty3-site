@@ -20,6 +20,9 @@
       opacity: 1;
       transition: opacity 0.5s ease;
       cursor: pointer;
+      font-family: monospace;
+      text-align: center;
+      font-size: 1rem;
     }
     .mobile-overlay.fade-out {
       opacity: 0;
@@ -27,6 +30,18 @@
     }
     .mobile-overlay button {
       display: none;
+    }
+    video::-webkit-media-controls {
+      display: none !important;
+    }
+    video::-moz-media-controls {
+      display: none !important;
+    }
+    video::-ms-media-controls {
+      display: none !important;
+    }
+    video::media-controls {
+      display: none !important;
     }
   </style>
 </head>
@@ -39,7 +54,7 @@
   </div>
   <div class="overlay"></div>
   <div class="mobile-overlay" id="mobileOverlay" onclick="enterSite()">
-    <button></button>
+    <div>tap anywhere</div>
   </div>
   <div class="content">
     <h1 class="glitch-title">T H I R T Y 3</h1>
