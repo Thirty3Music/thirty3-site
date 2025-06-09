@@ -19,23 +19,14 @@
       flex-direction: column;
       opacity: 1;
       transition: opacity 0.5s ease;
+      cursor: pointer;
     }
     .mobile-overlay.fade-out {
       opacity: 0;
       pointer-events: none;
     }
     .mobile-overlay button {
-      background: none;
-      border: 1px solid white;
-      color: white;
-      padding: 12px 24px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .mobile-overlay button:hover {
-      background: white;
-      color: black;
+      display: none;
     }
   </style>
 </head>
@@ -47,8 +38,8 @@
     </video>
   </div>
   <div class="overlay"></div>
-  <div class="mobile-overlay" id="mobileOverlay">
-    <button onclick="enterSite()">ENTER SITE</button>
+  <div class="mobile-overlay" id="mobileOverlay" onclick="enterSite()">
+    <button></button>
   </div>
   <div class="content">
     <h1 class="glitch-title">T H I R T Y 3</h1>
@@ -98,4 +89,3 @@
   </script>
 </body>
 </html>
-
