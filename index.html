@@ -17,6 +17,12 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
+      opacity: 1;
+      transition: opacity 1s ease;
+    }
+    .mobile-overlay.fade-out {
+      opacity: 0;
+      pointer-events: none;
     }
     .mobile-overlay button {
       background: none;
@@ -76,9 +82,12 @@
     }
 
     function enterSite() {
-      document.getElementById('mobileOverlay').style.display = 'none';
-      const video = document.getElementById('bg-video');
-      video.play();
+      const overlay = document.getElementById('mobileOverlay');
+      overlay.classList.add('fade-out');
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        document.getElementById('bg-video').play();
+      }, 1000);
     }
 
     window.addEventListener("DOMContentLoaded", () => {
