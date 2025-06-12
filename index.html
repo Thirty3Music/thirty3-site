@@ -54,9 +54,12 @@
         setTimeout(typeChar, 40);
       }
     }
-      window.addEventListener("load", () => {
-        setTimeout(typeChar, 1500);
-      });
+
+    function startTyping() {
+      index = 0;
+      target.textContent = "";
+      setTimeout(typeChar, 500);
+    }
 
       const overlayText = "tap to open";
       const overlayTarget = document.querySelector("#mobileOverlay div");
@@ -80,17 +83,20 @@
       setTimeout(() => {
         overlay.style.display = 'none';
         document.getElementById('bg-video').play();
+        startTyping();
       }, 500);
     }
 
-      window.addEventListener("DOMContentLoaded", () => {
-        if (isMobile()) {
-          const overlay = document.getElementById("mobileOverlay");
-          overlay.style.display = "flex";
-          overlayTarget.textContent = "";
-          typeOverlayChar();
-        }
-      });
+    window.addEventListener('DOMContentLoaded', () => {
+      if (isMobile()) {
+        const overlay = document.getElementById('mobileOverlay');
+        overlay.style.display = 'flex';
+        overlayTarget.textContent = '';
+        typeOverlayChar();
+      } else {
+        startTyping();
+      }
+    });
   </script>
 </body>
 </html>
