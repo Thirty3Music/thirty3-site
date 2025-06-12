@@ -134,3 +134,25 @@ footer a {
   transition: opacity 0.5s ease-out;
   pointer-events: none;
 }
+
+/* Anpassningar f\u00f6r mobil */
+@media (max-width: 600px) {
+  nav {
+    flex-direction: row;
+    width: calc(100% - 20px);
+    left: 10px;
+    right: 10px;
+    top: 10px;
+    justify-content: space-between;
+    padding: 0;
+  }
+  nav a {
+    text-align: center;
+    font-size: 12px;
+    padding: 4px 0;
+  }
+  .glitch-title {
+    font-size: 24px;
+    letter-spacing: 4px;
+  }
+}
