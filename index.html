@@ -84,7 +84,8 @@
     });
 
     function isMobile() {
-      return /Mobi|Android|iPhone/i.test(navigator.userAgent);
+      // Include iPad and iPod in mobile detection
+      return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     }
 
     function enterSite() {
