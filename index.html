@@ -54,9 +54,20 @@
         setTimeout(typeChar, 40);
       }
     }
-    window.addEventListener("load", () => {
-      setTimeout(typeChar, 1500);
-    });
+      window.addEventListener("load", () => {
+        setTimeout(typeChar, 1500);
+      });
+
+      const overlayText = "tap to open";
+      const overlayTarget = document.querySelector("#mobileOverlay div");
+      let overlayIndex = 0;
+      function typeOverlayChar() {
+        if (overlayIndex < overlayText.length) {
+          overlayTarget.textContent += overlayText.charAt(overlayIndex);
+          overlayIndex++;
+          setTimeout(typeOverlayChar, 120);
+        }
+      }
 
     function isMobile() {
       // Include iPad and iPod in mobile detection
@@ -72,11 +83,14 @@
       }, 500);
     }
 
-    window.addEventListener("DOMContentLoaded", () => {
-      if (isMobile()) {
-        document.getElementById("mobileOverlay").style.display = "flex";
-      }
-    });
+      window.addEventListener("DOMContentLoaded", () => {
+        if (isMobile()) {
+          const overlay = document.getElementById("mobileOverlay");
+          overlay.style.display = "flex";
+          overlayTarget.textContent = "";
+          typeOverlayChar();
+        }
+      });
   </script>
 </body>
 </html>
