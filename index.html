@@ -1,136 +1,82 @@
-/* Reset och grundläggande layout */
-body, html {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  font-family: 'Courier New', monospace;
-  overflow: hidden;
-  background-color: black;
-  color: white;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Official site for THIRTY3: noise and soul." />
+  <meta property="og:title" content="THIRTY3" />
+  <meta property="og:description" content="Official site for THIRTY3: noise and soul." />
+  <meta property="og:image" content="background_high_quality.webm" />
+  <meta property="og:url" content="https://example.com" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="THIRTY3" />
+  <meta name="twitter:description" content="Official site for THIRTY3: noise and soul." />
+  <title>THIRTY3</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="https://www.instagram.com/_thirty3_/" target="_blank">INSTAGRAM</a>
+      <a href="https://open.spotify.com/artist/5ysVz3lhJomLapuhp6WVaQ?si=zXLmS2hBQxaxp_-K9jrkCA" target="_blank">SPOTIFY</a>
+      <a href="https://soundcloud.com/thirty_3" target="_blank">SOUNDCLOUD</a>
+      <a href="https://www.youtube.com/@thirty3473" target="_blank">YOUTUBE</a>
+    </nav>
+  </header>
+  <main>
+    <div class="video-wrapper">
+    <video autoplay muted loop playsinline preload="auto" class="bg-video" id="bg-video">
+      <source src="background.mp4" type="video/mp4">
+      <source src="background_high_quality.webm" type="video/webm">
+    </video>
+  </div>
+  <div class="overlay"></div>
+  <div class="mobile-overlay" id="mobileOverlay" onclick="enterSite()">
+    <div>tap anywhere</div>
+  </div>
+  <div class="content">
+    <h1 class="glitch-title">T H I R T Y 3</h1>
+    <p class="subtitle">noise // soul</p>
+    <p class="intro" id="typing-text"></p>
+  </div>
+  </main>
+  <footer>
+    <a href="#">CONTACT</a>
+  </footer>
+  <script>
+    const text = "sound over style – emotion over ego – music that says what I don't";
+    const target = document.getElementById("typing-text");
+    let index = 0;
+    function typeChar() {
+      if (index < text.length) {
+        target.textContent += text.charAt(index);
+        index++;
+        setTimeout(typeChar, 40);
+      }
+    }
+    window.addEventListener("load", () => {
+      setTimeout(typeChar, 1500);
+    });
 
-/* Bakgrundsvideo */
-.bg-video {
-  position: fixed;
-  top: 0;
-  left: 0;
-  min-width: 100%;
-  min-height: 100%;
-  object-fit: cover;
-  filter: blur(2px) brightness(0.8);
-  z-index: 0;
-}
+    function isMobile() {
+      // Include iPad and iPod in mobile detection
+      return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
 
-/* Mörk overlay för kontrast */
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.4);
-  z-index: 1;
-}
+    function enterSite() {
+      const overlay = document.getElementById('mobileOverlay');
+      overlay.classList.add('fade-out');
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        document.getElementById('bg-video').play();
+      }, 500);
+    }
 
-/* Navigering (vänster hörn) */
-nav {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-nav a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  background-color: rgba(255,255,255,0.05);
-  padding: 4px 8px;
-  border: 1px solid white;
-  font-size: 14px;
-  letter-spacing: 1px;
-  transition: 0.2s;
-}
-
-nav a:hover {
-  background-color: rgba(255,255,255,0.2);
-}
-
-/* Kontaktlänk i foten */
-footer {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  z-index: 3;
-}
-
-footer a {
-  color: violet;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 12px;
-}
-
-/* Innehållet i mitten */
-.content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 2;
-}
-
-.glitch-title {
-  font-size: 32px;
-  letter-spacing: 8px;
-  background-color: rgba(255, 255, 255, 0.05);
-  padding: 6px 14px;
-  border: 1px solid white;
-  display: inline-block;
-  margin-bottom: 8px;
-}
-
-.subtitle {
-  font-size: 14px;
-  font-style: italic;
-  margin-bottom: 20px;
-  opacity: 0.8;
-}
-
-.intro {
-  font-size: 16px;
-  line-height: 1.4;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 10px 20px;
-  display: inline-block;
-}
-
-/* Mobil-overlay ("tap anywhere") */
-.mobile-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 4;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: opacity 0.5s;
-}
-
-.fade-out {
-  opacity: 0;
-  transition: opacity 0.5s ease-out;
-  pointer-events: none;
-}
+    window.addEventListener("DOMContentLoaded", () => {
+      if (isMobile()) {
+        document.getElementById("mobileOverlay").style.display = "flex";
+      }
+    });
+  </script>
+</body>
+</html>
