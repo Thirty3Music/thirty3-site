@@ -161,3 +161,60 @@ footer a {
     white-space: nowrap;
   }
 }
+.glitch-text {
+  position: relative;
+  display: inline-block;
+  font-family: monospace;
+  font-size: 1.2rem;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  clip: rect(0, 0, 0, 0);
+}
+
+.glitch-text.glitching::before {
+  animation: glitchTop 0.4s linear;
+}
+
+.glitch-text.glitching::after {
+  animation: glitchBottom 0.4s linear;
+}
+
+@keyframes glitchTop {
+  0% { clip: rect(0, 9999px, 0, 0); opacity: 0.6; }
+  20% { clip: rect(0, 9999px, 10px, 0); opacity: 0.8; }
+  40% { clip: rect(0, 9999px, 2px, 0); opacity: 0.4; }
+  100% { clip: rect(0, 9999px, 0, 0); opacity: 0; }
+}
+
+@keyframes glitchBottom {
+  0% { clip: rect(0, 9999px, 0, 0); opacity: 0.6; }
+  20% { clip: rect(10px, 9999px, 15px, 0); opacity: 0.8; }
+  40% { clip: rect(5px, 9999px, 8px, 0); opacity: 0.4; }
+  100% { clip: rect(0, 9999px, 0, 0); opacity: 0; }
+}
+
+#contactLinks {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  transition: opacity 0.8s ease, height 0.6s ease;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+#contactLinks a {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: white;
+  text-decoration: none;
+}
