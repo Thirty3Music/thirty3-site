@@ -14,24 +14,7 @@
   <title>THIRTY3</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<script>
-  function glitchAndShow(el) {
-    el.classList.add("glitching");
-    setTimeout(() => {
-      el.classList.remove("glitching");
-      const links = document.getElementById("contactLinks");
-      links.style.opacity = 1;
-      links.style.height = "auto";
-    }, 400);
-  }
-</script><body>
-  <footer>
-  <p class="glitch-text" data-text="send a signal" onclick="glitchAndShow(this)">send a signal</p>
-  <div id="contactLinks">
-    <a href="mailto:thirty3music@gmail.com">→ thirty3music@gmail.com</a>
-    <a href="https://www.instagram.com/_thirty3_/" target="_blank">→ @_thirty3_</a>
-  </div>
-</footer>
+<body>
   <header>
     <nav>
       <a href="https://www.instagram.com/_thirty3_/" target="_blank">INSTAGRAM</a>
@@ -40,26 +23,34 @@
       <a href="https://www.youtube.com/@thirty3473" target="_blank">YOUTUBE</a>
     </nav>
   </header>
+
   <main>
     <div class="video-wrapper">
-    <video autoplay muted loop playsinline preload="auto" class="bg-video" id="bg-video">
-      <source src="background.mp4" type="video/mp4">
-      <source src="background_high_quality.webm" type="video/webm">
-    </video>
-  </div>
-  <div class="overlay"></div>
-  <div class="mobile-overlay" id="mobileOverlay" onclick="enterSite()">
-    <div>tap to open</div>
-  </div>
-  <div class="content">
-    <h1 class="glitch-title">T H I R T Y 3</h1>
-    <p class="subtitle">noise // soul</p>
-    <p class="intro" id="typing-text"></p>
-  </div>
+      <video autoplay muted loop playsinline preload="auto" class="bg-video" id="bg-video">
+        <source src="background.mp4" type="video/mp4">
+        <source src="background_high_quality.webm" type="video/webm">
+      </video>
+    </div>
+    <div class="overlay"></div>
+    <div class="mobile-overlay" id="mobileOverlay" onclick="enterSite()">
+      <div>tap to open</div>
+    </div>
+    <div class="content">
+      <h1 class="glitch-title">T H I R T Y 3</h1>
+      <p class="subtitle">noise // soul</p>
+      <p class="intro" id="typing-text"></p>
+    </div>
   </main>
+
+  <!-- ✅ Enda FOOTER -->
   <footer>
-    <a href="#">&#9993; CONTACT</a>
+    <p class="glitch-text" data-text="send a signal" onclick="glitchAndShow(this)">send a signal</p>
+    <div id="contactLinks">
+      <a href="mailto:thirty3music@gmail.com">→ thirty3music@gmail.com</a>
+      <a href="https://www.instagram.com/_thirty3_/" target="_blank">→ @_thirty3_</a>
+    </div>
   </footer>
+
   <script>
     const text = "sound over style – emotion over ego – music that says what I don't";
     const target = document.getElementById("typing-text");
@@ -76,7 +67,6 @@
     });
 
     function isMobile() {
-      // Include iPad and iPod in mobile detection
       return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     }
 
@@ -94,6 +84,16 @@
         document.getElementById("mobileOverlay").style.display = "flex";
       }
     });
+
+    function glitchAndShow(el) {
+      el.classList.add("glitching");
+      setTimeout(() => {
+        el.classList.remove("glitching");
+        const links = document.getElementById("contactLinks");
+        links.style.opacity = 1;
+        links.style.height = "auto";
+      }, 400);
+    }
   </script>
 </body>
 </html>
