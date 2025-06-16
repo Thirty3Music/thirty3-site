@@ -14,7 +14,24 @@
   <title>THIRTY3</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<script>
+  function glitchAndShow(el) {
+    el.classList.add("glitching");
+    setTimeout(() => {
+      el.classList.remove("glitching");
+      const links = document.getElementById("contactLinks");
+      links.style.opacity = 1;
+      links.style.height = "auto";
+    }, 400);
+  }
+</script><body>
+  <footer>
+  <p class="glitch-text" data-text="send a signal" onclick="glitchAndShow(this)">send a signal</p>
+  <div id="contactLinks">
+    <a href="mailto:thirty3music@gmail.com">→ thirty3music@gmail.com</a>
+    <a href="https://www.instagram.com/_thirty3_/" target="_blank">→ @_thirty3_</a>
+  </div>
+</footer>
   <header>
     <nav>
       <a href="https://www.instagram.com/_thirty3_/" target="_blank">INSTAGRAM</a>
