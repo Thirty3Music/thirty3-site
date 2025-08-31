@@ -139,7 +139,7 @@ footer a {
   pointer-events: none;
 }
 
-/* Anpassningar f\u00f6r mobil */
+/* Anpassningar för mobil */
 @media (max-width: 600px) {
   nav {
     flex-direction: row;
@@ -217,4 +217,66 @@ footer a {
   margin-bottom: 0.3rem;
   color: white;
   text-decoration: none;
+}
+
+/* =========== WORK (split layout) =========== */
+:root { --teal:#009a9f; --ink:#e7eceb; }
+
+/* på WORK-sidan vill vi kunna scrolla (din body har overflow:hidden) */
+body.work { overflow-y:auto; background:#000; }
+
+/* grid: bild vänster / text höger */
+.split{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:100vh;
+  position:relative;
+}
+.split.alt{ grid-auto-flow:column; } /* växla ordning på nästa sektion */
+
+.split-media{
+  background-size:cover;
+  background-position:center;
+  filter:contrast(.95) saturate(.9) brightness(.85);
+}
+
+.split-copy{
+  background:#000; color:#fff;
+  display:flex; flex-direction:column; justify-content:center;
+  gap:18px; padding:8vw 6vw; position:relative;
+}
+.split-copy::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(70% 60% at 60% 40%, rgba(0,154,159,.10), transparent 60%);
+}
+
+/* typografi för work */
+.work-kicker{ color:var(--teal); letter-spacing:.2em; font-size:14px; margin:0; }
+.work-title{ font-size:clamp(28px,5vw,56px); letter-spacing:.06em; margin:0; }
+.work-desc{ max-width:60ch; line-height:1.5; opacity:.9; }
+.work-meta{ font-size:12px; letter-spacing:.15em; opacity:.6; }
+
+/* länkar */
+.work-links{ display:flex; gap:12px; flex-wrap:wrap; }
+.work-links a{
+  border:1px solid var(--ink);
+  padding:6px 10px;
+  text-decoration:none; color:#fff;
+  background:rgba(255,255,255,.04);
+  transition:.2s;
+}
+.work-links a:hover{
+  background:rgba(0,154,159,.15);
+  border-color:var(--teal);
+}
+
+/* footer */
+.work-footer{ text-align:center; padding:48px 0; opacity:.7; }
+.work-footer a{ color:#fff; text-decoration:none; }
+
+/* mobil */
+@media (max-width: 900px){
+  .split{ grid-template-columns:1fr; }
+  .split-media{ min-height:56vh; }
+  .split-copy{ padding:14vw 8vw; }
 }
