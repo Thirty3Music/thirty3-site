@@ -34,20 +34,13 @@ html, body{
 }
 
 /* ===============================
-   Header / Topbar (centrerad meny + tunt rutnät)
+   Header / Topbar (centrerad meny + horisontella linjer)
 =================================*/
-/* ===== TOPPMENY med bara horisontella linjer ===== */
-.topbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  z-index: 9999;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.topbar{
+  position:fixed; top:0; left:0; right:0; height:60px;
+  z-index:9999;
+  display:flex; align-items:center; justify-content:center;
+  background:transparent;
 
   /* Endast horisontella linjer */
   background-image:
@@ -91,19 +84,21 @@ body.home{ padding-top:56px; }
    Hero / content
 =================================*/
 .content{
-  position:absolute; inset:0;
-  display:grid; place-items:center;
+  position:absolute;
+  top:45%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  text-align:center;
   z-index:2;
 }
-.content > *{ text-align:center; }
 .glitch-title{
   font-size:32px; letter-spacing:8px;
   background:rgba(255,255,255,.05);
   padding:6px 14px; border:1px solid #fff; display:inline-block;
-  margin-bottom:8px;
+  margin:0 0 6px;
 }
 .subtitle{
-  font-size:14px; font-style:italic; opacity:.8; margin:0 0 20px;
+  font-size:14px; font-style:italic; opacity:.8; margin:0 0 12px;
 }
 .intro{
   font-size:16px; line-height:1.4;
@@ -121,7 +116,9 @@ footer{
   transition:opacity .8s ease, height .6s ease;
   text-align:left; margin-top:.6rem;
 }
-#contactLinks a{ display:block; color:#fff; text-decoration:none; margin:.2rem 0; }
+#contactLinks a{
+  display:block; color:#fff; text-decoration:none; margin:.2rem 0;
+}
 
 /* Glitch-effekt */
 .glitch-text{ position:relative; display:inline-block; font-family:monospace; font-size:1.1rem; cursor:pointer; }
@@ -145,12 +142,12 @@ footer{
 }
 
 /* ===============================
-   Mobile overlays
+   Mobile overlay
 =================================*/
 .mobile-overlay{
   display:none; position:fixed; inset:0; z-index:4;
   background:rgba(0,0,0,.8); color:#fff;
-  display:none; align-items:center; justify-content:center;
+  align-items:center; justify-content:center;
   font-size:16px; letter-spacing:1px; cursor:pointer;
   transition:opacity .5s;
 }
@@ -214,24 +211,4 @@ body.work{ overflow-y:auto; background:#000; }
   .topbar nav a{ font-size:12px; }
   #logo3d-wrap{ display:none; } /* dölj 3D-logga på små skärmar */
   body.home{ padding-top:50px; }
-}
-
-
-/* Centrera och justera main-content */
-.content {
-  position: absolute;
-  top: 45%;              /* tidigare 50% */
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 2;
-}
-
-/* Avstånd mellan titel, subtitle och intro */
-.glitch-title {
-  margin-bottom: 6px;    /* tajtare mellanrum */
-}
-
-.subtitle {
-  margin-bottom: 12px;   /* lite mindre avstånd innan intro-texten */
 }
