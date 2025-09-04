@@ -382,3 +382,22 @@ body.home nav a{
   background:rgba(255,255,255,.05);
   border:1px solid rgba(255,255,255,.25);
 }
+
+/* ===== Topbar centrerad meny + logga i högra hörnet ===== */
+.topbar{position:fixed;top:0;left:0;right:0;height:60px;z-index:10;display:block;background:transparent;}
+/* Centrera menyn oavsett loggans bredd */
+.topbar nav{
+  position:absolute;left:50%;top:14px;transform:translateX(-50%);
+  display:flex;gap:28px;
+}
+/* Ta bort “boxarna” från gamla nav-stilen */
+.topbar nav a{
+  color:#fff;text-decoration:none;font-size:14px;letter-spacing:.08em;font-weight:500;
+  background:transparent;border:none;padding:6px 0;transition:color .25s;
+}
+.topbar nav a:hover{color:#aaa;}
+/* Logga i högra hörnet */
+#logo3d-wrap{position:absolute;right:20px;top:10px;width:60px;height:40px;}
+#logo3d{width:100%;height:100%;display:block;}
+/* ge plats under topbaren */
+body.home{padding-top:60px;}
