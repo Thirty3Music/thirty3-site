@@ -353,3 +353,32 @@ body.work { overflow-y:auto; background:#000; }
     display: none; /* Dölj 3D-logga på mobil om den tar plats */
   }
 }
+
+/* ===== TOPPMENY (home) ===== */
+.topbar{
+  position:fixed; top:0; left:0; right:0; height:56px;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:12px 24px; z-index:10; background:transparent;
+}
+#logo3d-wrap{ width:60px; height:60px; }
+#logo3d{ width:100%; height:100%; display:block; }
+
+.topbar nav{ display:flex; gap:28px; }
+.topbar nav a{
+  color:#fff; text-decoration:none; font-size:14px; letter-spacing:.08em; font-weight:500;
+  transition:color .25s ease;
+}
+.topbar nav a:hover{ color:#aaa; }
+
+/* Ge plats under topbaren */
+body.home{ padding-top:56px; }
+
+/* ===== Stäng av gamla vänstermenyn på HOME ===== */
+body.home nav{
+  position:static !important; top:auto !important; left:auto !important;
+  flex-direction:row !important; gap:28px;
+}
+body.home nav a{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.25);
+}
