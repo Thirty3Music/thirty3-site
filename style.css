@@ -1,245 +1,177 @@
-/* Reset och grundläggande layout */
-body, html {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  font-family: 'Courier New', monospace;
-  overflow: hidden;
-  background-color: black;
-  color: white;
+/* ===============================
+   Base / Reset
+=================================*/
+:root{
+  --ink:#e7eceb;
+  --line:rgba(255,255,255,.10);
+  --chip:rgba(255,255,255,.04);
+  --chipBorder:rgba(255,255,255,.18);
+  --chipHover:rgba(255,255,255,.12);
+  --teal:#009a9f;
 }
 
-/* Bakgrundsvideo */
-.bg-video {
-  position: fixed;
-  top: 0;
-  left: 0;
-  min-width: 100%;
-  min-height: 100%;
-  object-fit: cover;
-  filter: blur(2px) brightness(0.8);
-  z-index: 0;
+html, body{
+  margin:0; padding:0; width:100%; height:100%;
+  font-family:'Courier New', monospace;
+  background:#000; color:#fff;
+  overflow:hidden; /* låser startsidan – WORK öppnar scroll nedan */
 }
 
-/* Mörk overlay för kontrast */
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.4);
-  z-index: 1;
+/* ===============================
+   Background video + overlay
+=================================*/
+.bg-video{
+  position:fixed; inset:0;
+  min-width:100%; min-height:100%;
+  object-fit:cover;
+  filter:blur(2px) brightness(.8);
+  z-index:0;
+}
+.overlay{
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.4);
+  z-index:1;
 }
 
-/* Navigering (vänster hörn) */
-nav {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+/* ===============================
+   Header / Topbar (centrerad meny + tunt rutnät)
+=================================*/
+.topbar{
+  position:fixed; top:0; left:0; right:0; height:56px;
+  z-index:9999;
+
+  display:flex; align-items:center; justify-content:center;
+
+  /* tunn, transparent bar */
+  background:rgba(0,0,0,.18);
+  backdrop-filter:blur(2px);
+  border-bottom:1px solid var(--line);
+
+  /* SUBTILT RUTNÄT – glesare linjer */
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      rgba(255,255,255,.06) 0 1px,
+      transparent 1px 36px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,.06) 0 1px,
+      transparent 1px 36px
+    );
+  background-blend-mode:overlay;
 }
 
-nav a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  background-color: rgba(255,255,255,0.05);
-  padding: 4px 8px;
-  border: 1px solid white;
-  font-size: 14px;
-  letter-spacing: 1px;
-  transition: 0.2s;
+/* 3D-logga (vänster hörn) */
+#logo3d-wrap{
+  position:absolute; left:14px; top:6px;
+  width:84px; height:44px; z-index:10001;
+  pointer-events:none;
+}
+#logo3d{ width:100%; height:100%; display:block; }
+
+/* Meny i mitten */
+.topbar nav{
+  position:absolute; left:50%; top:14px; transform:translateX(-50%);
+  display:flex; gap:28px; align-items:center;
+  z-index:10000;
+}
+.topbar nav a{
+  all:unset; cursor:pointer;
+  color:#dfe4e6;
+  font-weight:600; font-size:13px; letter-spacing:.08em;
+  padding:7px 0; line-height:1;
+  transition:color .15s ease;
+}
+.topbar nav a:hover{ color:#fff; }
+
+/* ge plats under topbaren */
+body.home{ padding-top:56px; }
+
+/* ===============================
+   Hero / content
+=================================*/
+.content{
+  position:absolute; inset:0;
+  display:grid; place-items:center;
+  z-index:2;
+}
+.content > *{ text-align:center; }
+.glitch-title{
+  font-size:32px; letter-spacing:8px;
+  background:rgba(255,255,255,.05);
+  padding:6px 14px; border:1px solid #fff; display:inline-block;
+  margin-bottom:8px;
+}
+.subtitle{
+  font-size:14px; font-style:italic; opacity:.8; margin:0 0 20px;
+}
+.intro{
+  font-size:16px; line-height:1.4;
+  background:rgba(0,0,0,.5); padding:10px 20px; display:inline-block;
 }
 
-nav a:hover {
-  background-color: rgba(255,255,255,0.2);
+/* ===============================
+   Footer (kontakt “send a signal”)
+=================================*/
+footer{
+  position:absolute; bottom:20px; left:20px; z-index:3;
+}
+#contactLinks{
+  opacity:0; height:0; overflow:hidden;
+  transition:opacity .8s ease, height .6s ease;
+  text-align:left; margin-top:.6rem;
+}
+#contactLinks a{ display:block; color:#fff; text-decoration:none; margin:.2rem 0; }
+
+/* Glitch-effekt */
+.glitch-text{ position:relative; display:inline-block; font-family:monospace; font-size:1.1rem; cursor:pointer; }
+.glitch-text::before, .glitch-text::after{
+  content:attr(data-text); position:absolute; left:0; width:100%;
+  opacity:0; clip:rect(0,0,0,0);
+}
+.glitch-text.glitching::before{ animation:glitchTop .4s linear; }
+.glitch-text.glitching::after{  animation:glitchBottom .4s linear; }
+@keyframes glitchTop{
+  0%{clip:rect(0,9999px,0,0);opacity:.6}
+  20%{clip:rect(0,9999px,10px,0);opacity:.8}
+  40%{clip:rect(0,9999px,2px,0);opacity:.4}
+  100%{clip:rect(0,9999px,0,0);opacity:0}
+}
+@keyframes glitchBottom{
+  0%{clip:rect(0,9999px,0,0);opacity:.6}
+  20%{clip:rect(10px,9999px,15px,0);opacity:.8}
+  40%{clip:rect(5px,9999px,8px,0);opacity:.4}
+  100%{clip:rect(0,9999px,0,0);opacity:0}
 }
 
-/* Kontaktlänk i foten */
-footer {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  z-index: 3;
+/* ===============================
+   Mobile overlays
+=================================*/
+.mobile-overlay{
+  display:none; position:fixed; inset:0; z-index:4;
+  background:rgba(0,0,0,.8); color:#fff;
+  display:none; align-items:center; justify-content:center;
+  font-size:16px; letter-spacing:1px; cursor:pointer;
+  transition:opacity .5s;
 }
+.fade-out{ opacity:0; transition:opacity .5s ease-out; pointer-events:none; }
 
-footer a {
-  color: violet;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 12px;
-  background-color: rgba(255,255,255,0.05);
-  padding: 4px 8px;
-  border: 1px solid white;
-  display: inline-block;
-}
+/* ===============================
+   WORK page (split layout)
+=================================*/
+body.work{ overflow-y:auto; background:#000; }
 
-/* Innehållet i mitten */
-.content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 2;
-}
-
-.glitch-title {
-  font-size: 32px;
-  letter-spacing: 8px;
-  background-color: rgba(255, 255, 255, 0.05);
-  padding: 6px 14px;
-  border: 1px solid white;
-  display: inline-block;
-  margin-bottom: 8px;
-}
-
-.subtitle {
-  font-size: 14px;
-  font-style: italic;
-  margin-bottom: 20px;
-  opacity: 0.8;
-}
-
-.intro {
-  font-size: 16px;
-  line-height: 1.4;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 10px 20px;
-  display: inline-block;
-}
-
-/* Mobil-overlay ("tap anywhere") */
-.mobile-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 4;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: opacity 0.5s;
-}
-
-.fade-out {
-  opacity: 0;
-  transition: opacity 0.5s ease-out;
-  pointer-events: none;
-}
-
-/* Anpassningar för mobil */
-@media (max-width: 600px) {
-  nav {
-    flex-direction: row;
-    width: calc(100% - 20px);
-    left: 10px;
-    right: 10px;
-    top: 10px;
-    justify-content: space-between;
-    padding: 0;
-  }
-  nav a {
-    text-align: center;
-    font-size: 12px;
-    padding: 4px 0;
-  }
-  .glitch-title {
-    font-size: 24px;
-    letter-spacing: 2px;
-    white-space: nowrap;
-  }
-}
-.glitch-text {
-  position: relative;
-  display: inline-block;
-  font-family: monospace;
-  font-size: 1.2rem;
-  cursor: pointer;
-  text-align: center;
-  width: 100%;
-}
-
-.glitch-text::before,
-.glitch-text::after {
-  content: attr(data-text);
-  position: absolute;
-  left: 0;
-  width: 100%;
-  opacity: 0;
-  clip: rect(0, 0, 0, 0);
-}
-
-.glitch-text.glitching::before {
-  animation: glitchTop 0.4s linear;
-}
-
-.glitch-text.glitching::after {
-  animation: glitchBottom 0.4s linear;
-}
-
-@keyframes glitchTop {
-  0% { clip: rect(0, 9999px, 0, 0); opacity: 0.6; }
-  20% { clip: rect(0, 9999px, 10px, 0); opacity: 0.8; }
-  40% { clip: rect(0, 9999px, 2px, 0); opacity: 0.4; }
-  100% { clip: rect(0, 9999px, 0, 0); opacity: 0; }
-}
-
-@keyframes glitchBottom {
-  0% { clip: rect(0, 9999px, 0, 0); opacity: 0.6; }
-  20% { clip: rect(10px, 9999px, 15px, 0); opacity: 0.8; }
-  40% { clip: rect(5px, 9999px, 8px, 0); opacity: 0.4; }
-  100% { clip: rect(0, 9999px, 0, 0); opacity: 0; }
-}
-
-#contactLinks {
-  opacity: 0;
-  height: 0;
-  overflow: hidden;
-  transition: opacity 0.8s ease, height 0.6s ease;
-  text-align: center;
-  margin-top: 1rem;
-}
-
-#contactLinks a {
-  display: block;
-  margin-bottom: 0.3rem;
-  color: white;
-  text-decoration: none;
-}
-
-/* =========== WORK (split layout) =========== */
-:root { --teal:#009a9f; --ink:#e7eceb; }
-
-/* på WORK-sidan vill vi kunna scrolla (din body har overflow:hidden) */
-body.work { overflow-y:auto; background:#000; }
-
-/* grid: bild vänster / text höger */
 .split{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  min-height:100vh;
-  position:relative;
+  display:grid; grid-template-columns:1fr 1fr;
+  min-height:100vh; position:relative;
 }
-.split.alt{ grid-auto-flow:column; } /* växla ordning på nästa sektion */
+.split.alt{ grid-auto-flow:column; }
 
 .split-media{
-  background-size:cover;
-  background-position:center;
+  background-size:cover; background-position:center;
   filter:contrast(.95) saturate(.9) brightness(.85);
 }
-
 .split-copy{
   background:#000; color:#fff;
   display:flex; flex-direction:column; justify-content:center;
@@ -250,7 +182,7 @@ body.work { overflow-y:auto; background:#000; }
   background:radial-gradient(70% 60% at 60% 40%, rgba(0,154,159,.10), transparent 60%);
 }
 
-/* typografi för work */
+/* typografi */
 .work-kicker{ color:var(--teal); letter-spacing:.2em; font-size:14px; margin:0; }
 .work-title{ font-size:clamp(28px,5vw,56px); letter-spacing:.06em; margin:0; }
 .work-desc{ max-width:60ch; line-height:1.5; opacity:.9; }
@@ -260,202 +192,27 @@ body.work { overflow-y:auto; background:#000; }
 .work-links{ display:flex; gap:12px; flex-wrap:wrap; }
 .work-links a{
   border:1px solid var(--ink);
-  padding:6px 10px;
-  text-decoration:none; color:#fff;
-  background:rgba(255,255,255,.04);
-  transition:.2s;
+  padding:6px 10px; text-decoration:none; color:#fff;
+  background:rgba(255,255,255,.04); transition:.2s;
 }
-.work-links a:hover{
-  background:rgba(0,154,159,.15);
-  border-color:var(--teal);
-}
+.work-links a:hover{ background:rgba(0,154,159,.15); border-color:var(--teal); }
 
 /* footer */
 .work-footer{ text-align:center; padding:48px 0; opacity:.7; }
 .work-footer a{ color:#fff; text-decoration:none; }
 
-/* mobil */
-@media (max-width: 900px){
+/* ===============================
+   Responsive
+=================================*/
+@media (max-width:900px){
   .split{ grid-template-columns:1fr; }
   .split-media{ min-height:56vh; }
   .split-copy{ padding:14vw 8vw; }
 }
-
-/* ===== TOPPMENY ===== */
-.topbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 18px 32px;
-  z-index: 10;
-  background: transparent;
+@media (max-width:700px){
+  .topbar{ height:50px; }
+  .topbar nav{ gap:14px; top:10px; }
+  .topbar nav a{ font-size:12px; }
+  #logo3d-wrap{ display:none; } /* dölj 3D-logga på små skärmar */
+  body.home{ padding-top:50px; }
 }
-
-/* Loggan till vänster */
-#logo3d-wrap {
-  width: 60px;
-  height: 60px;
-}
-
-#logo3d {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* Menyn till höger */
-.topbar nav {
-  display: flex;
-  gap: 28px;
-}
-
-.topbar nav a {
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 14px;
-  letter-spacing: 0.08em;
-  font-weight: 500;
-  transition: color 0.25s ease;
-}
-
-.topbar nav a:hover {
-  color: #aaaaaa; /* grå när man hovrar */
-}
-
-/* 3D-logga till höger */
-#logo3d-wrap {
-  width: 60px;
-  height: 40px;
-}
-#logo3d {
-  width: 100%;
-  height: 100%;
-}
-
-/* Mobilanpassning */
-@media (max-width: 700px) {
-  .topbar {
-    height: 50px;
-    padding: 0 10px;
-  }
-  .topbar nav {
-    gap: 10px;
-  }
-  .topbar nav a {
-    font-size: 12px;
-    padding: 4px 6px;
-  }
-  #logo3d-wrap {
-    display: none; /* Dölj 3D-logga på mobil om den tar plats */
-  }
-}
-
-/* ===== TOPPMENY (home) ===== */
-.topbar{
-  position:fixed; top:0; left:0; right:0; height:56px;
-  display:flex; justify-content:space-between; align-items:center;
-  padding:12px 24px; z-index:10; background:transparent;
-}
-#logo3d-wrap{ width:60px; height:60px; }
-#logo3d{ width:100%; height:100%; display:block; }
-
-.topbar nav{ display:flex; gap:28px; }
-.topbar nav a{
-  color:#fff; text-decoration:none; font-size:14px; letter-spacing:.08em; font-weight:500;
-  transition:color .25s ease;
-}
-.topbar nav a:hover{ color:#aaa; }
-
-/* Ge plats under topbaren */
-body.home{ padding-top:56px; }
-
-/* ===== Stäng av gamla vänstermenyn på HOME ===== */
-body.home nav{
-  position:static !important; top:auto !important; left:auto !important;
-  flex-direction:row !important; gap:28px;
-}
-body.home nav a{
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.25);
-}
-
-/* ===== Topbar centrerad meny + logga i högra hörnet ===== */
-.topbar{position:fixed;top:0;left:0;right:0;height:60px;z-index:10;display:block;background:transparent;}
-/* Centrera menyn oavsett loggans bredd */
-.topbar nav{
-  position:absolute;left:50%;top:14px;transform:translateX(-50%);
-  display:flex;gap:28px;
-}
-/* Ta bort “boxarna” från gamla nav-stilen */
-.topbar nav a{
-  color:#fff;text-decoration:none;font-size:14px;letter-spacing:.08em;font-weight:500;
-  background:transparent;border:none;padding:6px 0;transition:color .25s;
-}
-.topbar nav a:hover{color:#aaa;}
-/* Logga i högra hörnet */
-#logo3d-wrap{position:absolute;right:20px;top:10px;width:60px;height:40px;}
-#logo3d{width:100%;height:100%;display:block;}
-/* ge plats under topbaren */
-body.home{padding-top:60px;}
-
-/* === FORCE TOP MENU === */
-.topbar{position:fixed;top:0;left:0;right:0;height:60px;z-index:9999;background:transparent;}
-/* centrera menyn */
-.topbar nav{
-  position:fixed;       /* force above allt */
-  top:14px;
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  gap:28px;
-  z-index:10000;
-}
-/* slå ut gamla vänster-menystilar */
-.topbar nav a{
-  color:#fff !important;
-  background:transparent !important;
-  border:none !important;
-  padding:6px 0 !important;
-  text-decoration:none;
-  font-size:14px; letter-spacing:.08em; font-weight:500;
-  transition:color .25s;
-}
-.topbar nav a:hover{ color:#aaa !important; }
-
-/* ge plats under topbaren */
-body.home{ padding-top:60px !important; }
-/* gör duken större + över allt */
-#logo3d-wrap{position:absolute;left:20px;top:8px;width:96px;height:64px;z-index:10001}
-#logo3d{width:100%;height:100%;display:block}
-
-/* topbar – tunn, grå, centrering */
-.topbar{
-  position:fixed; top:0; left:0; right:0; height:60px;
-  z-index:9999; background:transparent;
-  display:flex; align-items:center; justify-content:center;
-}
-
-.topbar nav{
-  display:flex; gap:24px; align-items:center;
-}
-
-.topbar nav a{
-  color:#cfd3d2; text-decoration:none; font-weight:500;
-  letter-spacing:.06em; font-size:14px;
-  padding:10px 2px;                 /* smal “tab” */
-  border:none; background:transparent;
-  border-bottom:1px solid rgba(255,255,255,.25); /* tunn linje */
-  transition:color .2s, border-color .2s;
-}
-
-.topbar nav a:hover{
-  color:#fff; border-bottom-color:#fff;
-}
-
-/* loggans canvas i vänstra hörnet (liten) */
-#logo3d-wrap{position:absolute; left:20px; top:10px; width:90px; height:60px; z-index:10001;}
-#logo3d{width:100%; height:100%; display:block;}
