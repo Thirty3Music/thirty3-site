@@ -401,3 +401,30 @@ body.home nav a{
 #logo3d{width:100%;height:100%;display:block;}
 /* ge plats under topbaren */
 body.home{padding-top:60px;}
+
+/* === FORCE TOP MENU === */
+.topbar{position:fixed;top:0;left:0;right:0;height:60px;z-index:9999;background:transparent;}
+/* centrera menyn */
+.topbar nav{
+  position:fixed;       /* force above allt */
+  top:14px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:28px;
+  z-index:10000;
+}
+/* slå ut gamla vänster-menystilar */
+.topbar nav a{
+  color:#fff !important;
+  background:transparent !important;
+  border:none !important;
+  padding:6px 0 !important;
+  text-decoration:none;
+  font-size:14px; letter-spacing:.08em; font-weight:500;
+  transition:color .25s;
+}
+.topbar nav a:hover{ color:#aaa !important; }
+
+/* ge plats under topbaren */
+body.home{ padding-top:60px !important; }
