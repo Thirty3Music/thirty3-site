@@ -12,65 +12,54 @@
   <meta name="twitter:title" content="THIRTY3" />
   <meta name="twitter:description" content="Official site for THIRTY3: noise and soul." />
   <title>THIRTY3</title>
-
-  <!-- Din globala CSS -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- ====== TOPBAR OVERRIDES (tunna linjer + centrerad meny) ====== -->
+  <!-- TOPBAR-stil (tunna linjer + subtilt rutmönster + centrerad meny) -->
   <style>
-    :root{ --ink:#e7eceb; --line:rgba(255,255,255,.08); --chip:rgba(255,255,255,.04); --chipBorder:rgba(255,255,255,.18); --chipHover:rgba(255,255,255,.10); }
-
-    /* självaste topbaren */
+    :root{
+      --ink:#e7eceb;
+      --line:rgba(255,255,255,.10);
+      --chip:rgba(255,255,255,.04);
+      --chipBorder:rgba(255,255,255,.18);
+      --chipHover:rgba(255,255,255,.12);
+    }
     .topbar{
       position:fixed; inset:0 0 auto 0; height:56px; z-index:9999;
       display:flex; align-items:center; justify-content:center;
-      backdrop-filter: blur(2px);
-      border-bottom:1px solid var(--line);   /* TUNN linje */
-      background:rgba(0,0,0,.18);           /* diskret glas */
+      background:rgba(0,0,0,.18);
+      border-bottom:1px solid var(--line);
+      backdrop-filter:blur(2px);
+      /* tunt rutmönster (1px) */
+      background-image:
+        linear-gradient(to bottom, rgba(255,255,255,.06), rgba(255,255,255,.06)),
+        repeating-linear-gradient(to right, rgba(255,255,255,.06) 0, rgba(255,255,255,.06) 1px, transparent 1px, transparent 12px),
+        repeating-linear-gradient(to bottom, rgba(255,255,255,.06) 0, rgba(255,255,255,.06) 1px, transparent 1px, transparent 12px);
+      background-blend-mode: overlay, normal, normal;
     }
-
-    /* vänster hörn: 3D-logo */
-    #logo3d-wrap{
-      position:absolute; left:14px; top:10px;
-      width:72px; height:48px; z-index:10001;
-      pointer-events:none;                   /* menyer alltid klickbara */
-    }
+    #logo3d-wrap{ position:absolute; left:14px; top:6px; width:84px; height:44px; z-index:10001; pointer-events:none; }
     #logo3d{ width:100%; height:100%; display:block; }
-
-    /* slå ut gammal nav-layout och centrera */
-    .topbar nav{
-      all:unset; display:flex; gap:12px; align-items:center;
-    }
-
-    /* tunna “chips” i Subvert-stil */
+    .topbar nav{ all:unset; display:flex; gap:12px; align-items:center; }
     .topbar nav a{
-      all:unset;
-      font-family: 'Courier New', monospace;
-      font-size:13px; letter-spacing:.08em; font-weight:600;
-      color:#dfe4e6; padding:8px 12px; cursor:pointer;
-      border:1px solid var(--chipBorder);
-      background:var(--chip);
-      line-height:1; border-radius:3px;
+      all:unset; cursor:pointer;
+      font-family:'Courier New', monospace; font-weight:600;
+      font-size:13px; letter-spacing:.08em; color:#dfe4e6;
+      padding:7px 12px; line-height:1; border-radius:3px;
+      background:var(--chip); border:1px solid var(--chipBorder);
       transition:background .15s ease, color .15s ease, border-color .15s ease;
     }
-    .topbar nav a:hover{
-      background:var(--chipHover);
-      color:#ffffff;
-      border-color:rgba(255,255,255,.35);
-    }
-
-    /* ge plats under topbaren så innehåll inte hamnar bakom */
+    .topbar nav a:hover{ background:var(--chipHover); color:#fff; border-color:rgba(255,255,255,.35); }
     body.home{ padding-top:56px; }
   </style>
 </head>
 
 <body class="home">
-  <!-- ====== TOPPMENY ====== -->
+  <!-- TOPPMENY -->
   <header class="topbar">
-    <!-- 3D-logga (vänster) -->
-    <div id="logo3d-wrap"><canvas id="logo3d"></canvas></div>
-
-    <!-- Meny (centrerad) -->
+    <!-- Vänster: 3D-logga -->
+    <div id="logo3d-wrap">
+      <canvas id="logo3d"></canvas>
+    </div>
+    <!-- Mitten: länkar -->
     <nav>
       <a href="https://www.instagram.com/_thirty3_/" target="_blank">INSTAGRAM</a>
       <a href="https://soundcloud.com/thirty_3" target="_blank">SOUNDCLOUD</a>
@@ -80,7 +69,7 @@
     </nav>
   </header>
 
-  <!-- ====== HUVUDINNEHÅLL ====== -->
+  <!-- HUVUDINNEHÅLL -->
   <main>
     <div class="video-wrapper">
       <video autoplay muted loop playsinline preload="auto" class="bg-video" id="bg-video">
@@ -88,13 +77,14 @@
         <source src="background_high_quality.webm" type="video/webm">
       </video>
     </div>
-
     <div class="overlay"></div>
 
+    <!-- Mobil overlay -->
     <div class="mobile-overlay" id="mobileOverlay" onclick="enterSite()">
       <div>tap to open</div>
     </div>
 
+    <!-- Mittinnehåll -->
     <div class="content">
       <h1 class="glitch-title">T H I R T Y 3</h1>
       <p class="subtitle">noise // soul</p>
@@ -102,7 +92,7 @@
     </div>
   </main>
 
-  <!-- ====== FOOTER ====== -->
+  <!-- FOOTER -->
   <footer id="contact">
     <p class="glitch-text" data-text="send a signal" onclick="glitchAndShow(this)">send a signal</p>
     <div id="contactLinks">
@@ -111,32 +101,25 @@
     </div>
   </footer>
 
-  <!-- ====== Page scripts (typing / mobile overlay / glitch) ====== -->
+  <!-- SCRIPTS (typning + mobil + glitch) -->
   <script>
-    // typing
+    // Typing intro
     const text = "sound over style – emotion over ego – music that says what I don't";
     const target = document.getElementById("typing-text");
-    let i = 0;
-    function typeChar(){ if(i<text.length){ target.textContent += text.charAt(i++); setTimeout(typeChar,40);} }
-    window.addEventListener("load", ()=> setTimeout(typeChar, 1200));
+    let index = 0;
+    function typeChar(){ if(index<text.length){ target.textContent += text.charAt(index); index++; setTimeout(typeChar,40); } }
+    window.addEventListener("load",()=>setTimeout(typeChar,1500));
 
-    // mobile overlay
-    const isMobile = ()=> /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    function enterSite(){ const o=document.getElementById('mobileOverlay'); o.classList.add('fade-out'); setTimeout(()=>{ o.style.display='none'; document.getElementById('bg-video').play(); }, 500); }
-    window.addEventListener("DOMContentLoaded", ()=>{ if(isMobile()) document.getElementById("mobileOverlay").style.display = "flex"; });
+    // Mobile overlay
+    function isMobile(){ return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent); }
+    function enterSite(){ const o=document.getElementById('mobileOverlay'); o.classList.add('fade-out'); setTimeout(()=>{ o.style.display='none'; document.getElementById('bg-video').play(); },500); }
+    window.addEventListener("DOMContentLoaded",()=>{ if(isMobile()) document.getElementById("mobileOverlay").style.display="flex"; });
 
-    // glitch footer
-    function glitchAndShow(el){
-      el.classList.add("glitching");
-      setTimeout(()=>{
-        el.classList.remove("glitching");
-        const links = document.getElementById("contactLinks");
-        links.style.opacity = 1; links.style.height = "auto";
-      }, 400);
-    }
+    // Glitch + reveal contacts
+    function glitchAndShow(el){ el.classList.add("glitching"); setTimeout(()=>{ el.classList.remove("glitching"); const links=document.getElementById("contactLinks"); links.style.opacity=1; links.style.height="auto"; },400); }
   </script>
 
-  <!-- ====== 3D LOGO (autoscale + center) ====== -->
+  <!-- 3D LOGO (Three.js + robust OBJ-laddning med fallback) -->
   <script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
   <script src="https://unpkg.com/three@0.159.0/examples/js/loaders/OBJLoader.js"></script>
   <script>
@@ -144,8 +127,8 @@
     const cvs = document.getElementById('logo3d');
     if(!cvs) return;
 
-    // Renderer (skarp på retina)
-    const renderer = new THREE.WebGLRenderer({canvas:cvs, alpha:true, antialias:true});
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({ canvas:cvs, alpha:true, antialias:true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
     // Scen + kamera
@@ -153,56 +136,65 @@
     const cam   = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
     cam.position.set(0,0,6);
 
+    // Storlek
     function resize(){
-      const w = cvs.clientWidth || 96, h = cvs.clientHeight || 64;
-      renderer.setSize(w, h, false);
-      cam.aspect = w / h; cam.updateProjectionMatrix();
+      const w = cvs.clientWidth  || 96;
+      const h = cvs.clientHeight || 64;
+      renderer.setSize(w,h,false);
+      cam.aspect = w/h; cam.updateProjectionMatrix();
     }
     resize(); window.addEventListener('resize', resize);
 
     // Ljus
-    scene.add(new THREE.AmbientLight(0xffffff, .8));
-    const dir = new THREE.DirectionalLight(0xffffff, .9); dir.position.set(2,3,4); scene.add(dir);
+    scene.add(new THREE.AmbientLight(0xffffff, .85));
+    const dir = new THREE.DirectionalLight(0xffffff, .9);
+    dir.position.set(2,3,4); scene.add(dir);
 
-    // Ladda OBJ
+    // Fallback: wireframe-kub (visas direkt)
+    const fallback = new THREE.Mesh(
+      new THREE.BoxGeometry(1,1,1),
+      new THREE.MeshStandardMaterial({ color:0x8aa0a6, metalness:.2, roughness:.6, wireframe:true })
+    );
+    scene.add(fallback);
+
+    // Renderloop
+    let liveObj = null;
+    (function tick(){
+      (liveObj || fallback).rotation.y += 0.02;
+      renderer.render(scene, cam);
+      requestAnimationFrame(tick);
+    })();
+
+    // Hjälpare: autoskala + centrera objektet
+    function fitAndCenter(obj, targetDiameter=2.2){
+      const box = new THREE.Box3().setFromObject(obj);
+      const size = box.getSize(new THREE.Vector3()).length() || 1;
+      const center = box.getCenter(new THREE.Vector3());
+      obj.position.sub(center);
+      obj.scale.setScalar(targetDiameter / size);
+      obj.rotation.set(0.2, 0.6, 0);
+    }
+
+    // Ladda OBJ (fil i repo-roten)
+    const OBJ_URL = new URL('Thirty3_Live_Logo.obj', window.location.href).toString();
     const loader = new THREE.OBJLoader();
     loader.load(
-      'Thirty3_Live_Logo.obj',    // filnamn exakt
+      OBJ_URL,
       (obj)=>{
-        // Material
         obj.traverse(m=>{
-          if(m.isMesh) m.material = new THREE.MeshStandardMaterial({ color:0xe7eceb, metalness:.2, roughness:.35 });
+          if(m.isMesh){
+            m.material = new THREE.MeshStandardMaterial({
+              color:0xe7eceb, metalness:.2, roughness:.35
+            });
+          }
         });
-
-        // Center + autoscale
-        const box = new THREE.Box3().setFromObject(obj);
-        const size = box.getSize(new THREE.Vector3()).length() || 1;
-        const center = box.getCenter(new THREE.Vector3());
-        obj.position.sub(center);
-
-        const targetDiameter = 2.2;            // ändra för större/mindre
-        const s = targetDiameter / size;
-        obj.scale.setScalar(s);
-
-        obj.rotation.set(0.2, 0.6, 0);
+        fitAndCenter(obj);
+        scene.remove(fallback);
+        liveObj = obj;
         scene.add(obj);
-
-        // Loop
-        (function animate(){
-          obj.rotation.y += 0.01;
-          renderer.render(scene, cam);
-          requestAnimationFrame(animate);
-        })();
       },
       undefined,
-      (err)=>{
-        console.error('OBJ load error', err);
-        // Liten fallback-kub om modellen inte hittas
-        const geo = new THREE.BoxGeometry(1,1,1);
-        const mat = new THREE.MeshStandardMaterial({ color:0x93a0a4, metalness:.2, roughness:.6, wireframe:false });
-        const cube = new THREE.Mesh(geo, mat); scene.add(cube);
-        (function animate(){ cube.rotation.y += 0.02; renderer.render(scene, cam); requestAnimationFrame(animate); })();
-      }
+      (err)=>{ console.error('OBJ load error:', err); }
     );
   })();
   </script>
