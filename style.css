@@ -280,3 +280,67 @@ body.work { overflow-y:auto; background:#000; }
   .split-media{ min-height:56vh; }
   .split-copy{ padding:14vw 8vw; }
 }
+
+/* ===== TOPPMENY ===== */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.topbar nav {
+  display: flex;
+  gap: 20px;
+}
+
+.topbar nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  padding: 6px 10px;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.topbar nav a:hover {
+  color: #00a0a4;
+  transform: translateY(-2px);
+}
+
+/* 3D-logga till höger */
+#logo3d-wrap {
+  width: 60px;
+  height: 40px;
+}
+#logo3d {
+  width: 100%;
+  height: 100%;
+}
+
+/* Mobilanpassning */
+@media (max-width: 700px) {
+  .topbar {
+    height: 50px;
+    padding: 0 10px;
+  }
+  .topbar nav {
+    gap: 10px;
+  }
+  .topbar nav a {
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+  #logo3d-wrap {
+    display: none; /* Dölj 3D-logga på mobil om den tar plats */
+  }
+}
