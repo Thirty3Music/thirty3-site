@@ -428,3 +428,6 @@ body.home{padding-top:60px;}
 
 /* ge plats under topbaren */
 body.home{ padding-top:60px !important; }
+/* gör duken större + över allt */
+#logo3d-wrap{position:absolute;left:20px;top:8px;width:96px;height:64px;z-index:10001}
+#logo3d{width:100%;height:100%;display:block}
