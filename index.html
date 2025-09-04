@@ -14,7 +14,7 @@
   <title>THIRTY3</title>
   <link rel="stylesheet" href="style.css" />
 
-  <!-- TOPBAR-stil (tunna linjer + subtilt rutmönster + centrerad meny) -->
+  <!-- TOPBAR-stil (tunna linjer + rutmönster + centrerad meny) -->
   <style>
     :root{
       --ink:#e7eceb;
@@ -29,7 +29,7 @@
       background:rgba(0,0,0,.18);
       border-bottom:1px solid var(--line);
       backdrop-filter:blur(2px);
-      /* tunt rutmönster (1px) */
+      /* subtilt 1px-rutmönster */
       background-image:
         linear-gradient(to bottom, rgba(255,255,255,.06), rgba(255,255,255,.06)),
         repeating-linear-gradient(to right, rgba(255,255,255,.06) 0, rgba(255,255,255,.06) 1px, transparent 1px, transparent 12px),
@@ -48,6 +48,7 @@
       transition:background .15s ease, color .15s ease, border-color .15s ease;
     }
     .topbar nav a:hover{ background:var(--chipHover); color:#fff; border-color:rgba(255,255,255,.35); }
+
     body.home{ padding-top:56px; }
   </style>
 </head>
@@ -119,7 +120,7 @@
     function glitchAndShow(el){ el.classList.add("glitching"); setTimeout(()=>{ el.classList.remove("glitching"); const links=document.getElementById("contactLinks"); links.style.opacity=1; links.style.height="auto"; },400); }
   </script>
 
-  <!-- 3D LOGO (Three.js + robust OBJ-laddning med fallback) -->
+  <!-- 3D LOGO (Three.js + OBJ) -->
   <script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
   <script src="https://unpkg.com/three@0.159.0/examples/js/loaders/OBJLoader.js"></script>
   <script>
@@ -150,7 +151,7 @@
     const dir = new THREE.DirectionalLight(0xffffff, .9);
     dir.position.set(2,3,4); scene.add(dir);
 
-    // Fallback: wireframe-kub (visas direkt)
+    // Fallback: liten wireframe-kub (visas direkt)
     const fallback = new THREE.Mesh(
       new THREE.BoxGeometry(1,1,1),
       new THREE.MeshStandardMaterial({ color:0x8aa0a6, metalness:.2, roughness:.6, wireframe:true })
@@ -168,14 +169,15 @@
     // Hjälpare: autoskala + centrera objektet
     function fitAndCenter(obj, targetDiameter=2.2){
       const box = new THREE.Box3().setFromObject(obj);
-      const size = box.getSize(new THREE.Vector3()).length() || 1;
+      const sizeV = box.getSize(new THREE.Vector3());
+      const maxDim = Math.max(sizeV.x, sizeV.y, sizeV.z) || 1;
       const center = box.getCenter(new THREE.Vector3());
       obj.position.sub(center);
-      obj.scale.setScalar(targetDiameter / size);
+      obj.scale.setScalar(targetDiameter / maxDim);
       obj.rotation.set(0.2, 0.6, 0);
     }
 
-    // Ladda OBJ (fil i repo-roten)
+    // Ladda OBJ (fil i repo-roten – namnet är skiftlägeskänsligt!)
     const OBJ_URL = new URL('Thirty3_Live_Logo.obj', window.location.href).toString();
     const loader = new THREE.OBJLoader();
     loader.load(
@@ -183,9 +185,8 @@
       (obj)=>{
         obj.traverse(m=>{
           if(m.isMesh){
-            m.material = new THREE.MeshStandardMaterial({
-              color:0xe7eceb, metalness:.2, roughness:.35
-            });
+            // Eftersom ingen MTL – ge ett material
+            m.material = new THREE.MeshStandardMaterial({ color:0xe7eceb, metalness:.2, roughness:.35 });
           }
         });
         fitAndCenter(obj);
