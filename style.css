@@ -36,30 +36,29 @@ html, body{
 /* ===============================
    Header / Topbar (centrerad meny + tunt rutnät)
 =================================*/
-.topbar{
-  position:fixed; top:0; left:0; right:0; height:56px;
-  z-index:9999;
+/* ===== TOPPMENY med bara horisontella linjer ===== */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  z-index: 9999;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  display:flex; align-items:center; justify-content:center;
-
-  /* tunn, transparent bar */
-  background:rgba(0,0,0,.18);
-  backdrop-filter:blur(2px);
-  border-bottom:1px solid var(--line);
-
-  /* SUBTILT RUTNÄT – glesare linjer */
+  /* Endast horisontella linjer */
   background-image:
     repeating-linear-gradient(
-      to right,
-      rgba(255,255,255,.06) 0 1px,
-      transparent 1px 36px
-    ),
-    repeating-linear-gradient(
       to bottom,
-      rgba(255,255,255,.06) 0 1px,
-      transparent 1px 36px
+      rgba(255,255,255,0.08) 0,
+      rgba(255,255,255,0.08) 1px,
+      transparent 1px,
+      transparent 40px
     );
-  background-blend-mode:overlay;
+  background-blend-mode: overlay;
 }
 
 /* 3D-logga (vänster hörn) */
