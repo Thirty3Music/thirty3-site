@@ -16,24 +16,24 @@
 </head>
 <body class="home">
 
-  <!-- ✅ TOPPMENY -->
+  <!-- TOPPMENY -->
   <header class="topbar">
-  <!-- Vänstra hörnet: 3D loggan -->
-  <div id="logo3d-wrap">
-    <canvas id="logo3d"></canvas>
-  </div>
+    <!-- Vänstra hörnet: 3D-logga -->
+    <div id="logo3d-wrap">
+      <canvas id="logo3d"></canvas>
+    </div>
 
-  <!-- Högra hörnet: länkar -->
-  <nav>
-    <a href="https://www.instagram.com/_thirty3_/" target="_blank">INSTAGRAM</a>
-    <a href="https://soundcloud.com/thirty_3" target="_blank">SOUNDCLOUD</a>
-    <a href="https://www.youtube.com/@thirty3473" target="_blank">YOUTUBE</a>
-    <a href="work.html">WORK</a>
-    <a href="#contact">CONTACT</a>
-  </nav>
-</header>
+    <!-- Högra hörnet: länkar -->
+    <nav>
+      <a href="https://www.instagram.com/_thirty3_/" target="_blank">INSTAGRAM</a>
+      <a href="https://soundcloud.com/thirty_3" target="_blank">SOUNDCLOUD</a>
+      <a href="https://www.youtube.com/@thirty3473" target="_blank">YOUTUBE</a>
+      <a href="work-test.html">WORK</a>
+      <a href="#contact">CONTACT</a>
+    </nav>
+  </header>
 
-  <!-- ✅ HUVUDINNEHÅLL -->
+  <!-- HUVUDINNEHÅLL -->
   <main>
     <div class="video-wrapper">
       <video autoplay muted loop playsinline preload="auto" class="bg-video" id="bg-video">
@@ -52,7 +52,7 @@
     </div>
   </main>
 
-  <!-- ✅ FOOTER -->
+  <!-- FOOTER -->
   <footer id="contact">
     <p class="glitch-text" data-text="send a signal" onclick="glitchAndShow(this)">send a signal</p>
     <div id="contactLinks">
@@ -61,8 +61,9 @@
     </div>
   </footer>
 
-  <!-- ✅ SCRIPT -->
+  <!-- SCRIPT -->
   <script>
+    // Typing intro
     const text = "sound over style – emotion over ego – music that says what I don't";
     const target = document.getElementById("typing-text");
     let index = 0;
@@ -73,83 +74,73 @@
         setTimeout(typeChar, 40);
       }
     }
-    window.addEventListener("load", () => {
-      setTimeout(typeChar, 1500);
-    });
+    window.addEventListener("load", () => setTimeout(typeChar, 1500));
 
-    function isMobile() {
-      return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    }
-
-    function enterSite() {
+    // Mobile overlay
+    function isMobile(){ return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent); }
+    function enterSite(){
       const overlay = document.getElementById('mobileOverlay');
       overlay.classList.add('fade-out');
-      setTimeout(() => {
-        overlay.style.display = 'none';
-        document.getElementById('bg-video').play();
-      }, 500);
+      setTimeout(()=>{ overlay.style.display='none'; document.getElementById('bg-video').play(); }, 500);
     }
-
     window.addEventListener("DOMContentLoaded", () => {
-      if (isMobile()) {
-        document.getElementById("mobileOverlay").style.display = "flex";
-      }
+      if (isMobile()) document.getElementById("mobileOverlay").style.display = "flex";
     });
 
-    function glitchAndShow(el) {
+    // Glitch + reveal contacts
+    function glitchAndShow(el){
       el.classList.add("glitching");
-      setTimeout(() => {
+      setTimeout(()=>{
         el.classList.remove("glitching");
         const links = document.getElementById("contactLinks");
-        links.style.opacity = 1;
-        links.style.height = "auto";
+        links.style.opacity = 1; links.style.height = "auto";
       }, 400);
     }
   </script>
 
-  <!-- ✅ 3D LOGO -->
+  <!-- 3D LOGO -->
   <script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
   <script src="https://unpkg.com/three@0.159.0/examples/js/loaders/OBJLoader.js"></script>
   <script>
-    (function(){
-      const wrap = document.getElementById('logo3d');
-      if(!wrap) return;
+  (function(){
+    const wrap = document.getElementById('logo3d');
+    if(!wrap) return;
 
-      const scene = new THREE.Scene();
-      const cam = new THREE.PerspectiveCamera(35, wrap.clientWidth / wrap.clientHeight, 0.1, 100);
-      cam.position.set(0, 0, 6);
+    const scene = new THREE.Scene();
+    const cam = new THREE.PerspectiveCamera(35, wrap.clientWidth / wrap.clientHeight, 0.1, 100);
+    cam.position.set(0, 0, 6);
 
-      const renderer = new THREE.WebGLRenderer({ canvas: wrap, alpha: true, antialias: true });
-      function resize(){
-        const w = wrap.clientWidth, h = wrap.clientHeight;
-        renderer.setSize(w, h, false);
-        cam.aspect = w / h; cam.updateProjectionMatrix();
-      }
-      resize(); window.addEventListener('resize', resize);
+    const renderer = new THREE.WebGLRenderer({ canvas: wrap, alpha: true, antialias: true });
+    function resize(){
+      const w = wrap.clientWidth, h = wrap.clientHeight;
+      renderer.setSize(w, h, false);
+      cam.aspect = w / h; cam.updateProjectionMatrix();
+    }
+    resize(); window.addEventListener('resize', resize);
 
-      scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-      const dir = new THREE.DirectionalLight(0xffffff, 0.9);
-      dir.position.set(2, 3, 4); scene.add(dir);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+    const dir = new THREE.DirectionalLight(0xffffff, 0.9);
+    dir.position.set(2, 3, 4); scene.add(dir);
 
-      const loader = new THREE.OBJLoader();
-      loader.load('assets/Thirty3_Live_Logo.obj', (obj)=>{
-        obj.traverse(m=>{
-          if(m.isMesh){
-            m.material = new THREE.MeshStandardMaterial({ color: 0xe7eceb, metalness: .2, roughness: .35 });
-          }
-        });
-        obj.scale.set(0.9,0.9,0.9);
-        obj.rotation.set(0.2, 0.6, 0);
-        scene.add(obj);
-
-        function tick(){
-          obj.rotation.y += 0.01;
-          renderer.render(scene, cam);
-          requestAnimationFrame(tick);
+    const loader = new THREE.OBJLoader();
+    // Laddar från repo-root
+    loader.load('Thirty3_Live_Logo.obj', (obj)=>{
+      obj.traverse(m=>{
+        if(m.isMesh){
+          m.material = new THREE.MeshStandardMaterial({ color: 0xe7eceb, metalness: .2, roughness: .35 });
         }
-        tick();
       });
-    })();
+      obj.scale.set(0.9,0.9,0.9);
+      obj.rotation.set(0.2, 0.6, 0);
+      scene.add(obj);
+
+      (function tick(){
+        obj.rotation.y += 0.01;
+        renderer.render(scene, cam);
+        requestAnimationFrame(tick);
+      })();
+    });
+  })();
   </script>
 </body>
 </html>
