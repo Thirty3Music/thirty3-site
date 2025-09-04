@@ -431,3 +431,31 @@ body.home{ padding-top:60px !important; }
 /* gör duken större + över allt */
 #logo3d-wrap{position:absolute;left:20px;top:8px;width:96px;height:64px;z-index:10001}
 #logo3d{width:100%;height:100%;display:block}
+
+/* topbar – tunn, grå, centrering */
+.topbar{
+  position:fixed; top:0; left:0; right:0; height:60px;
+  z-index:9999; background:transparent;
+  display:flex; align-items:center; justify-content:center;
+}
+
+.topbar nav{
+  display:flex; gap:24px; align-items:center;
+}
+
+.topbar nav a{
+  color:#cfd3d2; text-decoration:none; font-weight:500;
+  letter-spacing:.06em; font-size:14px;
+  padding:10px 2px;                 /* smal “tab” */
+  border:none; background:transparent;
+  border-bottom:1px solid rgba(255,255,255,.25); /* tunn linje */
+  transition:color .2s, border-color .2s;
+}
+
+.topbar nav a:hover{
+  color:#fff; border-bottom-color:#fff;
+}
+
+/* loggans canvas i vänstra hörnet (liten) */
+#logo3d-wrap{position:absolute; left:20px; top:10px; width:90px; height:60px; z-index:10001;}
+#logo3d{width:100%; height:100%; display:block;}
