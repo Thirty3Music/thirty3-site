@@ -215,3 +215,23 @@ body.work{ overflow-y:auto; background:#000; }
   #logo3d-wrap{ display:none; } /* dölj 3D-logga på små skärmar */
   body.home{ padding-top:50px; }
 }
+
+
+/* Centrera och justera main-content */
+.content {
+  position: absolute;
+  top: 45%;              /* tidigare 50% */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 2;
+}
+
+/* Avstånd mellan titel, subtitle och intro */
+.glitch-title {
+  margin-bottom: 6px;    /* tajtare mellanrum */
+}
+
+.subtitle {
+  margin-bottom: 12px;   /* lite mindre avstånd innan intro-texten */
+}
