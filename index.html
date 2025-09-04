@@ -106,71 +106,63 @@
     function glitchAndShow(el){ el.classList.add("glitching"); setTimeout(()=>{ el.classList.remove("glitching"); const links=document.getElementById("contactLinks"); links.style.opacity=1; links.style.height="auto"; },400); }
   </script>
 
-  <!-- 3D LOGO (one set, no duplicates) -->
-  <script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
+ <!-- 3D LOGO (one set, no duplicates) -->
+<script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
 <script src="https://unpkg.com/three@0.159.0/examples/js/loaders/OBJLoader.js"></script>
 <script>
 (function(){
   const cvs = document.getElementById('logo3d');
   if(!cvs) return;
 
+  // Scen & kamera
   const scene = new THREE.Scene();
-  const cam = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+  const cam = new THREE.PerspectiveCamera(35, cvs.clientWidth/cvs.clientHeight, 0.1, 100);
   cam.position.set(0,0,6);
 
+  // Renderer
   const renderer = new THREE.WebGLRenderer({canvas:cvs, alpha:true, antialias:true});
-
   function resize(){
-    const w = cvs.clientWidth || 96, h = cvs.clientHeight || 64;
-    renderer.setSize(w, h, false);
-    cam.aspect = w/h; cam.updateProjectionMatrix();
+    const w = cvs.clientWidth, h = cvs.clientHeight;
+    renderer.setSize(w,h,false);
+    cam.aspect = w/h;
+    cam.updateProjectionMatrix();
   }
-  resize(); window.addEventListener('resize', resize);
+  resize();
+  window.addEventListener('resize', resize);
 
-  scene.add(new THREE.AmbientLight(0xffffff,0.8));
-  const dir = new THREE.DirectionalLight(0xffffff,0.9); dir.position.set(2,3,4); scene.add(dir);
+  // Ljussättning
+  scene.add(new THREE.AmbientLight(0xffffff,0.7));
+  const dir = new THREE.DirectionalLight(0xffffff,0.9);
+  dir.position.set(2,3,4);
+  scene.add(dir);
 
-  // Fallback-kub så du ser om renderern funkar
-  const fallback = new THREE.Mesh(
-    new THREE.BoxGeometry(1,1,1),
-    new THREE.MeshStandardMaterial({color:0x888888, metalness:.2, roughness:.6, wireframe:false})
-  );
-  scene.add(fallback);
-
-  function tick(){
-    fallback.rotation.y += 0.02;
-    renderer.render(scene, cam);
-    requestAnimationFrame(tick);
-  }
-  tick();
-
-  // Försök ladda loggan
+  // Ladda OBJ-loggan
   const loader = new THREE.OBJLoader();
   loader.load(
-    'Thirty3_Live_Logo.obj',
+    './Thirty3_Live_Logo.obj',
     (obj)=>{
-      // ersätt fallback med riktiga loggan
-      scene.remove(fallback);
       obj.traverse(m=>{
         if(m.isMesh){
-          m.material = new THREE.MeshStandardMaterial({ color:0xe7eceb, metalness:.2, roughness:.35 });
+          m.material = new THREE.MeshStandardMaterial({
+            color: 0xe7eceb,
+            metalness: 0.2,
+            roughness: 0.35
+          });
         }
       });
       obj.scale.set(0.9,0.9,0.9);
       obj.rotation.set(0.2,0.6,0);
       scene.add(obj);
-      (function spin(){ obj.rotation.y += 0.01; renderer.render(scene,cam); requestAnimationFrame(spin); })();
+
+      // Rotation
+      (function spin(){
+        obj.rotation.y += 0.01;
+        renderer.render(scene,cam);
+        requestAnimationFrame(spin);
+      })();
     },
     undefined,
-    (err)=>{
-      // visa fel på sidan om OBJ ej hittas
-      const msg = document.createElement('div');
-      msg.textContent = 'Logo OBJ kunde inte laddas';
-      msg.style.cssText = 'position:fixed;left:20px;top:72px;color:#f88;font:12px monospace;z-index:10002';
-      document.body.appendChild(msg);
-      console.error('OBJ load error', err);
-    }
+    (err)=>{ console.error("OBJ load error", err); }
   );
 })();
 </script>
-   
