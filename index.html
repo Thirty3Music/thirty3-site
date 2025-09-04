@@ -14,16 +14,21 @@
   <title>THIRTY3</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <header>
+<body class="home">
+
+  <!-- ✅ TOPPMENY -->
+  <header class="topbar">
     <nav>
       <a href="https://www.instagram.com/_thirty3_/" target="_blank">INSTAGRAM</a>
-      <a href="https://open.spotify.com/artist/5ysVz3lhJomLapuhp6WVaQ?si=zXLmS2hBQxaxp_-K9jrkCA" target="_blank">SPOTIFY</a>
       <a href="https://soundcloud.com/thirty_3" target="_blank">SOUNDCLOUD</a>
       <a href="https://www.youtube.com/@thirty3473" target="_blank">YOUTUBE</a>
+      <a href="work.html">WORK</a>
+      <a href="#contact">CONTACT</a>
     </nav>
+    <div id="logo3d-wrap"><canvas id="logo3d"></canvas></div>
   </header>
 
+  <!-- ✅ HUVUDINNEHÅLL -->
   <main>
     <div class="video-wrapper">
       <video autoplay muted loop playsinline preload="auto" class="bg-video" id="bg-video">
@@ -42,8 +47,8 @@
     </div>
   </main>
 
-  <!-- ✅ Enda FOOTER -->
-  <footer>
+  <!-- ✅ FOOTER -->
+  <footer id="contact">
     <p class="glitch-text" data-text="send a signal" onclick="glitchAndShow(this)">send a signal</p>
     <div id="contactLinks">
       <a href="mailto:thirty3music@gmail.com">→ thirty3music@gmail.com</a>
@@ -51,6 +56,7 @@
     </div>
   </footer>
 
+  <!-- ✅ SCRIPT -->
   <script>
     const text = "sound over style – emotion over ego – music that says what I don't";
     const target = document.getElementById("typing-text");
@@ -94,6 +100,51 @@
         links.style.height = "auto";
       }, 400);
     }
+  </script>
+
+  <!-- ✅ 3D LOGO -->
+  <script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.159.0/examples/js/loaders/OBJLoader.js"></script>
+  <script>
+    (function(){
+      const wrap = document.getElementById('logo3d');
+      if(!wrap) return;
+
+      const scene = new THREE.Scene();
+      const cam = new THREE.PerspectiveCamera(35, wrap.clientWidth / wrap.clientHeight, 0.1, 100);
+      cam.position.set(0, 0, 6);
+
+      const renderer = new THREE.WebGLRenderer({ canvas: wrap, alpha: true, antialias: true });
+      function resize(){
+        const w = wrap.clientWidth, h = wrap.clientHeight;
+        renderer.setSize(w, h, false);
+        cam.aspect = w / h; cam.updateProjectionMatrix();
+      }
+      resize(); window.addEventListener('resize', resize);
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+      const dir = new THREE.DirectionalLight(0xffffff, 0.9);
+      dir.position.set(2, 3, 4); scene.add(dir);
+
+      const loader = new THREE.OBJLoader();
+      loader.load('assets/Thirty3_Live_Logo.obj', (obj)=>{
+        obj.traverse(m=>{
+          if(m.isMesh){
+            m.material = new THREE.MeshStandardMaterial({ color: 0xe7eceb, metalness: .2, roughness: .35 });
+          }
+        });
+        obj.scale.set(0.9,0.9,0.9);
+        obj.rotation.set(0.2, 0.6, 0);
+        scene.add(obj);
+
+        function tick(){
+          obj.rotation.y += 0.01;
+          renderer.render(scene, cam);
+          requestAnimationFrame(tick);
+        }
+        tick();
+      });
+    })();
   </script>
 </body>
 </html>
