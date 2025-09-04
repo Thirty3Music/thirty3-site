@@ -16,16 +16,35 @@
 
   <!-- Minimal toppbar-stil som överstyr gammal vänstermeny -->
   <style>
-    .topbar{position:fixed;top:0;left:0;right:0;height:60px;z-index:10;background:transparent;}
-    #logo3d-wrap{position:absolute;left:20px;top:10px;width:60px;height:40px}
-    #logo3d{width:100%;height:100%;display:block}
-    .topbar nav{position:absolute;left:50%;top:14px;transform:translateX(-50%);display:flex;gap:28px}
-    .topbar nav a{color:#fff;text-decoration:none;font-size:14px;letter-spacing:.08em;font-weight:500;background:transparent;border:none;padding:6px 0;transition:color .25s}
-    .topbar nav a:hover{color:#aaa}
-    body.home{padding-top:60px}
-  </style>
-</head>
-<body class="home">
+  /* === TOPBAR (centrerad meny) === */
+  .topbar{position:fixed;top:0;left:0;right:0;height:60px;z-index:9999;background:transparent;}
+
+  /* Vänster: 3D-logga */
+  #logo3d-wrap{position:absolute;left:20px;top:10px;width:60px;height:40px}
+  #logo3d{width:100%;height:100%;display:block}
+
+  /* Mitten: meny — nollställ ALLT arv från gamla nav-regler */
+  .topbar nav{
+    all: unset;                     /* <- viktigt: slår ut gamla regler */
+    position: fixed !important;
+    top: 14px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; gap: 28px;
+    z-index: 10000;
+  }
+  .topbar nav a{
+    all: unset;
+    color: #fff !important;
+    cursor: pointer;
+    font-size: 14px; letter-spacing: .08em; font-weight: 500;
+    padding: 6px 0;
+    transition: color .25s;
+  }
+  .topbar nav a:hover{ color:#aaa !important; }
+
+  /* Ge plats under topbaren */
+  body.home{ padding-top:60px !important; }
+</style>
 
   <!-- TOPPMENY -->
   <header class="topbar">
