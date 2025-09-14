@@ -87,7 +87,7 @@
 </head>
 
 <body class="work">
-  <!-- TOPPMENY (använder din style.css) -->
+  <!-- TOPPMENY -->
   <header class="topbar">
     <nav>
       <a href="https://www.instagram.com/_thirty3_/" target="_blank">INSTAGRAM</a>
@@ -130,129 +130,172 @@
     </div>
   </dialog>
 
+  <!-- PAGE SCRIPT -->
   <script>
-const PLACEHOLDER = 'image00015.jpeg'; // lämna som i filen
+    const PLACEHOLDER = 'image00015.jpeg'; // fallback-bild i repo
 
-const PROJECTS = [
-  /* --- Befintliga --- */
-  {
-    title: "11:59 — Short film",
-    kind: "collab",
-    thumb: "auto",
-    media: { type: "embed", src: "https://player.vimeo.com/video/282178116" },
-    desc: "Sound design & score. Field recordings (hemstad + London).",
-    links: [
-      { label: "Project page", href: "https://petterscholander.com/project/1159" },
-      { label: "Watch (Vimeo)", href: "https://vimeo.com/282178116" }
-    ]
-  },
-  {
-    title: "Dream, girl — Cora Onori",
-    kind: "collab",
-    thumb: "auto",
-    media: { type: "embed", src: "https://www.youtube.com/embed/A9clscLNVi0?start=8" },
-    desc: "Produced by THIRTY3. Directed by Moncef Henaien.",
-    links: [
-      { label: "Watch (YouTube)", href: "https://www.youtube.com/watch?v=A9clscLNVi0" },
-      { label: "Listen (SoundCloud)", href: "https://soundcloud.com/coraonori/dream-girl" }
-    ]
-  },
-  {
-    title: "N I T E F I S H — Live (Nordberg)",
-    kind: "live",
-    thumb: "auto",
-    media: { type: "embed", src: "https://www.youtube.com/embed/GDiQughTDqI" },
-    desc: "Live AV: performance, virtuell miljö + live-manipulerat ljud.",
-    links: [
-      { label: "Watch (YouTube)", href: "https://www.youtube.com/watch?v=GDiQughTDqI" }
-    ]
-  },
-  {
-    title: "Barbie Slumlord — N I T E F I S H",
-    kind: "collab",
-    thumb: "auto",
-    media: { type: "embed", src: "https://www.youtube.com/embed/o9cvorFHGos" },
-    desc: "Produced · Mixed · Mastered by THIRTY3.",
-    links: [
-      { label: "Watch (YouTube)", href: "https://www.youtube.com/watch?v=o9cvorFHGos" }
-    ]
-  },
-  {
-    title: "Mitsubishi Facelift — N I T E F I S H",
-    kind: "collab",
-    thumb: PLACEHOLDER,
-    media: { type: "image", src: PLACEHOLDER },
-    desc: "Produced · Mixed · Mastered by THIRTY3.",
-    links: [
-      { label: "Read (Kmag article)", href: "https://kmag.se/2024/06/09/n-i-t-e-f-i-s-h-slapper-singeln-mitsubishi-facelift-fran-kommande-ep/" }
-    ]
-  },
-  {
-    title: "Permaculture Heaven — N I T E F I S H (EP)",
-    kind: "collab",
-    thumb: "auto",
-    media: { 
-      type: "embed",
-      src: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1742669856&visual=true"
-    },
-    desc: "Production (flera spår) · Mix · Master.",
-    links: [
-      { label: "Listen (SoundCloud playlist)", href: "https://soundcloud.com/nitefishofficial/sets/permaculture-heaven-draft-part" }
-    ]
-  },
+    // ===== PROJEKT =====
+    // kind: "solo" | "collab" | "live"
+    // media: { type: "image" | "video" | "embed", src: "..." }
+    // thumb: "auto" = hämta preview från YouTube/Vimeo/SoundCloud
+    const PROJECTS = [
+      {
+        title: "11:59 — Short film",
+        kind: "collab",
+        thumb: "auto",
+        media: { type: "embed", src: "https://player.vimeo.com/video/282178116" },
+        desc: "Sound design & score. Field recordings (hemstad + London).",
+        links: [
+          { label: "Project page", href: "https://petterscholander.com/project/1159" },
+          { label: "Watch (Vimeo)", href: "https://vimeo.com/282178116" }
+        ]
+      },
+      {
+        title: "Dream, girl — Cora Onori",
+        kind: "collab",
+        thumb: "auto",
+        media: { type: "embed", src: "https://www.youtube.com/embed/A9clscLNVi0?start=8" },
+        desc: "Produced by THIRTY3. Directed by Moncef Henaien.",
+        links: [
+          { label: "Watch (YouTube)", href: "https://www.youtube.com/watch?v=A9clscLNVi0" },
+          { label: "Listen (SoundCloud)", href: "https://soundcloud.com/coraonori/dream-girl" }
+        ]
+      },
+      {
+        title: "N I T E F I S H — Live (Nordberg)",
+        kind: "live",
+        thumb: "auto",
+        media: { type: "embed", src: "https://www.youtube.com/embed/GDiQughTDqI" },
+        desc: "Live AV: performance, virtuell miljö + live-manipulerat ljud.",
+        links: [
+          { label: "Watch (YouTube)", href: "https://www.youtube.com/watch?v=GDiQughTDqI" }
+        ]
+      },
+      {
+        title: "Barbie Slumlord — N I T E F I S H",
+        kind: "collab",
+        thumb: "auto",
+        media: { type: "embed", src: "https://www.youtube.com/embed/o9cvorFHGos" },
+        desc: "Produced · Mixed · Mastered by THIRTY3.",
+        links: [
+          { label: "Watch (YouTube)", href: "https://www.youtube.com/watch?v=o9cvorFHGos" }
+        ]
+      },
+      {
+        title: "Mitsubishi Facelift — N I T E F I S H",
+        kind: "collab",
+        thumb: PLACEHOLDER,
+        media: { type: "image", src: PLACEHOLDER },
+        desc: "Produced · Mixed · Mastered by THIRTY3.",
+        links: [
+          { label: "Read (Kmag article)", href: "https://kmag.se/2024/06/09/n-i-t-e-f-i-s-h-slapper-singeln-mitsubishi-facelift-fran-kommande-ep/" }
+        ]
+      },
+      {
+        title: "Permaculture Heaven — N I T E F I S H (EP)",
+        kind: "collab",
+        thumb: "auto",
+        media: { 
+          type: "embed",
+          src: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1742669856&visual=true"
+        },
+        desc: "Production (flera spår) · Mix · Master.",
+        links: [
+          { label: "Listen (SoundCloud playlist)", href: "https://soundcloud.com/nitefishofficial/sets/permaculture-heaven-draft-part" }
+        ]
+      },
 
-  /* --- Nya collabs du skickade --- */
-  {
-    title: "If I Disappear — Nightcall (ft. Thirty3)",
-    kind: "collab",
-    thumb: "auto",
-    media: {
-      type: "embed",
-      src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nightcallofficial/if-i-disappear&visual=true"
-    },
-    desc: "Feature: Thirty3.",
-    links: [
-      { label: "Listen (SoundCloud)", href: "https://soundcloud.com/nightcallofficial/if-i-disappear" }
-    ]
-  },
-  {
-    title: "Stuck — Nightcall (ft. Thirty3)",
-    kind: "collab",
-    thumb: "auto",
-    media: {
-      type: "embed",
-      src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nightcallofficial/lycka-ft-thirty3&visual=true"
-    },
-    desc: "Feature: Thirty3.",
-    links: [
-      { label: "Listen (SoundCloud)", href: "https://soundcloud.com/nightcallofficial/lycka-ft-thirty3" }
-    ]
-  },
-  {
-    title: "A short film about us and the environment",
-    kind: "collab",
-    thumb: "auto",
-    media: { type: "embed", src: "https://player.vimeo.com/video/378989999" },
-    desc: "Created by Petter Schölander. Music by Thirty3. Theme: Sokhi & Inzo.",
-    links: [
-      { label: "Watch (Vimeo)", href: "https://vimeo.com/378989999" }
-    ]
-  },
-  {
-    title: "Spider Plant — Mix (entire release)",
-    kind: "collab",
-    thumb: "auto",
-    media: { 
-      type: "embed", 
-      src: "https://www.youtube.com/embed/7r2CZbvWSB8?list=OLAK5uy_nbkkukfRBX66iNm3pulXvNM5WEEPa6K38"
-    },
-    desc: "Mixing on all tracks.",
-    links: [
-      { label: "Listen (YouTube)", href: "https://www.youtube.com/watch?v=7r2CZbvWSB8&list=OLAK5uy_nbkkukfRBX66iNm3pulXvNM5WEEPa6K38" }
-    ]
-  }
-];
-</script>
+      /* --- Nya collabs du skickade --- */
+      {
+        title: "If I Disappear — Nightcall (ft. Thirty3)",
+        kind: "collab",
+        thumb: "auto",
+        media: {
+          type: "embed",
+          src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nightcallofficial/if-i-disappear&visual=true"
+        },
+        desc: "Feature: Thirty3.",
+        links: [
+          { label: "Listen (SoundCloud)", href: "https://soundcloud.com/nightcallofficial/if-i-disappear" }
+        ]
+      },
+      {
+        title: "Stuck — Nightcall (ft. Thirty3)",
+        kind: "collab",
+        thumb: "auto",
+        media: {
+          type: "embed",
+          src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nightcallofficial/lycka-ft-thirty3&visual=true"
+        },
+        desc: "Feature: Thirty3.",
+        links: [
+          { label: "Listen (SoundCloud)", href: "https://soundcloud.com/nightcallofficial/lycka-ft-thirty3" }
+        ]
+      },
+      {
+        title: "A short film about us and the environment",
+        kind: "collab",
+        thumb: "auto",
+        media: { type: "embed", src: "https://player.vimeo.com/video/378989999" },
+        desc: "Created by Petter Schölander. Music by Thirty3. Theme: Sokhi & Inzo.",
+        links: [
+          { label: "Watch (Vimeo)", href: "https://vimeo.com/378989999" }
+        ]
+      },
+      {
+        title: "Spider Plant — Mix (entire release)",
+        kind: "collab",
+        thumb: "auto",
+        media: { 
+          type: "embed", 
+          src: "https://www.youtube.com/embed/7r2CZbvWSB8?list=OLAK5uy_nbkkukfRBX66iNm3pulXvNM5WEEPa6K38"
+        },
+        desc: "Mixing on all tracks.",
+        links: [
+          { label: "Listen (YouTube)", href: "https://www.youtube.com/watch?v=7r2CZbvWSB8&list=OLAK5uy_nbkkukfRBX66iNm3pulXvNM5WEEPa6K38" }
+        ]
+      }
+    ];
+
+    // ===== Helpers: auto-preview =====
+    function youtubeIdFrom(url){
+      const m = url.match(/(?:embed\/|v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+      return m ? m[1] : null;
+    }
+
+    async function resolveThumb(p){
+      if (p.thumb && p.thumb !== 'auto') return p.thumb;
+      if (!p.media || p.media.type !== 'embed') return PLACEHOLDER;
+      const url = p.media.src;
+
+      // YouTube
+      if (/youtube\.com|youtu\.be/.test(url)) {
+        const id = youtubeIdFrom(url);
+        if (id) return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+      }
+
+      // Vimeo
+      if (/vimeo\.com/.test(url)) {
+        try {
+          const vimeoUrl = url.replace('https://player.vimeo.com/video/', 'https://vimeo.com/');
+          const o = await fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(vimeoUrl)}`).then(r=>r.json());
+          if (o && o.thumbnail_url) return o.thumbnail_url;
+        } catch(e){}
+      }
+
+      // SoundCloud
+      if (/soundcloud\.com/.test(url) || /w\.soundcloud\.com\/player/.test(url)) {
+        try {
+          let sc = url;
+          const q = new URL(url).searchParams.get('url');
+          if (q) sc = decodeURIComponent(q);
+          const o = await fetch(`https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(sc)}`).then(r=>r.json());
+          if (o && o.thumbnail_url) return o.thumbnail_url.replace('-t500x500','-t300x300');
+        } catch(e){}
+      }
+
+      return PLACEHOLDER;
+    }
 
     // ===== Render / Filter / Modal =====
     const grid = document.getElementById('wkGrid');
@@ -267,18 +310,19 @@ const PROJECTS = [
       const img = document.createElement('img');
       img.className = 'wk-thumb';
       img.alt = p.title;
-      img.src = PLACEHOLDER; // först fallback
-      // sätt riktig preview när/om vi får tag på den
+      img.src = PLACEHOLDER; // fallback direkt
       resolveThumb(p).then(u => { img.src = u || PLACEHOLDER; }).catch(()=>{});
 
-      const meta = document.createElement('div'); meta.className = 'wk-meta';
+      const meta = document.createElement('div'); 
+      meta.className = 'wk-meta';
       const left = document.createElement('div');
       const kind = document.createElement('div'); kind.className = 'wk-kind'; kind.textContent = p.kind;
       const name = document.createElement('div'); name.className = 'wk-name'; name.textContent = p.title;
       left.append(kind, name);
       meta.append(left);
 
-      const actions = document.createElement('div'); actions.className = 'wk-actions';
+      const actions = document.createElement('div'); 
+      actions.className = 'wk-actions';
       (p.links||[]).forEach(l=>{
         const a = document.createElement('a');
         a.href = l.href; a.target = '_blank'; a.rel='noopener';
