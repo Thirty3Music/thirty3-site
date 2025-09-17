@@ -134,11 +134,11 @@
   <script>
     const PLACEHOLDER = 'image00015.jpeg'; // fallback-bild i repo
 
-    // ===== PROJEKT =====
+    // ===== PROJEKT (manuellt) =====
     // kind: "solo" | "collab" | "live"
     // media: { type: "image" | "video" | "embed", src: "..." }
     // thumb: "auto" = hämta preview från YouTube/Vimeo/SoundCloud
-    const PROJECTS = [
+    let PROJECTS = [
       {
         title: "11:59 — Short film",
         kind: "collab",
@@ -195,7 +195,7 @@
         title: "Permaculture Heaven — N I T E F I S H (EP)",
         kind: "collab",
         thumb: "auto",
-        media: { 
+        media: {
           type: "embed",
           src: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1742669856&visual=true"
         },
@@ -246,8 +246,8 @@
         title: "Spider Plant — Mix (entire release)",
         kind: "collab",
         thumb: "auto",
-        media: { 
-          type: "embed", 
+        media: {
+          type: "embed",
           src: "https://www.youtube.com/embed/7r2CZbvWSB8?list=OLAK5uy_nbkkukfRBX66iNm3pulXvNM5WEEPa6K38"
         },
         desc: "Mixing on all tracks.",
@@ -313,7 +313,7 @@
       img.src = PLACEHOLDER; // fallback direkt
       resolveThumb(p).then(u => { img.src = u || PLACEHOLDER; }).catch(()=>{});
 
-      const meta = document.createElement('div'); 
+      const meta = document.createElement('div');
       meta.className = 'wk-meta';
       const left = document.createElement('div');
       const kind = document.createElement('div'); kind.className = 'wk-kind'; kind.textContent = p.kind;
@@ -321,7 +321,7 @@
       left.append(kind, name);
       meta.append(left);
 
-      const actions = document.createElement('div'); 
+      const actions = document.createElement('div');
       actions.className = 'wk-actions';
       (p.links||[]).forEach(l=>{
         const a = document.createElement('a');
@@ -393,8 +393,41 @@
     modal.addEventListener('click', (e)=>{ if(e.target.hasAttribute('data-close')) modal.removeAttribute('open'); });
     document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') modal.removeAttribute('open'); });
 
-    // Init
+    // Init (rendera manuellt först)
     render();
+
+    // ===== HÄMTA AUTO-DATA och MERGA =====
+    function sameProject(a,b){
+      const at = (a.title||'').trim().toLowerCase();
+      const bt = (b.title||'').trim().toLowerCase();
+      if (at && bt && at === bt) return true;
+      const am = a.media?.src || '';
+      const bm = b.media?.src || '';
+      return am && bm && am === bm;
+    }
+    function sanitize(p){
+      // gör om enklare format till vårt schema om det behövs
+      const media = typeof p.media === 'string' ? { type:'embed', src:p.media } : p.media || { type:'image', src:PLACEHOLDER };
+      return {
+        title: p.title || 'Untitled',
+        kind: p.kind || 'collab',
+        thumb: p.thumb || 'auto',
+        media,
+        desc: p.desc || '',
+        links: Array.isArray(p.links) ? p.links : []
+      };
+    }
+
+    fetch('data/projects.json', { cache:'no-store' })
+      .then(r => r.ok ? r.json() : [])
+      .then(auto => {
+        if (!Array.isArray(auto)) return;
+        auto.map(sanitize).forEach(p=>{
+          if (!PROJECTS.some(q => sameProject(q,p))) PROJECTS.push(p);
+        });
+        render(); // rendera om med auto-objekten
+      })
+      .catch(()=>{ /* tyst fel om filen inte finns än */ });
   </script>
 </body>
 </html>
