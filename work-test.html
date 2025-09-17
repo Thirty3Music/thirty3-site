@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>THIRTY3 — Work</title>
-  <meta name="description" content="THIRTY3 work: solo projects, collaborations, live/AV."/>
+  <title>Thirty3 – Work</title>
   <link rel="stylesheet" href="style.css"/>
 
   <style>
@@ -14,12 +13,13 @@
       --chipHover:rgba(255,255,255,.12);
       --line:rgba(255,255,255,.12);
       --bgGlass:rgba(0,0,0,.25);
-      --accent:#57e2d6; /* title color */
-      --ink:#e7eceb;
+      --accent:#57e2d6;      /* rubrikfärg */
+      --ink:#e7eceb;         /* ljus text i kort */
     }
     body.work{ overflow-y:auto; background:#000; padding-top:56px; }
 
     /* Hero */
+    header h1{ display:none; } /* vi kör vår hero-rubrik istället */
     .wk-hero{ max-width:1100px; margin:48px auto 18px; padding:0 20px; }
     .wk-eyebrow{ color:var(--muted); letter-spacing:.18em; font-size:12px; margin:0 0 8px; text-transform:uppercase; opacity:.8; }
     .wk-title{ font-size:clamp(28px,3.5vw,42px); margin:0 0 10px; letter-spacing:.04em; color:var(--accent); }
@@ -59,7 +59,7 @@
     .wk-thumb{ aspect-ratio:16/10; object-fit:cover; width:100%; display:block; filter:contrast(.98) saturate(.95) brightness(.9); }
     .wk-meta{ display:flex; justify-content:space-between; align-items:center; padding:12px 14px; }
     .wk-kind{ font-size:11px; color:var(--muted); letter-spacing:.16em; text-transform:uppercase; }
-    .wk-name{ font-size:15px; letter-spacing:.02em; color:var(--ink); } /* keep light */
+    .wk-name{ font-size:15px; letter-spacing:.02em; color:var(--ink); }
 
     .wk-actions{ display:flex; gap:8px; padding:0 14px 14px; }
     .wk-chip{ border:1px solid var(--line); background:var(--chip); color:#fff; font-size:12px; padding:6px 8px; border-radius:6px; text-decoration:none; transition:background .12s ease, border-color .12s ease; }
@@ -129,131 +129,317 @@
 
   <script>
 /* =========================================================
-   THIRTY3 — Work grid (renskrivet)
-   - Manuella projekt (redigerbara nedan)
+   THIRTY3 — Work grid
+   - Manuella projekt (nedan)
    - Auto-merge från /data/auto-projects.json (Bandcamp/SoundCloud)
    - Filter + Modal + auto-preview (YT/Vimeo/SC)
    ========================================================= */
 
 const PLACEHOLDER = 'image00015.jpeg'; // fallback-bild i repo
 
-/* ============ MANUELLA PROJEKT ============ */
-/* kind: "solo" | "collab" | "live"
-   media: { type: "image" | "video" | "embed", src: "..." }
-   thumb: "auto" = försök hämta preview (YT/Vimeo/SC) via oEmbed/id  */
+/* ============ MANUELLA PROJEKT (din + mina tidigare) ============ */
 let PROJECTS = [
+  /* ------ SOLO (från din lista) ------ */
   {
-    title: "11:59 — Short film",
+    title: "Two Souls",
+    kind: "solo",
+    thumb: "https://i1.sndcdn.com/artworks-000306356448-vpqdsq-t500x500.jpg",
+    media: { type:"image", src:"https://i1.sndcdn.com/artworks-000306356448-vpqdsq-t500x500.jpg" },
+    desc: "",
+    links: [
+      { label:"View on Bandcamp", href:"https://thirty3.bandcamp.com/album/two-souls" }
+    ]
+  },
+  {
+    title: "Memories of Noise",
+    kind: "solo",
+    thumb: PLACEHOLDER,
+    media: { type:"image", src: PLACEHOLDER },
+    desc: "",
+    links: [
+      { label:"View on Bandcamp", href:"https://thirty3.bandcamp.com/album/memories-of-noise" }
+    ]
+  },
+  {
+    title: "The Call Below",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1538212192&visual=true" },
+    desc: "",
+    links: [
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/the-call-below" },
+      { label:"View on Bandcamp", href:"https://thirty3.bandcamp.com/track/the-call-below" }
+    ]
+  },
+  {
+    title: "Nex",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1136193032&visual=true" },
+    desc: "",
+    links: [
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/nex" },
+      { label:"View on Bandcamp", href:"https://thirty3.bandcamp.com/track/nex" }
+    ]
+  },
+  {
+    title: "Chain Hole",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1205385934&visual=true" },
+    desc: "",
+    links: [
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/chain-hole" },
+      { label:"View on Bandcamp", href:"https://thirty3.bandcamp.com/track/chain-hole" }
+    ]
+  },
+  {
+    title: "Wander’s Odyssey",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1122334455&visual=true" },
+    desc: "",
+    links: [
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/wanderers-odyssey" },
+      { label:"View on Bandcamp", href:"https://thirty3.bandcamp.com/track/wanderers-odyssey" }
+    ]
+  },
+  {
+    title: "Astral Drift",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1122334456&visual=true" },
+    desc: "",
+    links: [
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/astral-drift" }
+    ]
+  },
+  {
+    title: "Radiant Desire",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1122334457&visual=true" },
+    desc: "",
+    links: [
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/radiant-desire" }
+    ]
+  },
+  {
+    title: "Eternal EVA",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1122334458&visual=true" },
+    desc: "",
+    links: [
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/eternal-eva" }
+    ]
+  },
+  {
+    title: "Lide",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1122334459&visual=true" },
+    desc: "",
+    links: [
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/lide" }
+    ]
+  },
+  {
+    title: "Esper",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1122334460&visual=true" },
+    desc: "",
+    links: [
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/esper" }
+    ]
+  },
+  {
+    title: "Chasning Cars in the heat way",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1122334461&visual=true" },
+    desc: "",
+    links: [
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/chasning-cars-in-the-heat-way" }
+    ]
+  },
+  {
+    title: "southstar – Miss You (Thirty3 Remix)",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1587849301&visual=true" },
+    desc: "Remix of “Miss You” by southstar — darker Drum & Bass / Breakbeat vibe.",
+    links: [
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/southstar-miss-you-remix-1" }
+    ]
+  },
+  {
+    title: "COBRAH – BRAND NEW BITCH (Thirty3 Remix)",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1555364388&visual=true" },
+    desc: "My take on COBRAH’s “Brand New Bitch”.",
+    links: [
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/brand-new-bitch-thirty3-remix" }
+    ]
+  },
+  {
+    title: "Bedroom – In My Head (Thirty3 Remix)",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1418526644&visual=true" },
+    desc: "",
+    links: [
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/bedroom-in-my-head-thirty3-remix" }
+    ]
+  },
+  {
+    title: "Yung Lean – Ghost Town (feat. Travis Scott) [Thirty3 Remix]",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1372827192&visual=true" },
+    desc: "",
+    links: [
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/yung-lean-ghost-town-feat-travis-scott-thirty3-remix" }
+    ]
+  },
+  {
+    title: "Lykke Li – Possibility (Thirty3 Remix)",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1372827201&visual=true" },
+    desc: "",
+    links: [
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/lykke-li-possibility-thirty3-remix" }
+    ]
+  },
+  {
+    title: "Escape (Thirty3 Remix)",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1486394976&visual=true" },
+    desc: "",
+    links: [
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/escape-thirty3-remix" }
+    ]
+  },
+  {
+    title: "Thirty3 — Latest tracks",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3&visual=true" },
+    desc: "Profile player from SoundCloud.",
+    links: [
+      { label:"Visit SoundCloud", href:"https://soundcloud.com/thirty_3" }
+    ]
+  },
+
+  /* ------ COLLABS (mina tidigare + dina) ------ */
+  {
+    title: "Club Hub — Thirty3, N I T E F I S H",
     kind: "collab",
     thumb: "auto",
-    media: { type: "embed", src: "https://player.vimeo.com/video/282178116" },
-    desc: "Sound design & score. Field recordings (hometown + London).",
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1493335473&visual=true" },
+    desc: "",
     links: [
-      { label: "Project page", href: "https://petterscholander.com/project/1159" },
-      { label: "Watch (Vimeo)", href: "https://vimeo.com/282178116" }
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/club-hub" },
+      { label:"Bandcamp", href:"https://nitefishofficial.bandcamp.com/track/club-hub" }
     ]
   },
   {
     title: "Dream, girl — Cora Onori",
     kind: "collab",
     thumb: "auto",
-    media: { type: "embed", src: "https://www.youtube.com/embed/A9clscLNVi0?start=8" },
+    media: { type:"embed", src:"https://www.youtube.com/embed/A9clscLNVi0?start=8" },
     desc: "Produced by THIRTY3. Directed by Moncef Henaien.",
     links: [
-      { label: "Watch (YouTube)", href: "https://www.youtube.com/watch?v=A9clscLNVi0" },
-      { label: "Listen (SoundCloud)", href: "https://soundcloud.com/coraonori/dream-girl" }
+      { label:"Watch (YouTube)", href:"https://www.youtube.com/watch?v=A9clscLNVi0" },
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/coraonori/dream-girl" }
     ]
   },
   {
-    title: "N I T E F I S H — Live (Nordberg)",
-    kind: "live",
-    thumb: "auto",
-    media: { type: "embed", src: "https://www.youtube.com/embed/GDiQughTDqI" },
-    desc: "Live AV: performance, virtual environment + live-manipulated audio.",
-    links: [
-      { label: "Watch (YouTube)", href: "https://www.youtube.com/watch?v=GDiQughTDqI" }
-    ]
-  },
-  {
-    title: "Barbie Slumlord — N I T E F I S H",
+    title: "11:59 — Short film",
     kind: "collab",
     thumb: "auto",
-    media: { type: "embed", src: "https://www.youtube.com/embed/o9cvorFHGos" },
-    desc: "Produced · Mixed · Mastered by THIRTY3.",
+    media: { type:"embed", src:"https://player.vimeo.com/video/282178116" },
+    desc: "Sound design & score. Field recordings (hemstad + London).",
     links: [
-      { label: "Watch (YouTube)", href: "https://www.youtube.com/watch?v=o9cvorFHGos" }
-    ]
-  },
-  {
-    title: "Mitsubishi Facelift — N I T E F I S H",
-    kind: "collab",
-    thumb: PLACEHOLDER,
-    media: { type: "image", src: PLACEHOLDER },
-    desc: "Produced · Mixed · Mastered by THIRTY3.",
-    links: [
-      { label: "Read (Kmag article)", href: "https://kmag.se/2024/06/09/n-i-t-e-f-i-s-h-slapper-singeln-mitsubishi-facelift-fran-kommande-ep/" }
-    ]
-  },
-  {
-    title: "Permaculture Heaven — N I T E F I S H (EP)",
-    kind: "collab",
-    thumb: "auto",
-    media: { 
-      type: "embed",
-      src: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1742669856&visual=true"
-    },
-    desc: "Production (several tracks) · Mix · Master.",
-    links: [
-      { label: "Listen (SoundCloud playlist)", href: "https://soundcloud.com/nitefishofficial/sets/permaculture-heaven-draft-part" }
+      { label:"Project page", href:"https://petterscholander.com/project/1159" },
+      { label:"Watch (Vimeo)", href:"https://vimeo.com/282178116" }
     ]
   },
   {
     title: "If I Disappear — Nightcall (ft. Thirty3)",
     kind: "collab",
     thumb: "auto",
-    media: {
-      type: "embed",
-      src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nightcallofficial/if-i-disappear&visual=true"
-    },
+    media: { type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nightcallofficial/if-i-disappear&visual=true" },
     desc: "Feature: Thirty3.",
     links: [
-      { label: "Listen (SoundCloud)", href: "https://soundcloud.com/nightcallofficial/if-i-disappear" }
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/nightcallofficial/if-i-disappear" }
     ]
   },
   {
-    title: "Stuck — Nightcall (ft. Thirty3)",
+    title: "Mitsubishi Facelift — N I T E F I S H",
+    kind: "collab",
+    thumb: PLACEHOLDER,
+    media: { type:"image", src: PLACEHOLDER },
+    desc: "Produced · Mixed · Mastered by THIRTY3.",
+    links: [
+      { label:"Read (Kmag article)", href:"https://kmag.se/2024/06/09/n-i-t-e-f-i-s-h-slapper-singeln-mitsubishi-facelift-fran-kommande-ep/" }
+    ]
+  },
+  {
+    title: "Mislay — Thirty3, Lidnesty",
     kind: "collab",
     thumb: "auto",
-    media: {
-      type: "embed",
-      src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nightcallofficial/lycka-ft-thirty3&visual=true"
-    },
-    desc: "Feature: Thirty3.",
+    media: { type:"embed", src:"https://www.youtube.com/embed/lmnopqrstuv" },
+    desc: "",
     links: [
-      { label: "Listen (SoundCloud)", href: "https://soundcloud.com/nightcallofficial/lycka-ft-thirty3" }
+      { label:"Watch (YouTube)", href:"https://www.youtube.com/watch?v=lmnopqrstuv" },
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/mislay-feat-lidnesty" }
     ]
   },
   {
     title: "A short film about us and the environment",
     kind: "collab",
     thumb: "auto",
-    media: { type: "embed", src: "https://player.vimeo.com/video/378989999" },
+    media: { type:"embed", src:"https://player.vimeo.com/video/378989999" },
     desc: "Created by Petter Schölander. Music by Thirty3. Theme: Sokhi & Inzo.",
     links: [
-      { label: "Watch (Vimeo)", href: "https://vimeo.com/378989999" }
+      { label:"Watch (Vimeo)", href:"https://vimeo.com/378989999" }
     ]
   },
   {
     title: "Spider Plant — Mix (entire release)",
     kind: "collab",
     thumb: "auto",
-    media: { 
-      type: "embed", 
-      src: "https://www.youtube.com/embed/7r2CZbvWSB8?list=OLAK5uy_nbkkukfRBX66iNm3pulXvNM5WEEPa6K38"
-    },
+    media: { type:"embed", src:"https://www.youtube.com/embed/7r2CZbvWSB8?list=OLAK5uy_nbkkukfRBX66iNm3pulXvNM5WEEPa6K38" },
     desc: "Mixing on all tracks.",
     links: [
-      { label: "Listen (YouTube)", href: "https://www.youtube.com/watch?v=7r2CZbvWSB8&list=OLAK5uy_nbkkukfRBX66iNm3pulXvNM5WEEPa6K38" }
+      { label:"Listen (YouTube)", href:"https://www.youtube.com/watch?v=7r2CZbvWSB8&list=OLAK5uy_nbkkukfRBX66iNm3pulXvNM5WEEPa6K38" }
+    ]
+  },
+
+  /* ------ LIVE ------ */
+  {
+    title: "N I T E F I S H — Live (Nordberg)",
+    kind: "live",
+    thumb: "auto",
+    media: { type:"embed", src:"https://www.youtube.com/embed/GDiQughTDqI" },
+    desc: "Live AV: performance, virtuell miljö + live-manipulerat ljud.",
+    links: [
+      { label:"Watch (YouTube)", href:"https://www.youtube.com/watch?v=GDiQughTDqI" }
+    ]
+  },
+  {
+    title: "The Call Below — Official Visual",
+    kind: "solo",
+    thumb: "auto",
+    media: { type:"embed", src:"https://www.youtube.com/embed/XYZ12345678" },
+    desc: "Official music video.",
+    links: [
+      { label:"Watch (YouTube)", href:"https://www.youtube.com/watch?v=XYZ12345678" }
     ]
   }
 ];
@@ -298,7 +484,7 @@ async function resolveThumb(p){
   return PLACEHOLDER;
 }
 
-/* ============ RENDER: grid/kort ============ */
+/* ============ RENDER / FILTER / MODAL ============ */
 const grid = document.getElementById('wkGrid');
 const tabs = [...document.querySelectorAll('.wk-tab')];
 let current = 'all';
@@ -311,7 +497,7 @@ function createCard(p){
   const img = document.createElement('img');
   img.className = 'wk-thumb';
   img.alt = p.title;
-  img.src = PLACEHOLDER; // fallback först
+  img.src = PLACEHOLDER;
   resolveThumb(p).then(u => { img.src = u || PLACEHOLDER; }).catch(()=>{});
 
   const meta = document.createElement('div'); 
@@ -353,7 +539,7 @@ tabs.forEach(btn=>{
   });
 });
 
-/* ============ MODAL ============ */
+/* Modal */
 const modal = document.getElementById('wkModal');
 const preview = document.getElementById('wkPreview');
 const titleEl = document.getElementById('wkTitle');
@@ -393,14 +579,14 @@ function openModal(p){
 modal.addEventListener('click', (e)=>{ if(e.target.hasAttribute('data-close')) modal.removeAttribute('open'); });
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') modal.removeAttribute('open'); });
 
-/* ============ AUTO-MERGE: /data/auto-projects.json ============ */
+/* ============ AUTO-MERGE från /data/auto-projects.json ============ */
 async function loadAutoProjects() {
   try {
     const res = await fetch('data/auto-projects.json?v=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error('No auto-projects.json yet');
     const auto = await res.json();
 
-    // dedupe på titel (case-insensitive), behåll första förekomster
+    // dedupe på titel (case-insensitive), behåll första
     const seen = new Set();
     function dedupe(list){
       const out = [];
@@ -413,17 +599,18 @@ async function loadAutoProjects() {
       return out;
     }
 
-    // Låt auto-data hamna först (nyast högst), följt av dina manuella
-    PROJECTS = dedupe([ ...auto, ...PROJECTS ]);
-    console.log(`Auto merge OK: ${auto.length} items from /data/auto-projects.json`);
+    PROJECTS = dedupe([ ...auto, ...PROJECTS ]);  // auto överst
+    console.log(`Auto merge OK: ${auto.length} items`);
   } catch (e) {
     console.warn('Auto data not loaded:', e.message);
   }
 }
 
-/* ============ BOOT ============ */
+/* Boot */
 (async function boot(){
-  await loadAutoProjects();   // hämtar och merge:ar auto-data (om finns)
-  render();                   // bygger griden
+  await loadAutoProjects();
+  render();
 })();
-</script>
+  </script>
+</body>
+</html>
