@@ -1,0 +1,62 @@
+[
+  {
+    "title": "Two Souls",
+    "kind": "solo",
+    "thumb": "image00015.jpeg",
+    "media": { "type": "image", "src": "image00015.jpeg" },
+    "desc": "Single released on Bandcamp.",
+    "links": [
+      { "label": "View on Bandcamp", "href": "https://thirty3.bandcamp.com/" }
+    ]
+  },
+  {
+    "title": "Esper",
+    "kind": "solo",
+    "thumb": "image00015.jpeg",
+    "media": { "type": "image", "src": "image00015.jpeg" },
+    "desc": "Single released on Bandcamp.",
+    "links": [
+      { "label": "View on Bandcamp", "href": "https://thirty3.bandcamp.com/" }
+    ]
+  },
+  {
+    "title": "Memories of Noise",
+    "kind": "solo",
+    "thumb": "image00015.jpeg",
+    "media": { "type": "image", "src": "image00015.jpeg" },
+    "desc": "Release on Bandcamp.",
+    "links": [
+      { "label": "View on Bandcamp", "href": "https://thirty3.bandcamp.com/" }
+    ]
+  },
+  {
+    "title": "The Call Below",
+    "kind": "solo",
+    "thumb": "image00015.jpeg",
+    "media": { "type": "image", "src": "image00015.jpeg" },
+    "desc": "Release on Bandcamp.",
+    "links": [
+      { "label": "View on Bandcamp", "href": "https://thirty3.bandcamp.com/" }
+    ]
+  },
+  {
+    "title": "Nex",
+    "kind": "solo",
+    "thumb": "image00015.jpeg",
+    "media": { "type": "image", "src": "image00015.jpeg" },
+    "desc": "Release on Bandcamp.",
+    "links": [
+      { "label": "View on Bandcamp", "href": "https://thirty3.bandcamp.com/" }
+    ]
+  },
+  {
+    "title": "Club Hub — Thirty3, N I T E F I S H",
+    "kind": "collab",
+    "thumb": "image00015.jpeg",
+    "media": { "type": "image", "src": "image00015.jpeg" },
+    "desc": "Collaboration release on Bandcamp.",
+    "links": [
+      { "label": "View on Bandcamp", "href": "https://thirty3.bandcamp.com/" }
+    ]
+  }
+]
