@@ -14,24 +14,20 @@
       --chipHover:rgba(255,255,255,.12);
       --line:rgba(255,255,255,.12);
       --bgGlass:rgba(0,0,0,.25);
-      --accent:#69d5cf;            /* NEW: teal accent for headings */
+      --accent:#57e2d6; /* rubrikfärg */
+      --ink:#e7eceb;
     }
     body.work{ overflow-y:auto; background:#000; padding-top:56px; }
 
     /* Hero */
     .wk-hero{ max-width:1100px; margin:48px auto 18px; padding:0 20px; }
-    .wk-eyebrow{
-      color:var(--accent);          /* NEW */
-      letter-spacing:.18em; font-size:12px;
-      margin:0 0 8px; text-transform:uppercase; opacity:.9;
-    }
+    .wk-eyebrow{ color:var(--muted); letter-spacing:.18em; font-size:12px; margin:0 0 8px; text-transform:uppercase; opacity:.8; }
     .wk-title{
-      color:var(--accent);          /* NEW */
-      text-shadow:0 0 12px rgba(105,213,207,.18); /* subtle glow */
       font-size:clamp(28px,3.5vw,42px);
       margin:0 0 10px; letter-spacing:.04em;
+      color:var(--accent); /* <-- tydlig färg */
     }
-    .wk-sub{ color:#dfe4e6; opacity:.85; margin:0 0 22px; line-height:1.5; max-width:70ch; }
+    .wk-sub{ color:#dfe4e6; opacity:.85; margin:0 0 22px; line-height:1.5; }
 
     /* Filter tabs */
     .wk-tabs{
@@ -67,7 +63,7 @@
     .wk-thumb{ aspect-ratio:16/10; object-fit:cover; width:100%; display:block; filter:contrast(.98) saturate(.95) brightness(.9); }
     .wk-meta{ display:flex; justify-content:space-between; align-items:center; padding:12px 14px; }
     .wk-kind{ font-size:11px; color:var(--muted); letter-spacing:.16em; text-transform:uppercase; }
-    .wk-name{ font-size:15px; letter-spacing:.02em; }
+    .wk-name{ font-size:15px; letter-spacing:.02em; color:var(--ink); } /* <-- inte svart */
 
     .wk-actions{ display:flex; gap:8px; padding:0 14px 14px; }
     .wk-chip{ border:1px solid var(--line); background:var(--chip); color:#fff; font-size:12px; padding:6px 8px; border-radius:6px; text-decoration:none; transition:background .12s ease, border-color .12s ease; }
@@ -87,7 +83,7 @@
     .wk-preview{ background:#0b0f11; display:grid; place-items:center; min-height:280px; }
     .wk-preview img, .wk-preview video, .wk-preview iframe{ width:100%; height:100%; object-fit:cover; border:0; }
     .wk-detail{ padding:18px 18px 20px; display:flex; flex-direction:column; gap:10px; }
-    .wk-detail h3{ margin:2px 0 2px; letter-spacing:.02em; }
+    .wk-detail h3{ margin:2px 0 2px; letter-spacing:.02em; color:var(--ink); }
     .wk-detail p{ margin:0; color:#dfe4e6; opacity:.86; line-height:1.5; }
     .wk-detail .wk-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
 
@@ -97,7 +93,7 @@
 </head>
 
 <body class="work">
-  <!-- TOP BAR (reuses your global styles) -->
+  <!-- TOPPMENY -->
   <header class="topbar">
     <nav>
       <a href="https://www.instagram.com/_thirty3_/" target="_blank">INSTAGRAM</a>
@@ -110,7 +106,7 @@
 
   <!-- HERO -->
   <section class="wk-hero">
-    <p class="wk-eyebrow">Selected</p>
+    <p class="wk-eyebrow">SELECTED</p>
     <h1 class="wk-title">Work</h1>
     <p class="wk-sub">Solo pieces, collaborations and live/visual projects.</p>
 
@@ -142,10 +138,12 @@
 
   <!-- PAGE SCRIPT -->
   <script>
-    const PLACEHOLDER = 'image00015.jpeg'; // local fallback image
+    const PLACEHOLDER = 'image00015.jpeg'; // fallback-bild i repo
 
-    /* ===== Initial projects (manual) ===== */
-    const PROJECTS = [
+    /* =======================
+       Manuella projekt (exempel)
+       ======================= */
+    let PROJECTS = [
       {
         title: "11:59 — Short film",
         kind: "collab",
@@ -173,137 +171,81 @@
         kind: "live",
         thumb: "auto",
         media: { type: "embed", src: "https://www.youtube.com/embed/GDiQughTDqI" },
-        desc: "Live AV: performance, virtual environment + live-processed audio.",
+        desc: "Live AV: performance, virtual environment + live-manipulated audio.",
         links: [
           { label: "Watch (YouTube)", href: "https://www.youtube.com/watch?v=GDiQughTDqI" }
         ]
-      },
-      {
-        title: "Barbie Slumlord — N I T E F I S H",
-        kind: "collab",
-        thumb: "auto",
-        media: { type: "embed", src: "https://www.youtube.com/embed/o9cvorFHGos" },
-        desc: "Produced · Mixed · Mastered by THIRTY3.",
-        links: [
-          { label: "Watch (YouTube)", href: "https://www.youtube.com/watch?v=o9cvorFHGos" }
-        ]
-      },
-      {
-        title: "Mitsubishi Facelift — N I T E F I S H",
-        kind: "collab",
-        thumb: PLACEHOLDER,
-        media: { type: "image", src: PLACEHOLDER },
-        desc: "Produced · Mixed · Mastered by THIRTY3.",
-        links: [
-          { label: "Read (Kmag article)", href: "https://kmag.se/2024/06/09/n-i-t-e-f-i-s-h-slapper-singeln-mitsubishi-facelift-fran-kommande-ep/" }
-        ]
-      },
-      {
-        title: "Permaculture Heaven — N I T E F I S H (EP)",
-        kind: "collab",
-        thumb: "auto",
-        media: { 
-          type: "embed",
-          src: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1742669856&visual=true"
-        },
-        desc: "Production (multiple tracks) · Mix · Master.",
-        links: [
-          { label: "Listen (SoundCloud playlist)", href: "https://soundcloud.com/nitefishofficial/sets/permaculture-heaven-draft-part" }
-        ]
-      },
-      /* New collabs you gave */
-      {
-        title: "If I Disappear — Nightcall (ft. Thirty3)",
-        kind: "collab",
-        thumb: "auto",
-        media: {
-          type: "embed",
-          src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nightcallofficial/if-i-disappear&visual=true"
-        },
-        desc: "Feature: Thirty3.",
-        links: [
-          { label: "Listen (SoundCloud)", href: "https://soundcloud.com/nightcallofficial/if-i-disappear" }
-        ]
-      },
-      {
-        title: "Stuck — Nightcall (ft. Thirty3)",
-        kind: "collab",
-        thumb: "auto",
-        media: {
-          type: "embed",
-          src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nightcallofficial/lycka-ft-thirty3&visual=true"
-        },
-        desc: "Feature: Thirty3.",
-        links: [
-          { label: "Listen (SoundCloud)", href: "https://soundcloud.com/nightcallofficial/lycka-ft-thirty3" }
-        ]
-      },
-      {
-        title: "A short film about us and the environment",
-        kind: "collab",
-        thumb: "auto",
-        media: { type: "embed", src: "https://player.vimeo.com/video/378989999" },
-        desc: "Created by Petter Schölander. Music by Thirty3. Theme by Sokhi & Inzo.",
-        links: [
-          { label: "Watch (Vimeo)", href: "https://vimeo.com/378989999" }
-        ]
-      },
-      {
-        title: "Spider Plant — Mix (entire release)",
-        kind: "collab",
-        thumb: "auto",
-        media: { 
-          type: "embed", 
-          src: "https://www.youtube.com/embed/7r2CZbvWSB8?list=OLAK5uy_nbkkukfRBX66iNm3pulXvNM5WEEPa6K38"
-        },
-        desc: "Mixing on all tracks.",
-        links: [
-          { label: "Listen (YouTube)", href: "https://www.youtube.com/watch?v=7r2CZbvWSB8&list=OLAK5uy_nbkkukfRBX66iNm3pulXvNM5WEEPa6K38" }
-        ]
       }
+      // …(behåll/addera fler manuella om du vill)
     ];
 
-    /* ===== Auto-preview helpers ===== */
+    /* =======================
+       Auto: läs in /data/auto-projects.json
+       (Bandcamp/SoundCloud m.m.)
+       ======================= */
+    async function loadAutoProjects(){
+      try{
+        const res = await fetch('data/auto-projects.json', { cache:'no-store' });
+        if(!res.ok) throw new Error(res.status);
+        const auto = await res.json();
+        if(Array.isArray(auto) && auto.length){
+          // pushar allt i slutet så ordning i filen behålls
+          PROJECTS = PROJECTS.concat(auto);
+        }
+      }catch(e){
+        console.warn('Kunde inte läsa data/auto-projects.json', e);
+      }
+    }
+
+    /* =======================
+       Preview-hjälpare
+       ======================= */
     function youtubeIdFrom(url){
-      const m = url.match(/(?:embed\/|v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+      const m = url?.match(/(?:embed\/|v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
       return m ? m[1] : null;
     }
 
     async function resolveThumb(p){
+      // 1) explicit thumb (absolut/relativ URL)
       if (p.thumb && p.thumb !== 'auto') return p.thumb;
-      if (!p.media || p.media.type !== 'embed') return PLACEHOLDER;
-      const url = p.media.src;
 
-      // YouTube
-      if (/youtube\.com|youtu\.be/.test(url)) {
-        const id = youtubeIdFrom(url);
-        if (id) return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
-      }
+      // 2) auto
+      if (p.media?.type === 'embed') {
+        const url = p.media.src || '';
 
-      // Vimeo
-      if (/vimeo\.com/.test(url)) {
-        try {
-          const vimeoUrl = url.replace('https://player.vimeo.com/video/', 'https://vimeo.com/');
-          const o = await fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(vimeoUrl)}`).then(r=>r.json());
-          if (o && o.thumbnail_url) return o.thumbnail_url;
-        } catch(e){}
-      }
+        // YouTube
+        if (/youtube\.com|youtu\.be/.test(url)) {
+          const id = youtubeIdFrom(url);
+          if (id) return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+        }
 
-      // SoundCloud
-      if (/soundcloud\.com/.test(url) || /w\.soundcloud\.com\/player/.test(url)) {
-        try {
-          let sc = url;
-          const q = new URL(url).searchParams.get('url');
-          if (q) sc = decodeURIComponent(q);
-          const o = await fetch(`https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(sc)}`).then(r=>r.json());
-          if (o && o.thumbnail_url) return o.thumbnail_url.replace('-t500x500','-t300x300');
-        } catch(e){}
+        // Vimeo
+        if (/vimeo\.com/.test(url)) {
+          try {
+            const vimeoUrl = url.replace('https://player.vimeo.com/video/', 'https://vimeo.com/');
+            const o = await fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(vimeoUrl)}`).then(r=>r.json());
+            if (o?.thumbnail_url) return o.thumbnail_url;
+          } catch(e){}
+        }
+
+        // SoundCloud (iframe/visual widget brukar laddas i modal – men om du vill ha thumb):
+        if (/soundcloud\.com|w\.soundcloud\.com/.test(url)) {
+          try {
+            let sc = url;
+            const q = new URL(url).searchParams.get('url');
+            if (q) sc = decodeURIComponent(q);
+            const o = await fetch(`https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(sc)}`).then(r=>r.json());
+            if (o?.thumbnail_url) return o.thumbnail_url.replace('-t500x500','-t300x300');
+          } catch(e){}
+        }
       }
 
       return PLACEHOLDER;
     }
 
-    /* ===== Render / Filter / Modal ===== */
+    /* =======================
+       Render / Filter / Modal
+       ======================= */
     const grid = document.getElementById('wkGrid');
     const tabs = [...document.querySelectorAll('.wk-tab')];
     let current = 'all';
@@ -316,7 +258,7 @@
       const img = document.createElement('img');
       img.className = 'wk-thumb';
       img.alt = p.title;
-      img.src = PLACEHOLDER; // immediate fallback
+      img.src = PLACEHOLDER; // fallback direkt
       resolveThumb(p).then(u => { img.src = u || PLACEHOLDER; }).catch(()=>{});
 
       const meta = document.createElement('div'); 
@@ -381,7 +323,7 @@
         const v = document.createElement('video');
         v.src = p.media.src; v.controls = true; v.playsInline = true;
         preview.appendChild(v);
-      } else if (p.media?.type === 'embed'){
+      } else if (p.media?.type === 'embed' || p.media?.type === 'iframe'){
         const iframe = document.createElement('iframe');
         iframe.src = p.media.src;
         iframe.allow = "autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share";
@@ -399,23 +341,10 @@
     modal.addEventListener('click', (e)=>{ if(e.target.hasAttribute('data-close')) modal.removeAttribute('open'); });
     document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') modal.removeAttribute('open'); });
 
-    // First render manual items
-    render();
-
-    // ===== Auto-data loader (RELATIVE PATH fix) =====
-    // Put your generated file at: /thirty3-site/data/auto-projects.json in the repo
-    (async () => {
-      try {
-        const res = await fetch('data/auto-projects.json', { cache: 'no-store' }); // <— relative, works on Project Pages
-        if (!res.ok) return;
-        const more = await res.json();
-        if (Array.isArray(more) && more.length){
-          PROJECTS.push(...more);
-          render(); // re-render with auto items included
-        }
-      } catch (e) {
-        console.warn('No auto-projects yet (that’s fine).');
-      }
+    // Boot: ladda auto-data och rendera
+    (async function boot(){
+      await loadAutoProjects(); // fyller på PROJECTS med /data/auto-projects.json
+      render();
     })();
   </script>
 </body>
