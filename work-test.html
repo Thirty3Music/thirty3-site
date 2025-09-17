@@ -14,13 +14,22 @@
       --chipHover:rgba(255,255,255,.12);
       --line:rgba(255,255,255,.12);
       --bgGlass:rgba(0,0,0,.25);
+      --accent:#7EE9E2;       /* <<< accentfärgen för rubriker och aktiva flikar */
     }
     body.work{ overflow-y:auto; background:#000; padding-top:56px; }
 
     /* Hero */
     .wk-hero{ max-width:1100px; margin:48px auto 18px; padding:0 20px; }
-    .wk-eyebrow{ color:var(--muted); letter-spacing:.18em; font-size:12px; margin:0 0 8px; text-transform:uppercase; opacity:.8; }
-    .wk-title{ font-size:clamp(28px,3.5vw,42px); margin:0 0 10px; letter-spacing:.04em; }
+    .wk-eyebrow{
+      color:var(--accent);
+      letter-spacing:.18em; font-size:12px; margin:0 0 8px;
+      text-transform:uppercase; opacity:.9;
+    }
+    .wk-title{
+      color:var(--accent);                 /* <<< rubriken inte svart */
+      text-shadow:0 0 24px rgba(126,233,226,.15);
+      font-size:clamp(28px,3.5vw,42px); margin:0 0 10px; letter-spacing:.04em;
+    }
     .wk-sub{ color:#dfe4e6; opacity:.85; margin:0 0 22px; line-height:1.5; max-width:70ch; }
 
     /* Filter tabs */
@@ -35,9 +44,13 @@
       appearance:none; border:1px solid var(--line); background:var(--chip);
       color:#fff; font-size:13px; letter-spacing:.06em; font-weight:600;
       padding:8px 12px; border-radius:4px; cursor:pointer;
-      transition:transform .12s ease, background .12s ease, border-color .12s ease;
+      transition:transform .12s ease, background .12s ease, border-color .12s ease, color .12s ease;
     }
-    .wk-tab[aria-pressed="true"]{ background:var(--chipHover); border-color:#fff; }
+    .wk-tab[aria-pressed="true"]{
+      background:var(--chipHover);
+      border-color:var(--accent);
+      color:var(--accent);                 /* <<< aktiv flik får accentfärg */
+    }
     .wk-tab:hover{ transform:translateY(-1px); }
 
     /* Grid */
@@ -87,7 +100,7 @@
 </head>
 
 <body class="work">
-  <!-- TOPPMENY -->
+  <!-- TOP BAR -->
   <header class="topbar">
     <nav>
       <a href="https://www.instagram.com/_thirty3_/" target="_blank">INSTAGRAM</a>
@@ -100,7 +113,7 @@
 
   <!-- HERO -->
   <section class="wk-hero">
-    <p class="wk-eyebrow">Selected</p>
+    <p class="wk-eyebrow">SELECTED</p>
     <h1 class="wk-title">Work</h1>
     <p class="wk-sub">Solo pieces, collaborations and live/visual projects.</p>
 
@@ -132,19 +145,16 @@
 
   <!-- PAGE SCRIPT -->
   <script>
-    const PLACEHOLDER = 'image00015.jpeg'; // fallback-bild i repo
+    const PLACEHOLDER = 'image00015.jpeg';
 
-    // ===== PROJEKT (manuellt) =====
-    // kind: "solo" | "collab" | "live"
-    // media: { type: "image" | "video" | "embed", src: "..." }
-    // thumb: "auto" = hämta preview från YouTube/Vimeo/SoundCloud
-    let PROJECTS = [
+    /* ---------------- Projects (English) ---------------- */
+    const PROJECTS = [
       {
         title: "11:59 — Short film",
         kind: "collab",
         thumb: "auto",
         media: { type: "embed", src: "https://player.vimeo.com/video/282178116" },
-        desc: "Sound design & score. Field recordings (hemstad + London).",
+        desc: "Sound design & score. Field recordings (hometown + London).",
         links: [
           { label: "Project page", href: "https://petterscholander.com/project/1159" },
           { label: "Watch (Vimeo)", href: "https://vimeo.com/282178116" }
@@ -166,7 +176,7 @@
         kind: "live",
         thumb: "auto",
         media: { type: "embed", src: "https://www.youtube.com/embed/GDiQughTDqI" },
-        desc: "Live AV: performance, virtuell miljö + live-manipulerat ljud.",
+        desc: "Live AV: performance, virtual environment + live-manipulated audio.",
         links: [
           { label: "Watch (YouTube)", href: "https://www.youtube.com/watch?v=GDiQughTDqI" }
         ]
@@ -199,13 +209,11 @@
           type: "embed",
           src: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1742669856&visual=true"
         },
-        desc: "Production (flera spår) · Mix · Master.",
+        desc: "Production (multiple tracks) · Mix · Master.",
         links: [
           { label: "Listen (SoundCloud playlist)", href: "https://soundcloud.com/nitefishofficial/sets/permaculture-heaven-draft-part" }
         ]
       },
-
-      /* --- Nya collabs du skickade --- */
       {
         title: "If I Disappear — Nightcall (ft. Thirty3)",
         kind: "collab",
@@ -237,7 +245,7 @@
         kind: "collab",
         thumb: "auto",
         media: { type: "embed", src: "https://player.vimeo.com/video/378989999" },
-        desc: "Created by Petter Schölander. Music by Thirty3. Theme: Sokhi & Inzo.",
+        desc: "Created by Petter Schölander. Music by Thirty3. Theme by Sokhi & Inzo.",
         links: [
           { label: "Watch (Vimeo)", href: "https://vimeo.com/378989999" }
         ]
@@ -257,12 +265,11 @@
       }
     ];
 
-    // ===== Helpers: auto-preview =====
+    /* ---------------- Auto preview helpers ---------------- */
     function youtubeIdFrom(url){
       const m = url.match(/(?:embed\/|v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
       return m ? m[1] : null;
     }
-
     async function resolveThumb(p){
       if (p.thumb && p.thumb !== 'auto') return p.thumb;
       if (!p.media || p.media.type !== 'embed') return PLACEHOLDER;
@@ -293,11 +300,10 @@
           if (o && o.thumbnail_url) return o.thumbnail_url.replace('-t500x500','-t300x300');
         } catch(e){}
       }
-
       return PLACEHOLDER;
     }
 
-    // ===== Render / Filter / Modal =====
+    /* ---------------- Render / Filter / Modal ---------------- */
     const grid = document.getElementById('wkGrid');
     const tabs = [...document.querySelectorAll('.wk-tab')];
     let current = 'all';
@@ -310,19 +316,17 @@
       const img = document.createElement('img');
       img.className = 'wk-thumb';
       img.alt = p.title;
-      img.src = PLACEHOLDER; // fallback direkt
+      img.src = PLACEHOLDER;
       resolveThumb(p).then(u => { img.src = u || PLACEHOLDER; }).catch(()=>{});
 
-      const meta = document.createElement('div');
-      meta.className = 'wk-meta';
+      const meta = document.createElement('div'); meta.className = 'wk-meta';
       const left = document.createElement('div');
       const kind = document.createElement('div'); kind.className = 'wk-kind'; kind.textContent = p.kind;
       const name = document.createElement('div'); name.className = 'wk-name'; name.textContent = p.title;
       left.append(kind, name);
       meta.append(left);
 
-      const actions = document.createElement('div');
-      actions.className = 'wk-actions';
+      const actions = document.createElement('div'); actions.className = 'wk-actions';
       (p.links||[]).forEach(l=>{
         const a = document.createElement('a');
         a.href = l.href; a.target = '_blank'; a.rel='noopener';
@@ -386,48 +390,14 @@
         im.src = p.media?.src || PLACEHOLDER; im.alt = p.title;
         preview.appendChild(im);
       }
-
       modal.setAttribute('open','');
     }
 
     modal.addEventListener('click', (e)=>{ if(e.target.hasAttribute('data-close')) modal.removeAttribute('open'); });
     document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') modal.removeAttribute('open'); });
 
-    // Init (rendera manuellt först)
-    render();
-
-    // ===== HÄMTA AUTO-DATA och MERGA =====
-    function sameProject(a,b){
-      const at = (a.title||'').trim().toLowerCase();
-      const bt = (b.title||'').trim().toLowerCase();
-      if (at && bt && at === bt) return true;
-      const am = a.media?.src || '';
-      const bm = b.media?.src || '';
-      return am && bm && am === bm;
-    }
-    function sanitize(p){
-      // gör om enklare format till vårt schema om det behövs
-      const media = typeof p.media === 'string' ? { type:'embed', src:p.media } : p.media || { type:'image', src:PLACEHOLDER };
-      return {
-        title: p.title || 'Untitled',
-        kind: p.kind || 'collab',
-        thumb: p.thumb || 'auto',
-        media,
-        desc: p.desc || '',
-        links: Array.isArray(p.links) ? p.links : []
-      };
-    }
-
-    fetch('data/projects.json', { cache:'no-store' })
-      .then(r => r.ok ? r.json() : [])
-      .then(auto => {
-        if (!Array.isArray(auto)) return;
-        auto.map(sanitize).forEach(p=>{
-          if (!PROJECTS.some(q => sameProject(q,p))) PROJECTS.push(p);
-        });
-        render(); // rendera om med auto-objekten
-      })
-      .catch(()=>{ /* tyst fel om filen inte finns än */ });
+    // Initial render (wait for DOM just to be extra safe)
+    window.addEventListener('DOMContentLoaded', render);
   </script>
 </body>
 </html>
