@@ -1,108 +1,145 @@
 // scripts/sync.js
-// Builds data/auto-projects.json from SoundCloud (and leaves Bandcamp parts to you if needed).
+// Node 20+. Körs i Actions. Bygger/uppdaterar data/auto-projects.json med SoundCloud-låtar.
 
-import fs from "node:fs/promises";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+const fs = require('fs/promises');
+const path = require('path');
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const OUT_PATH = path.join(__dirname, "..", "data", "auto-projects.json");
+const OUT_PATH = path.join(__dirname, '..', 'data', 'auto-projects.json');
+const SOUNDLOUD_USER = 'thirty_3';
 
-// --- SETTINGS ---
-const SOUNDCLOUD_USER = "thirty_3";          // <- din SoundCloud-handle
-const PLACEHOLDER = "image00015.jpeg";
+const UA = { 'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36' };
+const PLACEHOLDER = 'image00015.jpeg';
 
-// ---------- helpers ----------
-function tag(text, name) {
-  const re = new RegExp(`<${name}>([\\s\\S]*?)<\\/${name}>`, "i");
-  const m = text.match(re);
-  if (!m) return "";
-  return m[1]
-    .replace(/<!\[CDATA\[/g, "")
-    .replace(/\]\]>/g, "")
-    .trim();
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+async function getHTML(url) {
+  const r = await fetch(url, { headers: UA });
+  if (!r.ok) throw new Error(`Fetch failed ${r.status} ${url}`);
+  return await r.text();
 }
-function attr(text, name) {
-  const re = new RegExp(`${name}="([^"]+)"`);
-  const m = text.match(re);
-  return m ? m[1] : "";
+
+function absolutify(href, base) {
+  try { return new URL(href, base).toString(); } catch { return null; }
 }
-function dedupeByTitle(list) {
-  const m = new Map();
-  for (const p of list) {
-    const k = (p.title || "").trim().toLowerCase();
-    if (!m.has(k)) m.set(k, p);
+
+/** Plocka ut track-länkar från en SoundCloud-sida utan cheerio */
+function extractTrackLinks(html, base) {
+  const out = new Set();
+  // Hämta href="/thirty_3/slug" eller fulla https://soundcloud.com/thirty_3/slug
+  const re = /href="([^"]+)"/g;
+  let m;
+  while ((m = re.exec(html))) {
+    const href = m[1];
+    if (!href) continue;
+    if (!/soundcloud\.com|^\/[^/]/.test(href) && !href.startsWith('/')) continue;
+
+    const abs = absolutify(href, base);
+    if (!abs) continue;
+
+    // Endast dina spår, inte likes, reposts, popular mm.
+    if (!abs.includes(`soundcloud.com/${SOUNDLOUD_USER}/`)) continue;
+    if (abs.includes('/likes') || abs.includes('/reposts') || abs.includes('/popular-tracks') || abs.includes('/sets/')) continue;
+
+    out.add(abs);
   }
-  return [...m.values()];
+  return [...out];
 }
 
-// ---------- SoundCloud via RSS ----------
-async function scrapeSoundCloud() {
-  const rssUrl = `https://soundcloud.com/${SOUNDCLOUD_USER}/sounds.rss`;
-  const res = await fetch(rssUrl, { headers: { "User-Agent": "Mozilla/5.0" } });
-  if (!res.ok) throw new Error(`SC RSS ${res.status}`);
-  const xml = await res.text();
+async function listSoundCloudTrackUrls() {
+  const base = `https://soundcloud.com/${SOUNDLOUD_USER}`;
+  const pages = [`${base}/tracks`, base];
+  const all = new Set();
 
-  const items = [];
-  const itemBlocks = xml.match(/<item>[\s\S]*?<\/item>/gi) || [];
-
-  for (const block of itemBlocks) {
-    const title = tag(block, "title");
-    const link = tag(block, "link"); // canonical track url
-    if (!title || !link) continue;
-
-    // Hoppa över reposts (behåll egna låtar + remixer)
-    // (SoundCloud RSS lägger ändå mest egna; extra filter bara ifall)
-    if (!link.includes(`/` + SOUNDCLOUD_USER + `/`)) {
-      // fortfarande ok om det är collab/feature men vi låter solo-listan ta dina uppladdningar
-      continue;
+  for (const p of pages) {
+    try {
+      const html = await getHTML(p);
+      extractTrackLinks(html, p).forEach(u => all.add(u));
+    } catch (e) {
+      console.warn('Page scrape failed:', p, e.message);
     }
+    await sleep(300);
+  }
+  return [...all];
+}
 
-    // Thumb från enclosure (om finns)
-    let thumb = attr(block, "url") || PLACEHOLDER;
+async function getOEmbed(url) {
+  try {
+    const r = await fetch(`https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(url)}`, { headers: UA });
+    if (!r.ok) throw new Error(`oEmbed ${r.status}`);
+    return await r.json();
+  } catch {
+    return null;
+  }
+}
 
-    // Sätt ihop projektobjekt
+function niceTitle(o, url) {
+  if (o?.title) return o.title.replace(/\s+-\s+SoundCloud$/i, '').trim();
+  try {
+    const slug = decodeURIComponent(new URL(url).pathname.split('/').pop() || '');
+    const human = slug.replace(/[-_]+/g, ' ').trim();
+    return human.charAt(0).toUpperCase() + human.slice(1);
+  } catch {
+    return url;
+  }
+}
+
+function dedupeByTitle(items) {
+  const map = new Map();
+  for (const it of items) {
+    const k = `${(it.title || '').toLowerCase()}|${it.kind || ''}`;
+    if (!map.has(k)) map.set(k, it);
+  }
+  return [...map.values()];
+}
+
+async function scrapeSoundCloud() {
+  const urls = await listSoundCloudTrackUrls();
+  const items = [];
+
+  for (const link of urls) {
+    const o = await getOEmbed(link);
+    const title = niceTitle(o, link);
+    const thumb = o?.thumbnail_url || PLACEHOLDER;
+
     items.push({
       title,
-      kind: "solo", // dina egna låtar (inkl remixes)
-      thumb: "auto",
+      kind: 'solo', // dina egna låtar (inkl remixer)
+      thumb,
       media: {
-        type: "embed",
-        src:
-          "https://w.soundcloud.com/player/?url=" +
-          encodeURIComponent(link) +
-          "&visual=true",
+        type: 'embed',
+        src: `https://w.soundcloud.com/player/?url=${encodeURIComponent(link)}&visual=true`
       },
-      desc: "From SoundCloud.",
-      links: [{ label: "Listen (SoundCloud)", href: link }],
+      desc: 'From SoundCloud.',
+      links: [{ label: 'Listen (SoundCloud)', href: link }]
     });
+
+    await sleep(250); // snällt mot oEmbed
   }
 
-  // dedupe + return
-  return dedupeByTitle(items);
+  return items;
 }
 
-// ---------- MAIN ----------
 async function main() {
-  // 1) hämta SoundCloud
+  // 1) Nya SC-objekt
   const scItems = await scrapeSoundCloud();
 
-  // 2) läs ev befintlig auto-projects.json och slå ihop (för att inte tappa Bandcamp)
+  // 2) Läs ev. befintlig data
   let existing = [];
   try {
-    const old = await fs.readFile(OUT_PATH, "utf8");
+    const old = await fs.readFile(OUT_PATH, 'utf8');
     existing = JSON.parse(old);
-  } catch (_) {}
+  } catch {}
 
+  // 3) Slå ihop & dedupe
   const merged = dedupeByTitle([...existing, ...scItems]);
 
-  // 3) skriv fil
+  // 4) Skriv fil
   await fs.mkdir(path.dirname(OUT_PATH), { recursive: true });
-  await fs.writeFile(OUT_PATH, JSON.stringify(merged, null, 2), "utf8");
+  await fs.writeFile(OUT_PATH, JSON.stringify(merged, null, 2), 'utf8');
   console.log(`Wrote ${merged.length} items -> ${OUT_PATH}`);
 }
 
-main().catch((e) => {
-  console.error(e);
+main().catch(err => {
+  console.error(err);
   process.exit(1);
 });
