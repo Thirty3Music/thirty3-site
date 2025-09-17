@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>THIRTY3 — Work</title>
-  <meta name="description" content="THIRTY3 work: solo projects, collaborations, live/AV."/>
+  <meta name="description" content="THIRTY3 work: solo projects, remixes, collaborations, live/AV."/>
   <link rel="stylesheet" href="style.css"/>
 
   <style>
@@ -14,7 +14,7 @@
       --chipHover:rgba(255,255,255,.12);
       --line:rgba(255,255,255,.12);
       --bgGlass:rgba(0,0,0,.25);
-      --accent:#57e2d6;
+      --accent:#57e2d6; /* title color */
       --ink:#e7eceb;
     }
     body.work{ overflow-y:auto; background:#000; padding-top:56px; }
@@ -64,7 +64,6 @@
     .wk-actions{ display:flex; gap:8px; padding:0 14px 14px; flex-wrap:wrap; }
     .wk-chip{ border:1px solid var(--line); background:var(--chip); color:#fff; font-size:12px; padding:6px 8px; border-radius:6px; text-decoration:none; transition:background .12s ease, border-color .12s ease; }
     .wk-chip:hover{ background:var(--chipHover); border-color:#fff; }
-    .wk-tag{ font-size:11px; opacity:.8; }
 
     /* Modal */
     .wk-modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:10000; }
@@ -103,11 +102,12 @@
   <section class="wk-hero">
     <p class="wk-eyebrow">SELECTED</p>
     <h1 class="wk-title">Work</h1>
-    <p class="wk-sub">Solo pieces, collaborations and live/visual projects.</p>
+    <p class="wk-sub">Solo pieces, remixes, collaborations and live/visual projects.</p>
 
     <div class="wk-tabs" role="tablist" aria-label="Work categories">
       <button class="wk-tab" aria-pressed="true" data-filter="all">All</button>
       <button class="wk-tab" aria-pressed="false" data-filter="solo">Solo Projects</button>
+      <button class="wk-tab" aria-pressed="false" data-filter="remix">Remixes</button>
       <button class="wk-tab" aria-pressed="false" data-filter="collab">Collabs</button>
       <button class="wk-tab" aria-pressed="false" data-filter="live">Live / AV</button>
     </div>
@@ -131,289 +131,399 @@
   <script>
 /* =========================================================
    THIRTY3 — Work grid
-   * Manuella projekt nedan
-   * Auto-merge med /data/auto-projects.json (Bandcamp/SC)
-   * Fasta SoundCloud/YouTube/Vimeo previews med thumbnails
+   - Manual projects list below (incl. Remixes)
+   - Optional auto-merge from /data/auto-projects.json (kept)
+   - SoundCloud/YouTube/Vimeo previews + thumbnails
    ========================================================= */
 
-const PLACEHOLDER = 'image00015.jpeg';
+const PLACEHOLDER = 'image00015.jpeg'; // fallback-bild i repo
 
-/* Helper: bygga SC-embed från vanlig spårlänk */
-const scEmbed = (trackUrl) =>
-  `https://w.soundcloud.com/player/?url=${encodeURIComponent(trackUrl)}&visual=true&auto_play=false`;
-
-/* Helper: thumbnails */
-function youtubeIdFrom(url){
-  const m = (url||'').match(/(?:embed\/|v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
-  return m ? m[1] : null;
-}
-async function resolveThumb(p){
-  // prioritet: explicit thumb != 'auto'
-  if (p.thumb && p.thumb !== 'auto') return p.thumb;
-
-  // SoundCloud — prova oEmbed på track URL
-  const sc = p.links?.soundcloud;
-  if (sc){
-    try{
-      const o = await fetch(`https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(sc)}`).then(r=>r.json());
-      if (o?.thumbnail_url) return o.thumbnail_url.replace('-t500x500','-t300x300');
-    }catch(_){}
-  }
-
-  // YouTube
-  if (p.media?.type === 'embed' && /youtube\.com|youtu\.be/.test(p.media.src||'')){
-    const id = youtubeIdFrom(p.media.src);
-    if (id) return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
-  }
-
-  // Vimeo
-  if (p.media?.type === 'embed' && /vimeo\.com/.test(p.media.src||'')){
-    try{
-      const vimeoUrl = (p.media.src||'').replace('https://player.vimeo.com/video/','https://vimeo.com/');
-      const o = await fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(vimeoUrl)}`).then(r=>r.json());
-      if (o?.thumbnail_url) return o.thumbnail_url;
-    }catch(_){}
-  }
-
-  return PLACEHOLDER;
-}
-
-/* =================== DATA =================== */
-/* NOTE: Alla SC-embeds använder public track-URL => funkar + ger thumbnail */
+/* ============ MANUAL PROJECTS ============ */
+/* kind: "solo" | "remix" | "collab" | "live"
+   media: { type: "image" | "video" | "embed", src: "..." }
+   thumb: "auto" (derive from embed), or url string
+   series: optional grouping label (e.g., "Memories of Noise")
+*/
 let PROJECTS = [
-  /* ------------ COLLABS ------------ */
+  /* ---------- SOLO (key singles/EPs) ---------- */
   {
-    title: "Dream, girl — Cora Onori",
-    kind: "collab",
-    series: "",
+    title: "The Call Below",
+    kind: "solo",
     thumb: "auto",
-    media: { type: "embed", src: "https://www.youtube.com/embed/A9clscLNVi0?start=8" },
-    desc: "Produced by THIRTY3. Directed by Moncef Henaien.",
-    links: {
-      youtube: "https://www.youtube.com/watch?v=A9clscLNVi0",
-      soundcloud: "https://soundcloud.com/coraonori/dream-girl"
-    }
+    media: { type: "embed", src: "https://www.youtube.com/embed/Y_YEgEOXtAM" }, // show MV in modal
+    desc: "Official music video + single.",
+    links: [
+      { label: "Watch (YouTube)", href: "https://youtu.be/Y_YEgEOXtAM" },
+      { label: "Listen (SoundCloud)", href: "https://soundcloud.com/thirty_3/the-call-below" },
+      { label: "View on Bandcamp", href: "https://thirty3.bandcamp.com/track/the-call-below" }
+    ]
   },
   {
-    title: "11:59 — Short film",
-    kind: "collab",
-    series: "",
+    title: "Esper",
+    kind: "solo",
     thumb: "auto",
-    media: { type: "embed", src: "https://player.vimeo.com/video/282178116" },
-    desc: "Sound design & score. Field recordings (hometown + London).",
-    links: {
-      page: "https://petterscholander.com/project/1159",
-      vimeo: "https://vimeo.com/282178116"
-    }
+    media: {
+      type: "embed",
+      src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/esper&visual=true"
+    },
+    desc: "Single.",
+    links: [
+      { label: "Listen (SoundCloud)", href: "https://soundcloud.com/thirty_3/esper" }
+    ]
   },
   {
-    title: "N I T E F I S H — Live (Nordberg)",
-    kind: "live",
-    series: "",
+    title: "Two Souls (EP)",
+    kind: "solo",
     thumb: "auto",
-    media: { type: "embed", src: "https://www.youtube.com/embed/GDiQughTDqI" },
-    desc: "Live AV: performance, virtual environment + live-manipulated audio.",
-    links: {
-      youtube: "https://www.youtube.com/watch?v=GDiQughTDqI"
-    }
-  },
-  {
-    title: "Barbie Slumlord — N I T E F I S H",
-    kind: "collab",
-    series: "",
-    thumb: "auto",
-    media: { type: "embed", src: "https://www.youtube.com/embed/o9cvorFHGos" },
-    desc: "Produced · Mixed · Mastered by THIRTY3.",
-    links: {
-      youtube: "https://www.youtube.com/watch?v=o9cvorFHGos"
-    }
-  },
-  {
-    title: "Mitsubishi Facelift — N I T E F I S H",
-    kind: "collab",
-    series: "Permaculture Heaven",
-    thumb: PLACEHOLDER,
-    media: { type: "image", src: PLACEHOLDER },
-    desc: "Produced · Mixed · Mastered by THIRTY3.",
-    links: {
-      article: "https://kmag.se/2024/06/09/n-i-t-e-f-i-s-h-slapper-singeln-mitsubishi-facelift-fran-kommande-ep/"
-    }
-  },
-  {
-    title: "Permaculture Heaven — N I T E F I S H (EP)",
-    kind: "collab",
-    series: "",
-    thumb: "auto",
-    media: { type: "embed", src: scEmbed("https://soundcloud.com/nitefishofficial/sets/permaculture-heaven-draft-part") },
-    desc: "Production (several tracks) · Mix · Master.",
-    links: {
-      soundcloud: "https://soundcloud.com/nitefishofficial/sets/permaculture-heaven-draft-part"
-    }
-  },
-  {
-    title: "If I Disappear — Nightcall (ft. Thirty3)",
-    kind: "collab",
-    series: "",
-    thumb: "auto",
-    media: { type: "embed", src: scEmbed("https://soundcloud.com/nightcallofficial/if-i-disappear") },
-    desc: "Feature: Thirty3.",
-    links: {
-      soundcloud: "https://soundcloud.com/nightcallofficial/if-i-disappear"
-    }
-  },
-  {
-    title: "Stuck — Nightcall (ft. Thirty3)",
-    kind: "collab",
-    series: "",
-    thumb: "auto",
-    media: { type: "embed", src: scEmbed("https://soundcloud.com/nightcallofficial/lycka-ft-thirty3") },
-    desc: "Feature: Thirty3.",
-    links: {
-      soundcloud: "https://soundcloud.com/nightcallofficial/lycka-ft-thirty3"
-    }
-  },
-  {
-    title: "A short film about us and the environment",
-    kind: "collab",
-    series: "",
-    thumb: "auto",
-    media: { type: "embed", src: "https://player.vimeo.com/video/378989999" },
-    desc: "Created by Petter Schölander. Music by Thirty3. Theme: Sokhi & Inzo.",
-    links: {
-      vimeo: "https://vimeo.com/378989999"
-    }
-  },
-  {
-    title: "Spider Plant — Mix (entire release)",
-    kind: "collab",
-    series: "",
-    thumb: "auto",
-    media: { type: "embed", src: "https://www.youtube.com/embed/7r2CZbvWSB8?list=OLAK5uy_nbkkukfRBX66iNm3pulXvNM5WEEPa6K38" },
-    desc: "Mixing on all tracks.",
-    links: {
-      youtube: "https://www.youtube.com/watch?v=7r2CZbvWSB8&list=OLAK5uy_nbkkukfRBX66iNm3pulXvNM5WEEPa6K38"
-    }
-  },
-  {
-    title: "Club Hub — Thirty3, N I T E F I S H",
-    kind: "collab",
-    series: "",
-    thumb: PLACEHOLDER,
-    media: { type: "image", src: PLACEHOLDER }, /* lägg ev. SC-länk här om du har den */
-    desc: "Single release.",
-    links: {
-      bandcamp: "https://nitefishofficial.bandcamp.com/track/club-hub"
-      // soundcloud: "https://soundcloud.com/nitefishofficial/club-hub" // om detta stämmer, avkommentera + byt media till embed: scEmbed(...)
-    }
+    media: {
+      type: "embed",
+      src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/sets/two-souls&visual=true"
+    },
+    desc: "EP.",
+    links: [
+      { label: "Listen (SoundCloud set)", href: "https://soundcloud.com/thirty_3/sets/two-souls" },
+      { label: "View on Bandcamp", href: "https://thirty3.bandcamp.com/album/two-souls" }
+    ]
   },
 
-  /* ------------ SOLO — “Memories of Noise” serien ------------ */
+  /* ---------- SOLO — Memories of Noise (group) ---------- */
   {
     title: "Eternal EVA",
     kind: "solo",
     series: "Memories of Noise",
     thumb: "auto",
-    media: { type: "embed", src: scEmbed("https://soundcloud.com/thirty_3/eternal-eva") },
-    desc: "",
-    links: {
-      soundcloud: "https://soundcloud.com/thirty_3/eternal-eva"
-    }
+    media: {
+      type: "embed",
+      src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/eternal-eva&visual=true"
+    },
+    desc: "From the ‘Memories of Noise’ series.",
+    links: [
+      { label: "Listen (SoundCloud)", href: "https://soundcloud.com/thirty_3/eternal-eva" },
+      { label: "View set", href: "https://soundcloud.com/thirty_3/sets/memomries-of-noise" }
+    ]
   },
   {
     title: "Astral Drift",
     kind: "solo",
     series: "Memories of Noise",
     thumb: "auto",
-    media: { type: "embed", src: scEmbed("https://soundcloud.com/thirty_3/astral-drift") },
-    desc: "",
-    links: {
-      soundcloud: "https://soundcloud.com/thirty_3/astral-drift"
-    }
+    media: {
+      type: "embed",
+      src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/astral-drift&visual=true"
+    },
+    desc: "From the ‘Memories of Noise’ series.",
+    links: [
+      { label: "Listen (SoundCloud)", href: "https://soundcloud.com/thirty_3/astral-drift" },
+      { label: "View set", href: "https://soundcloud.com/thirty_3/sets/memomries-of-noise" }
+    ]
   },
   {
     title: "Chain Hole",
     kind: "solo",
     series: "Memories of Noise",
     thumb: "auto",
-    media: { type: "embed", src: scEmbed("https://soundcloud.com/thirty_3/chain-hole") },
-    desc: "",
-    links: {
-      soundcloud: "https://soundcloud.com/thirty_3/chain-hole",
-      bandcamp: "https://thirty3.bandcamp.com/track/chain-hole"
-    }
+    media: {
+      type: "embed",
+      src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/chain-hole&visual=true"
+    },
+    desc: "From the ‘Memories of Noise’ series.",
+    links: [
+      { label: "Listen (SoundCloud)", href: "https://soundcloud.com/thirty_3/chain-hole" },
+      { label: "View set", href: "https://soundcloud.com/thirty_3/sets/memomries-of-noise" }
+    ]
   },
   {
     title: "Blendfire",
     kind: "solo",
     series: "Memories of Noise",
     thumb: "auto",
-    media: { type: "embed", src: scEmbed("https://soundcloud.com/thirty_3/blendfire") },
-    desc: "",
-    links: {
-      soundcloud: "https://soundcloud.com/thirty_3/blendfire"
-    }
+    media: {
+      type: "embed",
+      src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/blendfire&visual=true"
+    },
+    desc: "From the ‘Memories of Noise’ series.",
+    links: [
+      { label: "Listen (SoundCloud)", href: "https://soundcloud.com/thirty_3/blendfire" },
+      { label: "View set", href: "https://soundcloud.com/thirty_3/sets/memomries-of-noise" }
+    ]
   },
   {
     title: "Mislay (feat. Lidnesty)",
     kind: "solo",
     series: "Memories of Noise",
     thumb: "auto",
-    media: { type: "embed", src: scEmbed("https://soundcloud.com/thirty_3/mislay-feat-lidnesty") },
-    desc: "",
-    links: {
-      soundcloud: "https://soundcloud.com/thirty_3/mislay-feat-lidnesty"
-    }
+    media: {
+      type: "embed",
+      src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/mislay-feat-lidnesty&visual=true"
+    },
+    desc: "Single with Lidnesty. Music video available.",
+    links: [
+      { label: "Listen (SoundCloud)", href: "https://soundcloud.com/thirty_3/mislay-feat-lidnesty?in=thirty_3/sets/memomries-of-noise" },
+      { label: "Watch (YouTube)", href: "https://youtu.be/tV5tmkoVEO0" },
+      { label: "View set", href: "https://soundcloud.com/thirty_3/sets/memomries-of-noise" }
+    ]
   },
   {
     title: "Digital Soul",
     kind: "solo",
     series: "Memories of Noise",
     thumb: "auto",
-    media: { type: "embed", src: scEmbed("https://soundcloud.com/thirty_3/digital-soul") },
-    desc: "",
-    links: {
-      soundcloud: "https://soundcloud.com/thirty_3/digital-soul"
-    }
+    media: {
+      type: "embed",
+      src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/digital-soul&visual=true"
+    },
+    desc: "From the ‘Memories of Noise’ series.",
+    links: [
+      { label: "Listen (SoundCloud)", href: "https://soundcloud.com/thirty_3/digital-soul" },
+      { label: "View set", href: "https://soundcloud.com/thirty_3/sets/memomries-of-noise" }
+    ]
   },
   {
     title: "Lide",
     kind: "solo",
     series: "Memories of Noise",
     thumb: "auto",
-    media: { type: "embed", src: scEmbed("https://soundcloud.com/thirty_3/lide") },
-    desc: "",
-    links: {
-      soundcloud: "https://soundcloud.com/thirty_3/lide"
-    }
+    media: {
+      type: "embed",
+      src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/lide&visual=true"
+    },
+    desc: "From the ‘Memories of Noise’ series.",
+    links: [
+      { label: "Listen (SoundCloud)", href: "https://soundcloud.com/thirty_3/lide" },
+      { label: "View set", href: "https://soundcloud.com/thirty_3/sets/memomries-of-noise" }
+    ]
   },
   {
     title: "Radiant Desire",
     kind: "solo",
     series: "Memories of Noise",
     thumb: "auto",
-    media: { type: "embed", src: scEmbed("https://soundcloud.com/thirty_3/radiant-desire") },
-    desc: "",
-    links: {
-      soundcloud: "https://soundcloud.com/thirty_3/radiant-desire"
-    }
+    media: {
+      type: "embed",
+      src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/radiant-desire&visual=true"
+    },
+    desc: "From the ‘Memories of Noise’ series.",
+    links: [
+      { label: "Listen (SoundCloud)", href: "https://soundcloud.com/thirty_3/radiant-desire" },
+      { label: "View set", href: "https://soundcloud.com/thirty_3/sets/memomries-of-noise" }
+    ]
   },
   {
     title: "Wanderer’s Odyssey",
     kind: "solo",
     series: "Memories of Noise",
     thumb: "auto",
-    media: { type: "embed", src: scEmbed("https://soundcloud.com/thirty_3/wanderers-odyssey") },
-    desc: "",
-    links: {
-      soundcloud: "https://soundcloud.com/thirty_3/wanderers-odyssey",
-      bandcamp: "https://thirty3.bandcamp.com/track/wanderers-odyssey"
-    }
+    media: {
+      type: "embed",
+      src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/wanderers-odyssey&visual=true"
+    },
+    desc: "From the ‘Memories of Noise’ series.",
+    links: [
+      { label: "Listen (SoundCloud)", href: "https://soundcloud.com/thirty_3/wanderers-odyssey" },
+      { label: "View set", href: "https://soundcloud.com/thirty_3/sets/memomries-of-noise" }
+    ]
+  },
+
+  /* ---------- REMIXES (own tab) ---------- */
+  {
+    title: "southstar — Miss You (Thirty3 Remix)",
+    kind: "remix",
+    thumb: "auto",
+    media:{ type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/southstar-miss-you-remix-1&visual=true" },
+    desc: "Darker Drum & Bass / Breakbeat vibe.",
+    links:[ { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/southstar-miss-you-remix-1" } ]
+  },
+  {
+    title: "COBRAH — BRAND NEW BITCH (Thirty3 Remix)",
+    kind: "remix",
+    thumb: "auto",
+    media:{ type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/brand-new-bitch-thirty3-remix&visual=true" },
+    desc: "Alt-pop into a new landscape.",
+    links:[ { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/brand-new-bitch-thirty3-remix" } ]
+  },
+  {
+    title: "Bedroom — In My Head (Thirty3 Remix)",
+    kind: "remix",
+    thumb: "auto",
+    media:{ type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/bedroom-in-my-head-thirty3-remix&visual=true" },
+    desc:"",
+    links:[ { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/bedroom-in-my-head-thirty3-remix" } ]
+  },
+  {
+    title: "Yung Lean — Ghost Town (feat. Travis Scott) [Thirty3 Remix]",
+    kind: "remix",
+    thumb: "auto",
+    media:{ type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/yung-lean-ghost-town-feat-travis-scott-thirty3-remix&visual=true" },
+    desc:"",
+    links:[ { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/yung-lean-ghost-town-feat-travis-scott-thirty3-remix" } ]
+  },
+  {
+    title: "Lykke Li — Possibility (Thirty3 Remix)",
+    kind: "remix",
+    thumb: "auto",
+    media:{ type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/lykke-li-possibility-thirty3-remix&visual=true" },
+    desc:"",
+    links:[ { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/lykke-li-possibility-thirty3-remix" } ]
+  },
+  {
+    title: "Escape (Thirty3 Remix)",
+    kind: "remix",
+    thumb: "auto",
+    media:{ type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/escape-thirty3-remix&visual=true" },
+    desc:"",
+    links:[ { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/escape-thirty3-remix" } ]
+  },
+
+  /* ---------- COLLABS ---------- */
+  {
+    title: "Club Hub — Thirty3, N I T E F I S H",
+    kind: "collab",
+    thumb: "auto",
+    media:{ type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/club-hub&visual=true" },
+    desc:"",
+    links:[
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/thirty_3/club-hub" },
+      { label:"View on Bandcamp", href:"https://nitefishofficial.bandcamp.com/track/club-hub" }
+    ]
+  },
+  {
+    title: "If I Disappear — Nightcall (ft. Thirty3)",
+    kind: "collab",
+    thumb: "auto",
+    media:{ type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nightcallofficial/if-i-disappear&visual=true" },
+    desc:"Feature: Thirty3.",
+    links:[ { label:"Listen (SoundCloud)", href:"https://soundcloud.com/nightcallofficial/if-i-disappear" } ]
+  },
+  {
+    title: "Stuck — Nightcall (ft. Thirty3)",
+    kind: "collab",
+    thumb: "auto",
+    media:{ type:"embed", src:"https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nightcallofficial/lycka-ft-thirty3&visual=true" },
+    desc:"Feature: Thirty3.",
+    links:[ { label:"Listen (SoundCloud)", href:"https://soundcloud.com/nightcallofficial/lycka-ft-thirty3" } ]
+  },
+  {
+    title: "Dream, girl — Cora Onori",
+    kind: "collab",
+    thumb: "auto",
+    media:{ type:"embed", src:"https://www.youtube.com/embed/A9clscLNVi0?start=8" },
+    desc:"Produced by THIRTY3. Directed by Moncef Henaien.",
+    links:[
+      { label:"Watch (YouTube)", href:"https://www.youtube.com/watch?v=A9clscLNVi0" },
+      { label:"Listen (SoundCloud)", href:"https://soundcloud.com/coraonori/dream-girl" }
+    ]
+  },
+  {
+    title: "11:59 — Short film",
+    kind: "collab",
+    thumb: "auto",
+    media:{ type:"embed", src:"https://player.vimeo.com/video/282178116" },
+    desc:"Sound design & score. Field recordings (hometown + London).",
+    links:[
+      { label:"Project page", href:"https://petterscholander.com/project/1159" },
+      { label:"Watch (Vimeo)", href:"https://vimeo.com/282178116" }
+    ]
+  },
+  {
+    title: "A short film about us and the environment",
+    kind: "collab",
+    thumb: "auto",
+    media:{ type:"embed", src:"https://player.vimeo.com/video/378989999" },
+    desc:"Created by Petter Schölander. Music by Thirty3. Theme: Sokhi & Inzo.",
+    links:[ { label:"Watch (Vimeo)", href:"https://vimeo.com/378989999" } ]
+  },
+  {
+    title: "N I T E F I S H — Live (Nordberg)",
+    kind: "live",
+    thumb: "auto",
+    media:{ type:"embed", src:"https://www.youtube.com/embed/GDiQughTDqI" },
+    desc:"Live AV: performance, virtual environment + live-manipulated audio.",
+    links:[ { label:"Watch (YouTube)", href:"https://www.youtube.com/watch?v=GDiQughTDqI" } ]
+  },
+  {
+    title: "Barbie Slumlord — N I T E F I S H",
+    kind: "collab",
+    thumb: "auto",
+    media:{ type:"embed", src:"https://www.youtube.com/embed/o9cvorFHGos" },
+    desc:"Produced · Mixed · Mastered by THIRTY3.",
+    links:[ { label:"Watch (YouTube)", href:"https://www.youtube.com/watch?v=o9cvorFHGos" } ]
+  },
+  {
+    title: "Mitsubishi Facelift — N I T E F I S H",
+    kind: "collab",
+    thumb: PLACEHOLDER,
+    media:{ type:"image", src: PLACEHOLDER },
+    desc:"Produced · Mixed · Mastered by THIRTY3.",
+    links:[
+      { label:"Read (Kmag article)", href:"https://kmag.se/2024/06/09/n-i-t-e-f-i-s-h-slapper-singeln-mitsubishi-facelift-fran-kommande-ep/" }
+    ]
+  },
+  {
+    title: "Permaculture Heaven — N I T E F I S H (EP)",
+    kind: "collab",
+    thumb: "auto",
+    media:{
+      type:"embed",
+      src:"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1742669856&visual=true"
+    },
+    desc:"Production (several tracks) · Mix · Master.",
+    links:[ { label:"Listen (SoundCloud playlist)", href:"https://soundcloud.com/nitefishofficial/sets/permaculture-heaven-draft-part" } ]
+  },
+  {
+    title: "Spider Plant — Mix (entire release)",
+    kind: "collab",
+    thumb: "auto",
+    media:{ type:"embed", src:"https://www.youtube.com/embed/7r2CZbvWSB8?list=OLAK5uy_nbkkukfRBX66iNm3pulXvNM5WEEPa6K38" },
+    desc:"Mixing on all tracks.",
+    links:[ { label:"Listen (YouTube)", href:"https://www.youtube.com/watch?v=7r2CZbvWSB8&list=OLAK5uy_nbkkukfRBX66iNm3pulXvNM5WEEPa6K38" } ]
   }
 ];
 
-/* =================== RENDER =================== */
-const grid  = document.getElementById('wkGrid');
-const tabs  = [...document.querySelectorAll('.wk-tab')];
+/* ============ Helpers: auto-preview thumbnails ============ */
+function youtubeIdFrom(url){
+  const m = url.match(/(?:embed\/|v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+async function resolveThumb(p){
+  if (p.thumb && p.thumb !== 'auto') return p.thumb;
+  if (!p.media || p.media.type !== 'embed') return PLACEHOLDER;
+  const url = p.media.src || '';
+
+  // YouTube
+  if (/youtube\.com|youtu\.be/.test(url)) {
+    const id = youtubeIdFrom(url);
+    if (id) return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+  }
+
+  // Vimeo
+  if (/vimeo\.com/.test(url)) {
+    try {
+      const vimeoUrl = url.replace('https://player.vimeo.com/video/', 'https://vimeo.com/');
+      const o = await fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(vimeoUrl)}`).then(r=>r.json());
+      if (o && o.thumbnail_url) return o.thumbnail_url;
+    } catch(e){}
+  }
+
+  // SoundCloud
+  if (/soundcloud\.com/.test(url) || /w\.soundcloud\.com\/player/.test(url)) {
+    try {
+      // If it's a soundcloud player URL, pull the underlying track url from ?url=
+      let sc = url;
+      const u = new URL(url);
+      const inner = u.searchParams.get('url');
+      if (inner) sc = decodeURIComponent(inner);
+      const o = await fetch(`https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(sc)}`).then(r=>r.json());
+      if (o && o.thumbnail_url) return o.thumbnail_url.replace('-t500x500','-t300x300');
+    } catch(e){}
+  }
+
+  return PLACEHOLDER;
+}
+
+/* ============ Render / Filter / Modal ============ */
+const grid = document.getElementById('wkGrid');
+const tabs = [...document.querySelectorAll('.wk-tab')];
 let current = 'all';
 
 function createCard(p){
@@ -430,44 +540,19 @@ function createCard(p){
   const meta = document.createElement('div'); 
   meta.className = 'wk-meta';
   const left = document.createElement('div');
-
-  const kind = document.createElement('div'); 
-  kind.className = 'wk-kind'; 
-  kind.textContent = p.kind;
-
-  const name = document.createElement('div'); 
-  name.className = 'wk-name'; 
-  name.textContent = p.title;
-
+  const kind = document.createElement('div'); kind.className = 'wk-kind'; kind.textContent = p.kind;
+  const name = document.createElement('div'); name.className = 'wk-name'; name.textContent = p.title;
   left.append(kind, name);
-
-  // series-tag (t.ex. “Memories of Noise”)
-  if (p.series){
-    const tag = document.createElement('div');
-    tag.className = 'wk-chip wk-tag';
-    tag.textContent = p.series;
-    meta.append(left, tag);
-  } else {
-    meta.append(left);
-  }
+  meta.append(left);
 
   const actions = document.createElement('div'); 
   actions.className = 'wk-actions';
-  if (p.links){
-    for (const [k,href] of Object.entries(p.links)){
-      const a = document.createElement('a');
-      a.href = href; a.target = '_blank'; a.rel='noopener';
-      a.className = 'wk-chip';
-      a.textContent =
-        k === 'soundcloud' ? 'Listen (SoundCloud)' :
-        k === 'youtube'    ? 'Watch (YouTube)'   :
-        k === 'vimeo'      ? 'Watch (Vimeo)'     :
-        k === 'bandcamp'   ? 'View on Bandcamp'  :
-        k === 'page'       ? 'Project page'      :
-        'Open';
-      actions.appendChild(a);
-    }
-  }
+  (p.links||[]).forEach(l=>{
+    const a = document.createElement('a');
+    a.href = l.href; a.target = '_blank'; a.rel='noopener';
+    a.className = 'wk-chip'; a.textContent = l.label;
+    actions.appendChild(a);
+  });
 
   card.append(img, meta, actions);
   card.addEventListener('click', ()=> openModal(p));
@@ -478,9 +563,8 @@ function createCard(p){
 
 function render(){
   grid.innerHTML = '';
-  PROJECTS
-    .filter(p => current==='all' ? true : p.kind===current)
-    .forEach(p => grid.appendChild(createCard(p)));
+  const list = PROJECTS.filter(p => current==='all' ? true : p.kind===current);
+  list.forEach(p => grid.appendChild(createCard(p)));
 }
 
 tabs.forEach(btn=>{
@@ -492,36 +576,26 @@ tabs.forEach(btn=>{
   });
 });
 
-/* =================== MODAL =================== */
-const modal   = document.getElementById('wkModal');
+/* ============ Modal ============ */
+const modal = document.getElementById('wkModal');
 const preview = document.getElementById('wkPreview');
 const titleEl = document.getElementById('wkTitle');
-const descEl  = document.getElementById('wkDesc');
+const descEl = document.getElementById('wkDesc');
 const linksEl = document.getElementById('wkLinks');
 
 function openModal(p){
   titleEl.textContent = p.title;
-  descEl.textContent  = p.desc || '';
-  linksEl.innerHTML   = '';
-
-  if (p.links){
-    for (const [k,href] of Object.entries(p.links)){
-      const a = document.createElement('a');
-      a.href = href; a.target = '_blank'; a.rel='noopener';
-      a.className = 'wk-chip';
-      a.textContent =
-        k === 'soundcloud' ? 'Listen (SoundCloud)' :
-        k === 'youtube'    ? 'Watch (YouTube)'     :
-        k === 'vimeo'      ? 'Watch (Vimeo)'       :
-        k === 'bandcamp'   ? 'View on Bandcamp'    :
-        k === 'page'       ? 'Project page'        :
-        'Open';
-      linksEl.appendChild(a);
-    }
-  }
+  descEl.textContent = p.desc || '';
+  linksEl.innerHTML = '';
+  (p.links||[]).forEach(l=>{
+    const a = document.createElement('a');
+    a.href = l.href; a.target = '_blank'; a.rel='noopener';
+    a.className = 'wk-chip'; a.textContent = l.label;
+    linksEl.appendChild(a);
+  });
 
   preview.innerHTML = '';
-  if (p.media?.type === 'video'){
+  if(p.media?.type === 'video'){
     const v = document.createElement('video');
     v.src = p.media.src; v.controls = true; v.playsInline = true;
     preview.appendChild(v);
@@ -542,28 +616,34 @@ function openModal(p){
 modal.addEventListener('click', (e)=>{ if(e.target.hasAttribute('data-close')) modal.removeAttribute('open'); });
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') modal.removeAttribute('open'); });
 
-/* =================== AUTO-MERGE =================== */
+/* ============ Auto-merge (optional) ============ */
 async function loadAutoProjects() {
   try {
     const res = await fetch('data/auto-projects.json?v=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error('No auto-projects.json yet');
     const auto = await res.json();
 
-    // dedupe på titel (case-insensitive)
     const seen = new Set();
-    PROJECTS = [...auto, ...PROJECTS].filter(p=>{
-      const k = (p.title||'').trim().toLowerCase();
-      if (!k || seen.has(k)) return false;
-      seen.add(k);
-      return true;
-    });
+    function dedupe(list){
+      const out = [];
+      for (const p of list){
+        const k = (p.title || '').trim().toLowerCase();
+        if (!k || seen.has(k)) continue;
+        seen.add(k); out.push(p);
+      }
+      return out;
+    }
+
+    PROJECTS = dedupe([ ...auto, ...PROJECTS ]);
+    console.log(`Auto merge OK: ${auto.length} items`);
   } catch (e) {
     console.warn('Auto data not loaded:', e.message);
   }
 }
 
+/* ============ Boot ============ */
 (async function boot(){
-  await loadAutoProjects();
+  await loadAutoProjects();   // if present
   render();
 })();
   </script>
