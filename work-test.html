@@ -14,21 +14,22 @@
       --chipHover:rgba(255,255,255,.12);
       --line:rgba(255,255,255,.12);
       --bgGlass:rgba(0,0,0,.25);
-      --accent:#7EE9E2;       /* <<< accentfärgen för rubriker och aktiva flikar */
+      --accent:#69d5cf;            /* NEW: teal accent for headings */
     }
     body.work{ overflow-y:auto; background:#000; padding-top:56px; }
 
     /* Hero */
     .wk-hero{ max-width:1100px; margin:48px auto 18px; padding:0 20px; }
     .wk-eyebrow{
-      color:var(--accent);
-      letter-spacing:.18em; font-size:12px; margin:0 0 8px;
-      text-transform:uppercase; opacity:.9;
+      color:var(--accent);          /* NEW */
+      letter-spacing:.18em; font-size:12px;
+      margin:0 0 8px; text-transform:uppercase; opacity:.9;
     }
     .wk-title{
-      color:var(--accent);                 /* <<< rubriken inte svart */
-      text-shadow:0 0 24px rgba(126,233,226,.15);
-      font-size:clamp(28px,3.5vw,42px); margin:0 0 10px; letter-spacing:.04em;
+      color:var(--accent);          /* NEW */
+      text-shadow:0 0 12px rgba(105,213,207,.18); /* subtle glow */
+      font-size:clamp(28px,3.5vw,42px);
+      margin:0 0 10px; letter-spacing:.04em;
     }
     .wk-sub{ color:#dfe4e6; opacity:.85; margin:0 0 22px; line-height:1.5; max-width:70ch; }
 
@@ -44,13 +45,9 @@
       appearance:none; border:1px solid var(--line); background:var(--chip);
       color:#fff; font-size:13px; letter-spacing:.06em; font-weight:600;
       padding:8px 12px; border-radius:4px; cursor:pointer;
-      transition:transform .12s ease, background .12s ease, border-color .12s ease, color .12s ease;
+      transition:transform .12s ease, background .12s ease, border-color .12s ease;
     }
-    .wk-tab[aria-pressed="true"]{
-      background:var(--chipHover);
-      border-color:var(--accent);
-      color:var(--accent);                 /* <<< aktiv flik får accentfärg */
-    }
+    .wk-tab[aria-pressed="true"]{ background:var(--chipHover); border-color:#fff; }
     .wk-tab:hover{ transform:translateY(-1px); }
 
     /* Grid */
@@ -100,7 +97,7 @@
 </head>
 
 <body class="work">
-  <!-- TOP BAR -->
+  <!-- TOP BAR (reuses your global styles) -->
   <header class="topbar">
     <nav>
       <a href="https://www.instagram.com/_thirty3_/" target="_blank">INSTAGRAM</a>
@@ -113,7 +110,7 @@
 
   <!-- HERO -->
   <section class="wk-hero">
-    <p class="wk-eyebrow">SELECTED</p>
+    <p class="wk-eyebrow">Selected</p>
     <h1 class="wk-title">Work</h1>
     <p class="wk-sub">Solo pieces, collaborations and live/visual projects.</p>
 
@@ -145,9 +142,9 @@
 
   <!-- PAGE SCRIPT -->
   <script>
-    const PLACEHOLDER = 'image00015.jpeg';
+    const PLACEHOLDER = 'image00015.jpeg'; // local fallback image
 
-    /* ---------------- Projects (English) ---------------- */
+    /* ===== Initial projects (manual) ===== */
     const PROJECTS = [
       {
         title: "11:59 — Short film",
@@ -176,7 +173,7 @@
         kind: "live",
         thumb: "auto",
         media: { type: "embed", src: "https://www.youtube.com/embed/GDiQughTDqI" },
-        desc: "Live AV: performance, virtual environment + live-manipulated audio.",
+        desc: "Live AV: performance, virtual environment + live-processed audio.",
         links: [
           { label: "Watch (YouTube)", href: "https://www.youtube.com/watch?v=GDiQughTDqI" }
         ]
@@ -205,7 +202,7 @@
         title: "Permaculture Heaven — N I T E F I S H (EP)",
         kind: "collab",
         thumb: "auto",
-        media: {
+        media: { 
           type: "embed",
           src: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1742669856&visual=true"
         },
@@ -214,6 +211,7 @@
           { label: "Listen (SoundCloud playlist)", href: "https://soundcloud.com/nitefishofficial/sets/permaculture-heaven-draft-part" }
         ]
       },
+      /* New collabs you gave */
       {
         title: "If I Disappear — Nightcall (ft. Thirty3)",
         kind: "collab",
@@ -254,8 +252,8 @@
         title: "Spider Plant — Mix (entire release)",
         kind: "collab",
         thumb: "auto",
-        media: {
-          type: "embed",
+        media: { 
+          type: "embed", 
           src: "https://www.youtube.com/embed/7r2CZbvWSB8?list=OLAK5uy_nbkkukfRBX66iNm3pulXvNM5WEEPa6K38"
         },
         desc: "Mixing on all tracks.",
@@ -265,11 +263,12 @@
       }
     ];
 
-    /* ---------------- Auto preview helpers ---------------- */
+    /* ===== Auto-preview helpers ===== */
     function youtubeIdFrom(url){
       const m = url.match(/(?:embed\/|v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
       return m ? m[1] : null;
     }
+
     async function resolveThumb(p){
       if (p.thumb && p.thumb !== 'auto') return p.thumb;
       if (!p.media || p.media.type !== 'embed') return PLACEHOLDER;
@@ -300,10 +299,11 @@
           if (o && o.thumbnail_url) return o.thumbnail_url.replace('-t500x500','-t300x300');
         } catch(e){}
       }
+
       return PLACEHOLDER;
     }
 
-    /* ---------------- Render / Filter / Modal ---------------- */
+    /* ===== Render / Filter / Modal ===== */
     const grid = document.getElementById('wkGrid');
     const tabs = [...document.querySelectorAll('.wk-tab')];
     let current = 'all';
@@ -316,17 +316,19 @@
       const img = document.createElement('img');
       img.className = 'wk-thumb';
       img.alt = p.title;
-      img.src = PLACEHOLDER;
+      img.src = PLACEHOLDER; // immediate fallback
       resolveThumb(p).then(u => { img.src = u || PLACEHOLDER; }).catch(()=>{});
 
-      const meta = document.createElement('div'); meta.className = 'wk-meta';
+      const meta = document.createElement('div'); 
+      meta.className = 'wk-meta';
       const left = document.createElement('div');
       const kind = document.createElement('div'); kind.className = 'wk-kind'; kind.textContent = p.kind;
       const name = document.createElement('div'); name.className = 'wk-name'; name.textContent = p.title;
       left.append(kind, name);
       meta.append(left);
 
-      const actions = document.createElement('div'); actions.className = 'wk-actions';
+      const actions = document.createElement('div'); 
+      actions.className = 'wk-actions';
       (p.links||[]).forEach(l=>{
         const a = document.createElement('a');
         a.href = l.href; a.target = '_blank'; a.rel='noopener';
@@ -390,14 +392,31 @@
         im.src = p.media?.src || PLACEHOLDER; im.alt = p.title;
         preview.appendChild(im);
       }
+
       modal.setAttribute('open','');
     }
 
     modal.addEventListener('click', (e)=>{ if(e.target.hasAttribute('data-close')) modal.removeAttribute('open'); });
     document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') modal.removeAttribute('open'); });
 
-    // Initial render (wait for DOM just to be extra safe)
-    window.addEventListener('DOMContentLoaded', render);
+    // First render manual items
+    render();
+
+    // ===== Auto-data loader (RELATIVE PATH fix) =====
+    // Put your generated file at: /thirty3-site/data/auto-projects.json in the repo
+    (async () => {
+      try {
+        const res = await fetch('data/auto-projects.json', { cache: 'no-store' }); // <— relative, works on Project Pages
+        if (!res.ok) return;
+        const more = await res.json();
+        if (Array.isArray(more) && more.length){
+          PROJECTS.push(...more);
+          render(); // re-render with auto items included
+        }
+      } catch (e) {
+        console.warn('No auto-projects yet (that’s fine).');
+      }
+    })();
   </script>
 </body>
 </html>
