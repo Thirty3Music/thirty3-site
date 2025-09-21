@@ -16,7 +16,12 @@
       --accent:#57e2d6; /* title color */
       --ink:#e7eceb;
     }
-    body.work{ overflow-y:auto; background:#000; padding-top:64px; }
+    body.work{
+      --topbar:60px;
+      overflow-y:auto;
+      background:#000;
+      padding-top:var(--topbar);
+    }
     body.work.modal-open{ overflow:hidden; }
     body.work .topbar{ z-index:940; }
     body.work .topbar nav{ z-index:941; }
@@ -89,24 +94,25 @@
       display:none;
       align-items:flex-start;
       justify-content:center;
-      padding:64px 16px 16px;
+      padding:calc(var(--topbar,60px) + 16px) 16px 16px;
       box-sizing:border-box;
       background:transparent;
       border:0;
-      z-index:960;
+      z-index:930;
       overflow-y:auto;
     }
+    .wk-modal::backdrop{ background:transparent; }
     .wk-modal[open]{ display:flex; }
     .wk-scrim{
-      position:absolute;
+      position:fixed;
       inset:0;
       background:rgba(0,0,0,.6);
     }
     .wk-dialog{
       position:relative;
       z-index:1;
-      width:min(1000px, calc(100vw - 32px));
-      max-height:calc(100vh - 96px);
+      width:min(960px, calc(100vw - 32px));
+      max-height:calc(100vh - (var(--topbar,60px) + 32px));
       background:rgba(8,10,11,.9);
       border:1px solid var(--line);
       border-radius:16px;
@@ -157,23 +163,28 @@
     .wk-close:focus-visible{ outline:2px solid rgba(255,255,255,.35); outline-offset:2px; }
     .wk-media-frame{
       width:100%;
+      max-width:960px;
       display:flex;
       align-items:center;
       justify-content:center;
       gap:0;
+    }
+    .wk-media{
+      width:min(100%, 960px);
+      aspect-ratio:16/9;
     }
     .wk-media-frame.is-embed,
     .wk-media-frame.is-video{ align-items:stretch; }
     .wk-media-frame.is-video,
     .wk-media-frame.is-video-embed{
       aspect-ratio:16/9;
-      width:min(100%, calc(56vh * 16 / 9));
-      max-height:56vh;
+      width:100%;
+      max-height:calc(100vh - (var(--topbar,60px) + 160px));
     }
     .wk-media-frame.is-embed:not(.is-video-embed){
       width:100%;
-      height:min(56vh, 520px);
-      max-height:56vh;
+      max-height:calc(100vh - (var(--topbar,60px) + 160px));
+      aspect-ratio:16/9;
     }
     .wk-media-frame iframe,
     .wk-media-frame video{
@@ -181,14 +192,16 @@
       height:100%;
       border:0;
     }
+    .wk-media iframe{ width:100%; height:100%; }
     .wk-media-frame.is-video video{ object-fit:contain; }
     .wk-media-frame.is-image{
       width:100%;
-      max-height:56vh;
+      max-height:calc(100vh - (var(--topbar,60px) + 160px));
+      aspect-ratio:auto;
     }
     .wk-media-frame.is-image img{
       max-width:100%;
-      max-height:56vh;
+      max-height:calc(100vh - (var(--topbar,60px) + 160px));
       width:auto;
       height:auto;
       object-fit:contain;
@@ -196,7 +209,7 @@
     }
     @supports not (aspect-ratio:1){
       .wk-media-frame.is-video,
-      .wk-media-frame.is-video-embed{ position:relative; width:100%; max-width:100%; }
+      .wk-media-frame.is-video-embed{ position:relative; width:100%; max-width:960px; }
       .wk-media-frame.is-video::before,
       .wk-media-frame.is-video-embed::before{
         content:"";
@@ -216,13 +229,14 @@
       }
     }
     @media (max-width:720px){
-      .wk-modal{ padding:56px 8px 16px; }
+      body.work{ --topbar:56px; }
+      .wk-modal{ padding:calc(var(--topbar,56px) + 16px) 8px 16px; }
       .wk-dialog{
         width:100%;
-        max-height:calc(100vh - 80px);
+        max-height:calc(100vh - (var(--topbar,56px) + 32px));
         border-radius:14px;
       }
-      .wk-preview{ padding:18px; min-height:200px; }
+      .wk-preview{ padding:0; min-height:0; }
       .wk-detail{ padding:18px; }
       .wk-detail-top{ padding:6px 0 12px; }
     }
@@ -791,7 +805,7 @@ function renderPreviewContent(media, options = {}){
   preview.innerHTML = '';
 
   const frame = document.createElement('div');
-  frame.className = 'wk-media-frame';
+  frame.className = 'wk-media-frame wk-media';
 
   if (!media) {
     frame.classList.add('is-image');
