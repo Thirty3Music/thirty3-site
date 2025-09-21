@@ -99,6 +99,23 @@
     }
     .wk-preview img, .wk-preview video, .wk-preview iframe{ width:100%; height:100%; object-fit:cover; border:0; }
     .wk-detail{ padding:18px 18px 20px; display:flex; flex-direction:column; gap:10px; }
+    .wk-detail-top{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:4px; flex-wrap:wrap; }
+    .wk-back{
+      border:1px solid var(--line);
+      background:var(--chip);
+      color:#fff;
+      font-size:12px;
+      padding:6px 12px;
+      border-radius:999px;
+      cursor:pointer;
+      letter-spacing:.04em;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .wk-back:hover{ background:var(--chipHover); border-color:#fff; }
+    .wk-back:focus-visible,
+    .wk-close:focus-visible{ outline:2px solid rgba(255,255,255,.35); outline-offset:2px; }
     .wk-detail h3{ margin:2px 0 2px; letter-spacing:.02em; color:var(--ink); }
     .wk-detail p{ margin:0; color:#dfe4e6; opacity:.86; line-height:1.5; }
     .wk-detail .wk-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
@@ -122,7 +139,7 @@
     .track-row .title{ flex:1; font-size:13px; letter-spacing:.03em; color:var(--ink); }
     .track-row .badge{ font-size:10px; letter-spacing:.12em; text-transform:uppercase; border:1px solid var(--line); border-radius:999px; padding:2px 6px; background:rgba(255,255,255,.08); color:var(--ink); }
 
-    .wk-close{ position:absolute; top:10px; right:10px; border:1px solid var(--line); background:var(--chip); color:#fff; border-radius:8px; padding:6px 9px; cursor:pointer; font-size:13px; }
+    .wk-close{ border:1px solid var(--line); background:var(--chip); color:#fff; border-radius:8px; padding:6px 10px; cursor:pointer; font-size:13px; margin-left:auto; }
     .wk-close:hover{ background:var(--chipHover); border-color:#fff; }
   </style>
 </head>
@@ -159,7 +176,10 @@
     <div class="wk-dialog">
       <div class="wk-preview" id="wkPreview"></div>
       <div class="wk-detail">
-        <button class="wk-close" data-close>Close</button>
+        <div class="wk-detail-top">
+          <button class="wk-back" id="wkBack" type="button" data-close hidden>← Back to Work</button>
+          <button class="wk-close" type="button" data-close>Close</button>
+        </div>
         <h3 id="wkTitle">Title</h3>
         <p id="wkDesc"></p>
         <div class="wk-row" id="wkLinks"></div>
@@ -453,8 +473,13 @@ function createCard(p){
 
   card.append(img, meta);
   if (actions.childElementCount) card.append(actions);
-  card.addEventListener('click', ()=> openModal(p));
-  card.addEventListener('keydown', (e)=>{ if(e.key==='Enter') openModal(p); });
+  card.addEventListener('click', ()=> openModal(p, card));
+  card.addEventListener('keydown', (e)=>{
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openModal(p, card);
+    }
+  });
 
   return card;
 }
@@ -481,12 +506,32 @@ tabs.forEach(btn=>{
 });
 
 /* ---------- modal ---------- */
-const modal   = document.getElementById('wkModal');
-const preview = document.getElementById('wkPreview');
-const titleEl = document.getElementById('wkTitle');
-const descEl  = document.getElementById('wkDesc');
-const linksEl = document.getElementById('wkLinks');
-const tracksEl= document.getElementById('wkTracks');
+const modal       = document.getElementById('wkModal');
+const preview     = document.getElementById('wkPreview');
+const titleEl     = document.getElementById('wkTitle');
+const descEl      = document.getElementById('wkDesc');
+const linksEl     = document.getElementById('wkLinks');
+const tracksEl    = document.getElementById('wkTracks');
+const backButton  = document.getElementById('wkBack');
+const closeButton = document.querySelector('.wk-close');
+let lastTriggerEl = null;
+
+function closeModal(){
+  if (!modal.hasAttribute('open')) return;
+  modal.removeAttribute('open');
+  if (backButton) backButton.hidden = true;
+  const toFocus = lastTriggerEl;
+  lastTriggerEl = null;
+  if (toFocus && typeof toFocus.focus === 'function') {
+    requestAnimationFrame(()=>{
+      try {
+        toFocus.focus({ preventScroll: true });
+      } catch (err) {
+        toFocus.focus();
+      }
+    });
+  }
+}
 
 function renderPreviewContent(media, options = {}){
   const fallback = options.fallback || PLACEHOLDER;
@@ -530,7 +575,16 @@ function renderPreviewContent(media, options = {}){
   preview.appendChild(img);
 }
 
-function openModal(p){
+function openModal(p, triggerEl){
+  const candidate = triggerEl || document.activeElement;
+  lastTriggerEl = (candidate && typeof candidate.focus === 'function') ? candidate : null;
+
+  const isMemoriesAlbum = Boolean(p) && (
+    p.dataUrl === MEMORIES_DATA_URL ||
+    (p.title || '').trim().toLowerCase() === 'memories of noise'
+  );
+  if (backButton) backButton.hidden = !isMemoriesAlbum;
+
   titleEl.textContent = p.title;
   const desc = (p.desc || '').trim();
   if (desc) {
@@ -645,9 +699,30 @@ function openModal(p){
   }
 
   modal.setAttribute('open','');
+
+  const focusTarget = (isMemoriesAlbum && backButton && !backButton.hidden) ? backButton : closeButton;
+  if (focusTarget && typeof focusTarget.focus === 'function') {
+    requestAnimationFrame(()=>{
+      try {
+        focusTarget.focus({ preventScroll: true });
+      } catch (err) {
+        focusTarget.focus();
+      }
+    });
+  }
 }
-modal.addEventListener('click', (e)=>{ if(e.target.hasAttribute('data-close')) modal.removeAttribute('open'); });
-document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') modal.removeAttribute('open'); });
+modal.addEventListener('click', (e)=>{
+  if (e.target instanceof HTMLElement && e.target.hasAttribute('data-close')) {
+    e.preventDefault();
+    closeModal();
+  }
+});
+document.addEventListener('keydown', (e)=>{
+  if (e.key === 'Escape' && modal.hasAttribute('open')) {
+    e.preventDefault();
+    closeModal();
+  }
+});
 
 /* ---------- (optional) merge auto-data om du kör scripts/sync.js ---------- */
 async function loadAutoProjects() {
