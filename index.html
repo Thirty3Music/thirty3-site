@@ -56,30 +56,6 @@
       .intro{ font-size:14px; }
       .mobile-overlay{ font-size:13px; }
     }
-    .topbar nav a{
-      transition: background .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
-    }
-
-    .topbar nav a:hover{
-      background: var(--chipHover);
-      border-color: #fff;
-    }
-
-    /* subtle glitch on hover (desktop only) */
-    @media (min-width: 480px){
-      @keyframes tiny-glitch {
-        0% { transform: translate(0,0); }
-        20% { transform: translate(.5px,-.5px); }
-        40% { transform: translate(-.5px,.5px); }
-        60% { transform: translate(.3px,0); }
-        100% { transform: translate(0,0); }
-      }
-      .topbar nav a:hover{ animation: tiny-glitch .25s steps(2,end) 2; }
-    }
-
-    /* Säkerställ att kontaktlänken alltid är klickbar överst */
-    .topbar nav a[href^="mailto:"]{ border-color: var(--chipBorder); }
-    .topbar nav a[href^="mailto:"]:hover{ background: var(--chipHover); }
     #logo3d-wrap{ position:fixed; left:12px; top:8px; width:84px; height:84px; z-index:10001; pointer-events:none; }
     #logo3d{ width:100%; height:100%; display:block; }
     @media (max-width:600px){ #logo3d-wrap{ left:8px; top:8px; width:64px; height:64px; } }
@@ -104,12 +80,12 @@
   <!-- Top bar -->
   <header class="topbar">
     <nav aria-label="Primary">
-      <a href="https://www.instagram.com/_thirty3_/" target="_blank" rel="noopener">INSTAGRAM</a>
-      <a href="https://soundcloud.com/thirty_3" target="_blank" rel="noopener">SOUNDCLOUD</a>
-      <a href="https://www.youtube.com/@thirty3473" target="_blank" rel="noopener">YOUTUBE</a>
-      <a href="work-test.html">WORK</a>
+      <a href="https://www.instagram.com/_thirty3_/" target="_blank" rel="noopener"><span class="nav-label">INSTAGRAM</span></a>
+      <a href="https://soundcloud.com/thirty_3" target="_blank" rel="noopener"><span class="nav-label">SOUNDCLOUD</span></a>
+      <a href="https://www.youtube.com/@thirty3473" target="_blank" rel="noopener"><span class="nav-label">YOUTUBE</span></a>
+      <a href="work-test.html"><span class="nav-label">WORK</span></a>
       <!-- Öppnar mailklient direkt -->
-      <a href="mailto:thirty3contact@gmail.com" aria-label="Email THIRTY3">CONTACT</a>
+      <a href="mailto:thirty3contact@gmail.com" aria-label="Email THIRTY3"><span class="nav-label">CONTACT</span></a>
     </nav>
   </header>
   <div id="logo3d-wrap"><canvas id="logo3d"></canvas></div>
