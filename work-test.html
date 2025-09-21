@@ -306,6 +306,40 @@
    THIRTY3 — Work grid
    ========================================================= */
 const PLACEHOLDER = 'image00015.jpeg';
+const IMG_FALLBACK_HANDLER = "if(this.dataset.fallback){this.src=this.dataset.fallback; this.removeAttribute('onerror');}";
+
+function scHiRes(url){
+  if (!url) return '';
+  if (!/sndcdn\.com|soundcloud\.com/i.test(url)) return url;
+  const [base, ...rest] = String(url).split('?');
+  const suffix = rest.length ? `?${rest.join('?')}` : '';
+  const hiBase = base
+    .replace(/-t\d+x\d+(?=\.(?:jpg|jpeg|png|gif)$)/i, '-t500x500')
+    .replace(/-large(?=\.(?:jpg|jpeg|png|gif)$)/i, '-t500x500')
+    .replace(/-small(?=\.(?:jpg|jpeg|png|gif)$)/i, '-t500x500')
+    .replace(/-tiny(?=\.(?:jpg|jpeg|png|gif)$)/i, '-t500x500')
+    .replace(/-mini(?=\.(?:jpg|jpeg|png|gif)$)/i, '-t500x500')
+    .replace(/-thumb(?=\.(?:jpg|jpeg|png|gif)$)/i, '-t500x500')
+    .replace(/-crop(?=\.(?:jpg|jpeg|png|gif)$)/i, '-t500x500');
+  return hiBase + suffix;
+}
+
+function applyImgThumb(img, src, fallback){
+  if (!img) return;
+  const primary = src || fallback || PLACEHOLDER;
+  if ('decoding' in img) img.decoding = 'async';
+  if ('loading' in img) img.loading = 'lazy';
+  img.src = primary;
+  if (fallback && fallback !== primary){
+    img.dataset.fallback = fallback;
+    img.setAttribute('data-fallback', fallback);
+    img.setAttribute('onerror', IMG_FALLBACK_HANDLER);
+  } else {
+    delete img.dataset.fallback;
+    img.removeAttribute('data-fallback');
+    img.removeAttribute('onerror');
+  }
+}
 
 function cleanScUrl(u) {
   try {
@@ -523,21 +557,37 @@ function youtubeEmbed(url){
 const scThumbCache = new Map();
 const ytThumbCache = new Map();
 
+function ytThumb(id){
+  const base = `https://img.youtube.com/vi/${id}/`;
+  return {
+    max: `${base}maxresdefault.jpg`,
+    hq: `${base}hqdefault.jpg`
+  };
+}
+
 function buildSoundCloudThumbCandidates(url){
   if (!url) return [];
-  const [base, ...rest] = url.split('?');
+  const [base, ...rest] = String(url).split('?');
   const suffix = rest.length ? `?${rest.join('?')}` : '';
-  let cleaned = base.replace(/-t\d+x\d+(?=\.(?:jpg|jpeg|png|gif)$)/i, '');
-  cleaned = cleaned.replace(/-large(?=\.(?:jpg|jpeg|png|gif)$)/i, '');
-  cleaned = cleaned.replace(/-small(?=\.(?:jpg|jpeg|png|gif)$)/i, '');
-  cleaned = cleaned.replace(/-crop(?=\.(?:jpg|jpeg|png|gif)$)/i, '');
-  const originalVariant = base.replace(/-t\d+x\d+(?=\.(?:jpg|jpeg|png|gif)$)/i, '-original');
-  const candidates = [];
-  if (cleaned && cleaned !== base) candidates.push(cleaned + suffix);
-  if (originalVariant && originalVariant !== base) candidates.push(originalVariant + suffix);
   const original = base + suffix;
-  if (!candidates.includes(original)) candidates.push(original);
-  return [...new Set(candidates)];
+  let cleanedBase = base.replace(/-t\d+x\d+(?=\.(?:jpg|jpeg|png|gif)$)/i, '');
+  cleanedBase = cleanedBase.replace(/-large(?=\.(?:jpg|jpeg|png|gif)$)/i, '');
+  cleanedBase = cleanedBase.replace(/-small(?=\.(?:jpg|jpeg|png|gif)$)/i, '');
+  cleanedBase = cleanedBase.replace(/-crop(?=\.(?:jpg|jpeg|png|gif)$)/i, '');
+  const cleaned = cleanedBase + suffix;
+  const originalVariantBase = base.replace(/-t\d+x\d+(?=\.(?:jpg|jpeg|png|gif)$)/i, '-original');
+  const originalVariant = originalVariantBase + suffix;
+  const candidates = [];
+  const push = (value) => {
+    if (value && !candidates.includes(value)) candidates.push(value);
+  };
+  push(scHiRes(original));
+  push(scHiRes(cleaned));
+  push(scHiRes(originalVariant));
+  push(cleaned);
+  push(originalVariant);
+  push(original);
+  return candidates;
 }
 
 function ensureImage(url){
@@ -566,22 +616,16 @@ async function fetchSoundCloudThumb(scUrl){
       const data = await res.json();
       const baseThumb = data && data.thumbnail_url ? data.thumbnail_url : '';
       const candidates = buildSoundCloudThumbCandidates(baseThumb);
-      let attemptedBase = false;
-      let baseFailed = false;
       for (const candidate of candidates){
-        const isBase = candidate === baseThumb;
-        if (isBase) attemptedBase = true;
         try {
           const confirmed = await ensureImage(candidate);
           if (confirmed){
             scThumbCache.set(cleanUrl, confirmed);
             return confirmed;
           }
-        } catch (err) {
-          if (isBase) baseFailed = true;
-        }
+        } catch (err) {}
       }
-      const fallback = (attemptedBase && baseFailed) ? '' : (baseThumb || '');
+      const fallback = scHiRes(baseThumb) || baseThumb || '';
       scThumbCache.set(cleanUrl, fallback);
       return fallback;
     } catch (e) {
@@ -598,11 +642,10 @@ async function fetchYouTubeThumb(id){
   const cached = ytThumbCache.get(id);
   if (typeof cached === 'string') return cached;
   if (cached && typeof cached.then === 'function') return cached;
-  const maxRes = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
-  const high = `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+  const { max, hq } = ytThumb(id);
   if (typeof Image === 'undefined') {
-    ytThumbCache.set(id, maxRes);
-    return maxRes;
+    ytThumbCache.set(id, max);
+    return max;
   }
   const promise = new Promise((resolve) => {
     const settle = (value) => {
@@ -612,16 +655,16 @@ async function fetchYouTubeThumb(id){
     const probe = new Image();
     probe.decoding = 'async';
     probe.referrerPolicy = 'no-referrer';
-    probe.onload = () => settle(maxRes);
+    probe.onload = () => settle(max);
     probe.onerror = () => {
       const fallbackImg = new Image();
       fallbackImg.decoding = 'async';
       fallbackImg.referrerPolicy = 'no-referrer';
-      fallbackImg.onload = () => settle(high);
+      fallbackImg.onload = () => settle(hq);
       fallbackImg.onerror = () => settle('');
-      fallbackImg.src = high;
+      fallbackImg.src = hq;
     };
-    probe.src = maxRes;
+    probe.src = max;
   });
   ytThumbCache.set(id, promise);
   return promise;
@@ -633,26 +676,21 @@ async function fetchYouTubeThumbForUrl(url){
   return fetchYouTubeThumb(id);
 }
 
-function tryImg(u){
-  return new Promise(res => {
-    const i = new Image();
-    i.onload = () => res(u);
-    i.onerror = () => res(null);
-    i.src = u;
-  });
-}
-
 async function resolveThumb(p){
-  if (p.thumb && p.thumb !== 'auto') return p.thumb;
-  if (!p.media || p.media.type !== 'embed') return PLACEHOLDER;
+  if (p.thumb && p.thumb !== 'auto') {
+    const raw = typeof p.thumb === 'string' ? p.thumb : '';
+    const src = /sndcdn\.com|soundcloud\.com/i.test(raw) ? scHiRes(raw) : raw;
+    return { src: src || PLACEHOLDER };
+  }
+  if (!p.media || p.media.type !== 'embed') return { src: PLACEHOLDER };
   const url = p.media.src || '';
 
   // YouTube
   if (/youtube\.com|youtu\.be/.test(url)) {
     const id = youtubeIdFrom(url);
     if (id) {
-      const hi = await tryImg(`https://img.youtube.com/vi/${id}/maxresdefault.jpg`);
-      return hi || `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+      const { max, hq } = ytThumb(id);
+      return { src: max, fallback: hq };
     }
   }
 
@@ -661,27 +699,29 @@ async function resolveThumb(p){
     try {
       const vimeoUrl = url.replace('https://player.vimeo.com/video/', 'https://vimeo.com/');
       const o = await fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(vimeoUrl)}`).then(r=>r.json());
-      if (o?.thumbnail_url) return o.thumbnail_url;
+      if (o?.thumbnail_url) return { src: o.thumbnail_url };
     } catch(e){}
   }
 
   // SoundCloud
   if (/soundcloud\.com/.test(url) || /w\.soundcloud\.com\/player/.test(url)) {
     try {
-      let sc = url;
-      const q = new URL(url).searchParams.get('url');
-      if (q) sc = decodeURIComponent(q);
-      const o = await fetch(`https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(sc)}`).then(r=>r.json());
-      if (o?.thumbnail_url) {
-        return o.thumbnail_url
-          .replace('-t300x300', '-t500x500')
-          .replace('-large', '-t500x500')
-          .replace('-t120x120','-t500x500');
+      let sc = p.scUrl || '';
+      if (!sc) sc = url;
+      try {
+        const parsed = new URL(url);
+        const q = parsed.searchParams.get('url');
+        if (q) sc = decodeURIComponent(q);
+      } catch (err) {}
+      const clean = cleanScUrl(sc);
+      if (clean) {
+        const thumb = await fetchSoundCloudThumb(clean);
+        if (thumb) return { src: thumb };
       }
     } catch(e){}
   }
 
-  return PLACEHOLDER;
+  return { src: PLACEHOLDER };
 }
 
 /* ---------- render ---------- */
@@ -697,8 +737,12 @@ function createCard(p){
   const img = document.createElement('img');
   img.className = 'wk-thumb';
   img.alt = p.title;
-  img.src = PLACEHOLDER;
-  resolveThumb(p).then(u => { img.src = u || PLACEHOLDER; }).catch(()=>{});
+  applyImgThumb(img, PLACEHOLDER);
+  resolveThumb(p).then(result => {
+    const src = (result && typeof result === 'object') ? result.src : result;
+    const fallback = (result && typeof result === 'object') ? result.fallback : '';
+    applyImgThumb(img, src || PLACEHOLDER, fallback);
+  }).catch(()=>{});
 
   const meta = document.createElement('div'); 
   meta.className = 'wk-meta';
@@ -933,8 +977,8 @@ function openModal(p, triggerEl){
       btn.type = 'button';
       btn.className = 'track-row';
       const img = document.createElement('img');
-      img.src = t.thumb || PLACEHOLDER;
       img.alt = `${t.title || 'Track'} artwork`;
+      applyImgThumb(img, t.thumb || PLACEHOLDER);
       const name = document.createElement('span');
       name.className = 'title';
       name.textContent = t.title || 'Untitled';
@@ -1026,9 +1070,10 @@ async function loadMemoriesAlbum(){
     const tracks = await Promise.all((list || []).map(async (track) => {
       const scUrl = cleanScUrl(track.scUrl || '');
       const youtubeUrl = track.youtubeUrl || '';
-      let thumb = track.thumb || '';
+      let thumb = track.thumb ? scHiRes(track.thumb) : '';
       if (!thumb && scUrl) thumb = await fetchSoundCloudThumb(scUrl);
       if (!thumb && youtubeUrl) thumb = await fetchYouTubeThumbForUrl(youtubeUrl);
+      if (thumb && /sndcdn\.com|soundcloud\.com/i.test(thumb)) thumb = scHiRes(thumb);
       const primaryMedia = scUrl ? { type: 'embed', src: scEmbed(scUrl) } : (youtubeUrl ? { type: 'embed', src: youtubeEmbed(youtubeUrl) } : null);
       const secondaryMedia = (scUrl && youtubeUrl) ? { type: 'embed', src: youtubeEmbed(youtubeUrl) } : null;
       return {
@@ -1046,8 +1091,9 @@ async function loadMemoriesAlbum(){
     const coverSource = album.setUrl || MEMORIES_SET_URL;
     const cover = (coverSource ? await fetchSoundCloudThumb(coverSource) : '') || tracks[0]?.thumb;
     if (cover) {
-      album.thumb = cover;
-      album.preview = { type: 'image', src: cover };
+      const coverImg = /sndcdn\.com|soundcloud\.com/i.test(cover) ? scHiRes(cover) : cover;
+      album.thumb = coverImg;
+      album.preview = { type: 'image', src: coverImg };
     }
 
     if (!album.media && album.setUrl) {
