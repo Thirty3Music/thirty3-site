@@ -87,21 +87,30 @@
       position:relative; z-index:1; width:min(1000px, 92vw); max-height:86vh;
       background:rgba(8,10,11,.85); border:1px solid var(--line);
       border-radius:14px; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,.5);
-      display:grid; grid-template-columns:1.1fr 1fr;
+      display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
     }
     @media (max-width:900px){ .wk-dialog{ grid-template-columns:1fr; } }
     .wk-preview{ background:#0b0f11; display:grid; place-items:center; min-height:280px; }
     @media (max-width:600px){
       .wk-modal{ align-items:flex-start; }
-      .wk-dialog{ width:100vw; height:100vh; max-height:none; border-radius:0; }
-      .wk-detail{ height:100%; overflow-y:auto; }
+      .wk-dialog{ width:100vw; height:100vh; max-height:none; border-radius:0; grid-template-columns:1fr; grid-template-rows:auto minmax(0,1fr); }
+      .wk-detail{ height:100%; }
       .wk-preview{ min-height:220px; }
     }
     .wk-preview img, .wk-preview video, .wk-preview iframe{ width:100%; height:100%; object-fit:cover; border:0; }
-    .wk-detail{ padding:18px 18px 20px; display:flex; flex-direction:column; gap:10px; }
-    .wk-detail h3{ margin:2px 0 2px; letter-spacing:.02em; color:var(--ink); }
+    .wk-detail{
+      display:flex; flex-direction:column; position:relative;
+      overflow-y:auto; min-height:0;
+    }
+    .wk-detail-header{
+      position:sticky; top:0; display:grid; grid-template-columns:1fr auto; align-items:flex-start; gap:12px;
+      padding:18px 18px 12px; background:linear-gradient(to bottom, rgba(8,10,11,.97), rgba(8,10,11,.94) 60%, rgba(8,10,11,0));
+      border-bottom:1px solid rgba(255,255,255,.08); z-index:1; backdrop-filter:blur(6px);
+    }
+    .wk-detail-body{ padding:12px 18px 20px; display:flex; flex-direction:column; gap:16px; }
+    .wk-detail h3{ margin:0; letter-spacing:.02em; color:var(--ink); }
     .wk-detail p{ margin:0; color:#dfe4e6; opacity:.86; line-height:1.5; }
-    .wk-detail .wk-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+    .wk-detail .wk-row{ display:flex; gap:8px; flex-wrap:wrap; margin:0; }
 
     .wk-tracks{ display:flex; flex-direction:column; gap:8px; margin-top:10px; }
     .wk-tracklabel{ font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin:0 0 2px; }
@@ -122,7 +131,11 @@
     .track-row .title{ flex:1; font-size:13px; letter-spacing:.03em; color:var(--ink); }
     .track-row .badge{ font-size:10px; letter-spacing:.12em; text-transform:uppercase; border:1px solid var(--line); border-radius:999px; padding:2px 6px; background:rgba(255,255,255,.08); color:var(--ink); }
 
-    .wk-close{ position:absolute; top:10px; right:10px; border:1px solid var(--line); background:var(--chip); color:#fff; border-radius:8px; padding:6px 9px; cursor:pointer; font-size:13px; }
+    .wk-close{
+      border:1px solid var(--line); background:var(--chip); color:#fff; border-radius:8px;
+      padding:6px 10px; cursor:pointer; font-size:13px; line-height:1.1; min-height:32px;
+      justify-self:end; align-self:start;
+    }
     .wk-close:hover{ background:var(--chipHover); border-color:#fff; }
   </style>
 </head>
@@ -159,11 +172,15 @@
     <div class="wk-dialog">
       <div class="wk-preview" id="wkPreview"></div>
       <div class="wk-detail">
-        <button class="wk-close" data-close>Close</button>
-        <h3 id="wkTitle">Title</h3>
-        <p id="wkDesc"></p>
-        <div class="wk-row" id="wkLinks"></div>
-        <div class="wk-tracks" id="wkTracks" hidden></div>
+        <div class="wk-detail-header">
+          <h3 id="wkTitle">Title</h3>
+          <button class="wk-close" data-close>Close</button>
+        </div>
+        <div class="wk-detail-body">
+          <p id="wkDesc"></p>
+          <div class="wk-row" id="wkLinks"></div>
+          <div class="wk-tracks" id="wkTracks" hidden></div>
+        </div>
       </div>
     </div>
   </dialog>
