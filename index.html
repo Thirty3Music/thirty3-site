@@ -56,6 +56,27 @@
       .intro{ font-size:14px; }
       .mobile-overlay{ font-size:13px; }
     }
+    .topbar nav a{
+      transition: background .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
+    }
+
+    .topbar nav a:hover{
+      background: var(--chipHover);
+      border-color: #fff;
+    }
+
+    /* subtle glitch on hover (desktop only) */
+    @media (min-width: 480px){
+      @keyframes tiny-glitch {
+        0% { transform: translate(0,0); }
+        20% { transform: translate(.5px,-.5px); }
+        40% { transform: translate(-.5px,.5px); }
+        60% { transform: translate(.3px,0); }
+        100% { transform: translate(0,0); }
+      }
+      .topbar nav a:hover{ animation: tiny-glitch .25s steps(2,end) 2; }
+    }
+
     /* Säkerställ att kontaktlänken alltid är klickbar överst */
     .topbar nav a[href^="mailto:"]{ border-color: var(--chipBorder); }
     .topbar nav a[href^="mailto:"]:hover{ background: var(--chipHover); }
