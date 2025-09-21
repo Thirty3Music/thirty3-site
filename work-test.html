@@ -307,8 +307,23 @@
    ========================================================= */
 const PLACEHOLDER = 'image00015.jpeg';
 
-const scEmbed = (url) =>
-  `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&visual=true`;
+function cleanScUrl(u) {
+  try {
+    const x = new URL(u);
+    x.search = '';
+    x.hash = '';
+    return x.toString();
+  } catch (e) {
+    return (u || '').split('?')[0];
+  }
+}
+
+function scEmbed(u){
+  const url = 'https://w.soundcloud.com/player/?url=' +
+    encodeURIComponent(cleanScUrl(u)) +
+    '&color=%23161616&auto_play=false&hide_related=false&show_comments=false&visual=true';
+  return url;
+}
 
 const MEMORIES_SET_URL = 'https://soundcloud.com/thirty_3/sets/memories-of-noise';
 const MEMORIES_DATA_URL = 'data/memories-of-noise.json';
@@ -539,13 +554,14 @@ function ensureImage(url){
 }
 
 async function fetchSoundCloudThumb(scUrl){
-  if (!scUrl) return '';
-  const cached = scThumbCache.get(scUrl);
+  const cleanUrl = cleanScUrl(scUrl);
+  if (!cleanUrl) return '';
+  const cached = scThumbCache.get(cleanUrl);
   if (typeof cached === 'string') return cached;
   if (cached && typeof cached.then === 'function') return cached;
   const promise = (async () => {
     try {
-      const res = await fetch(`https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(scUrl)}`);
+      const res = await fetch(`https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(cleanUrl)}`);
       if (!res.ok) throw new Error('SoundCloud oEmbed failed');
       const data = await res.json();
       const baseThumb = data && data.thumbnail_url ? data.thumbnail_url : '';
@@ -558,7 +574,7 @@ async function fetchSoundCloudThumb(scUrl){
         try {
           const confirmed = await ensureImage(candidate);
           if (confirmed){
-            scThumbCache.set(scUrl, confirmed);
+            scThumbCache.set(cleanUrl, confirmed);
             return confirmed;
           }
         } catch (err) {
@@ -566,14 +582,14 @@ async function fetchSoundCloudThumb(scUrl){
         }
       }
       const fallback = (attemptedBase && baseFailed) ? '' : (baseThumb || '');
-      scThumbCache.set(scUrl, fallback);
+      scThumbCache.set(cleanUrl, fallback);
       return fallback;
     } catch (e) {
-      scThumbCache.set(scUrl, '');
+      scThumbCache.set(cleanUrl, '');
       return '';
     }
   })();
-  scThumbCache.set(scUrl, promise);
+  scThumbCache.set(cleanUrl, promise);
   return promise;
 }
 
@@ -695,10 +711,15 @@ function createCard(p){
   const actions = document.createElement('div');
   actions.className = 'wk-actions';
   (p.links||[]).forEach(l=>{
-    if (!l.href || l.showOnCard === false) return;
+    if (!l || !l.href || l.showOnCard === false) return;
+    const label = typeof l.label === 'string' ? l.label : String(l.label || '');
+    const rawHref = typeof l.href === 'string' ? l.href : '';
+    const needsClean = /soundcloud/i.test(label) || /soundcloud/i.test(rawHref);
+    const href = needsClean ? cleanScUrl(rawHref) : rawHref;
+    if (!href) return;
     const a = document.createElement('a');
-    a.href = l.href; a.target = '_blank'; a.rel='noopener';
-    a.className = 'wk-chip'; a.textContent = l.label;
+    a.href = href; a.target = '_blank'; a.rel='noopener';
+    a.className = 'wk-chip'; a.textContent = label;
     actions.appendChild(a);
   });
 
@@ -859,12 +880,17 @@ function openModal(p, triggerEl){
   function createLinkControl(link){
     if (!link) return null;
     if (link.href){
+      const label = typeof link.label === 'string' ? link.label : String(link.label || '');
+      const rawHref = typeof link.href === 'string' ? link.href : '';
+      const needsClean = /soundcloud/i.test(label) || /soundcloud/i.test(rawHref);
+      const href = needsClean ? cleanScUrl(rawHref) : rawHref;
+      if (!href) return null;
       const a = document.createElement('a');
-      a.href = link.href;
+      a.href = href;
       a.target = '_blank';
       a.rel = 'noopener';
       a.className = 'wk-chip';
-      a.textContent = link.label;
+      a.textContent = label;
       return a;
     }
     if (link.action === 'preview' && link.media){
@@ -990,13 +1016,15 @@ async function loadMemoriesAlbum(){
   const album = PROJECTS.find(p => p.dataUrl === MEMORIES_DATA_URL);
   if (!album) return;
 
+  album.setUrl = cleanScUrl(album.setUrl || MEMORIES_SET_URL);
+
   try {
     const res = await fetch(`${album.dataUrl}?v=${Date.now()}`, { cache: 'no-store' });
     if (!res.ok) throw new Error('memories-of-noise.json missing');
     const list = await res.json();
 
     const tracks = await Promise.all((list || []).map(async (track) => {
-      const scUrl = track.scUrl || '';
+      const scUrl = cleanScUrl(track.scUrl || '');
       const youtubeUrl = track.youtubeUrl || '';
       let thumb = track.thumb || '';
       if (!thumb && scUrl) thumb = await fetchSoundCloudThumb(scUrl);
