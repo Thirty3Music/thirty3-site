@@ -16,7 +16,10 @@
       --accent:#57e2d6; /* title color */
       --ink:#e7eceb;
     }
-    body.work{ overflow-y:auto; background:#000; padding-top:56px; }
+    body.work{ overflow-y:auto; background:#000; padding-top:64px; }
+    body.work.modal-open{ overflow:hidden; }
+    body.work .topbar{ z-index:940; }
+    body.work .topbar nav{ z-index:941; }
 
     /* Hero */
     .wk-hero{ max-width:1100px; margin:48px auto 18px; padding:0 20px; }
@@ -80,50 +83,153 @@
     button.wk-chip{ font:inherit; }
 
     /* Modal */
-    .wk-modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:10000; }
-    .wk-modal[open]{ display:flex; }
-    .wk-scrim{ position:absolute; inset:0; background:rgba(0,0,0,.55); }
-    .wk-dialog{
-      position:relative; z-index:1; width:min(1000px, 92vw); max-height:86vh;
-      background:rgba(8,10,11,.85); border:1px solid var(--line);
-      border-radius:14px; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,.5);
-      display:grid; grid-template-columns:1.1fr 1fr;
+    .wk-modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:flex-start;
+      justify-content:center;
+      padding:64px 16px 16px;
+      box-sizing:border-box;
+      background:transparent;
+      border:0;
+      z-index:960;
+      overflow-y:auto;
     }
-    @media (max-width:900px){ .wk-dialog{ grid-template-columns:1fr; } }
-    .wk-preview{ background:#0b0f11; display:grid; place-items:center; min-height:280px; }
-    @media (max-width:600px){
-      .wk-modal{ align-items:flex-start; }
-      .wk-dialog{
-        width:100vw;
-        border-radius:0;
-        grid-template-columns:1fr;
-        height:auto;
-        max-height:92vh;
+    .wk-modal[open]{ display:flex; }
+    .wk-scrim{
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,.6);
+    }
+    .wk-dialog{
+      position:relative;
+      z-index:1;
+      width:min(1000px, calc(100vw - 32px));
+      max-height:calc(100vh - 96px);
+      background:rgba(8,10,11,.9);
+      border:1px solid var(--line);
+      border-radius:16px;
+      box-shadow:0 24px 60px rgba(0,0,0,.55);
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
+      grid-template-rows:minmax(0,1fr);
+      overflow:hidden;
+      backdrop-filter:blur(12px);
+    }
+    .wk-preview,
+    .wk-detail{ min-height:0; }
+    .wk-preview{
+      background:#0b0f11;
+      padding:24px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:240px;
+    }
+    .wk-detail{
+      padding:24px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      overflow-y:auto;
+      scrollbar-gutter:stable both-edges;
+    }
+    .wk-detail-top{
+      position:sticky;
+      top:0;
+      margin-bottom:8px;
+      padding:6px 0 12px;
+      display:flex;
+      justify-content:flex-end;
+      background:linear-gradient(to bottom, rgba(8,10,11,.95), rgba(8,10,11,.6));
+      z-index:2;
+    }
+    .wk-detail-top::after{
+      content:"";
+      position:absolute;
+      inset:auto 0 -12px;
+      height:12px;
+      background:linear-gradient(to bottom, rgba(8,10,11,.6), rgba(8,10,11,0));
+      pointer-events:none;
+    }
+    .wk-detail-top > *{ position:relative; z-index:2; }
+    .wk-close:focus-visible{ outline:2px solid rgba(255,255,255,.35); outline-offset:2px; }
+    .wk-media-frame{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:0;
+    }
+    .wk-media-frame.is-embed,
+    .wk-media-frame.is-video{ align-items:stretch; }
+    .wk-media-frame.is-video,
+    .wk-media-frame.is-video-embed{
+      aspect-ratio:16/9;
+      width:min(100%, calc(56vh * 16 / 9));
+      max-height:56vh;
+    }
+    .wk-media-frame.is-embed:not(.is-video-embed){
+      width:100%;
+      height:min(56vh, 520px);
+      max-height:56vh;
+    }
+    .wk-media-frame iframe,
+    .wk-media-frame video{
+      width:100%;
+      height:100%;
+      border:0;
+    }
+    .wk-media-frame.is-video video{ object-fit:contain; }
+    .wk-media-frame.is-image{
+      width:100%;
+      max-height:56vh;
+    }
+    .wk-media-frame.is-image img{
+      max-width:100%;
+      max-height:56vh;
+      width:auto;
+      height:auto;
+      object-fit:contain;
+      border:0;
+    }
+    @supports not (aspect-ratio:1){
+      .wk-media-frame.is-video,
+      .wk-media-frame.is-video-embed{ position:relative; width:100%; max-width:100%; }
+      .wk-media-frame.is-video::before,
+      .wk-media-frame.is-video-embed::before{
+        content:"";
+        display:block;
+        padding-top:56.25%;
       }
-      .wk-detail{ height:100%; overflow-y:auto; padding:14px; }
-      .wk-preview{ min-height:220px; }
-      .wk-row .wk-chip, .wk-close{ font-size:11px; padding:5px 7px; }
+      .wk-media-frame.is-video > *,
+      .wk-media-frame.is-video-embed > *{
+        position:absolute;
+        inset:0;
+      }
+    }
+    @media (max-width:900px){
+      .wk-dialog{
+        grid-template-columns:1fr;
+        grid-template-rows:auto minmax(0,1fr);
+      }
+    }
+    @media (max-width:720px){
+      .wk-modal{ padding:56px 8px 16px; }
+      .wk-dialog{
+        width:100%;
+        max-height:calc(100vh - 80px);
+        border-radius:14px;
+      }
+      .wk-preview{ padding:18px; min-height:200px; }
+      .wk-detail{ padding:18px; }
+      .wk-detail-top{ padding:6px 0 12px; }
+    }
+    @media (max-width:600px){
+      .wk-row .wk-chip, .wk-close{ font-size:11px; padding:6px 10px; }
       .wk-actions{ flex-wrap:wrap; }
     }
-    .wk-preview img, .wk-preview video, .wk-preview iframe{ width:100%; height:100%; object-fit:cover; border:0; }
-    .wk-detail{ padding:18px 18px 20px; display:flex; flex-direction:column; gap:10px; }
-    .wk-detail-top{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:4px; flex-wrap:wrap; }
-    .wk-back{
-      border:1px solid var(--line);
-      background:var(--chip);
-      color:#fff;
-      font-size:12px;
-      padding:6px 12px;
-      border-radius:999px;
-      cursor:pointer;
-      letter-spacing:.04em;
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-    }
-    .wk-back:hover{ background:var(--chipHover); border-color:#fff; }
-    .wk-back:focus-visible,
-    .wk-close:focus-visible{ outline:2px solid rgba(255,255,255,.35); outline-offset:2px; }
     .wk-detail h3{ margin:2px 0 2px; letter-spacing:.02em; color:var(--ink); }
     .wk-detail p{ margin:0; color:#dfe4e6; opacity:.86; line-height:1.5; }
     .wk-detail .wk-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
@@ -149,7 +255,6 @@
 
     .wk-close{ border:1px solid var(--line); background:var(--chip); color:#fff; border-radius:8px; padding:6px 10px; cursor:pointer; font-size:13px; margin-left:auto; }
     .wk-close:hover{ background:var(--chipHover); border-color:#fff; }
-    #wkBackHome{ margin-left:0; }
   </style>
 </head>
 
@@ -186,10 +291,6 @@
         <div class="wk-preview" id="wkPreview"></div>
         <div class="wk-detail">
           <div class="wk-detail-top">
-            <button class="wk-back" id="wkBack" type="button" data-close hidden>← Back to Work</button>
-          </div>
-          <div class="wk-row" style="justify-content:space-between; margin:0 0 6px;">
-            <button class="wk-close" id="wkBackHome" type="button">← Back to Home</button>
             <button class="wk-close" data-close type="button">Close</button>
           </div>
           <h3 id="wkTitle">Title</h3>
@@ -642,14 +743,13 @@ const titleEl     = document.getElementById('wkTitle');
 const descEl      = document.getElementById('wkDesc');
 const linksEl     = document.getElementById('wkLinks');
 const tracksEl    = document.getElementById('wkTracks');
-const backButton  = document.getElementById('wkBack');
 const closeButton = document.querySelector('.wk-close[data-close]');
 let lastTriggerEl = null;
 
 function closeModal(){
   if (!modal.hasAttribute('open')) return;
   modal.removeAttribute('open');
-  if (backButton) backButton.hidden = true;
+  document.body.classList.remove('modal-open');
   const toFocus = lastTriggerEl;
   lastTriggerEl = null;
   if (toFocus && typeof toFocus.focus === 'function') {
@@ -669,51 +769,60 @@ function renderPreviewContent(media, options = {}){
 
   preview.innerHTML = '';
 
+  const frame = document.createElement('div');
+  frame.className = 'wk-media-frame';
+
   if (!media) {
+    frame.classList.add('is-image');
     const img = document.createElement('img');
     img.src = fallback;
     img.alt = label;
-    preview.appendChild(img);
+    frame.appendChild(img);
+    preview.appendChild(frame);
     return;
   }
 
   if (media.type === 'video') {
+    frame.classList.add('is-video');
     const v = document.createElement('video');
     v.src = media.src;
     v.controls = true;
     v.playsInline = true;
     v.autoplay = Boolean(media.autoplay);
     v.title = label;
-    preview.appendChild(v);
+    frame.appendChild(v);
+    preview.appendChild(frame);
     return;
   }
 
   if (media.type === 'embed') {
+    const src = String(media.src || '');
+    const isVideoEmbed = /(?:youtube|youtu\.be|vimeo)/i.test(src);
+    frame.classList.add('is-embed');
+    if (isVideoEmbed) frame.classList.add('is-video-embed');
     const iframe = document.createElement('iframe');
     iframe.src = media.src;
     iframe.allow = media.allow || 'autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share';
     iframe.referrerPolicy = media.referrerPolicy || 'strict-origin-when-cross-origin';
     iframe.loading = 'lazy';
     iframe.title = label;
-    preview.appendChild(iframe);
+    if (isVideoEmbed) iframe.allowFullscreen = true;
+    frame.appendChild(iframe);
+    preview.appendChild(frame);
     return;
   }
 
+  frame.classList.add('is-image');
   const img = document.createElement('img');
   img.src = media.src || fallback;
   img.alt = label;
-  preview.appendChild(img);
+  frame.appendChild(img);
+  preview.appendChild(frame);
 }
 
 function openModal(p, triggerEl){
   const candidate = triggerEl || document.activeElement;
   lastTriggerEl = (candidate && typeof candidate.focus === 'function') ? candidate : null;
-
-  const isMemoriesAlbum = Boolean(p) && (
-    p.dataUrl === MEMORIES_DATA_URL ||
-    (p.title || '').trim().toLowerCase() === 'memories of noise'
-  );
-  if (backButton) backButton.hidden = !isMemoriesAlbum;
 
   titleEl.textContent = p.title;
   const desc = (p.desc || '').trim();
@@ -828,9 +937,11 @@ function openModal(p, triggerEl){
     tracksEl.hidden = true;
   }
 
+  modal.scrollTop = 0;
   modal.setAttribute('open','');
+  document.body.classList.add('modal-open');
 
-  const focusTarget = (isMemoriesAlbum && backButton && !backButton.hidden) ? backButton : closeButton;
+  const focusTarget = closeButton;
   if (focusTarget && typeof focusTarget.focus === 'function') {
     requestAnimationFrame(()=>{
       try {
@@ -852,10 +963,6 @@ document.addEventListener('keydown', (e)=>{
     e.preventDefault();
     closeModal();
   }
-});
-
-document.getElementById('wkBackHome')?.addEventListener('click', ()=>{
-  window.location.href = 'index.html';
 });
 
 /* ---------- (optional) merge auto-data om du kör scripts/sync.js ---------- */
