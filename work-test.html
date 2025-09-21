@@ -202,7 +202,7 @@ let PROJECTS = [
   {
     title: "The Call Below",
     kind: "solo",
-    thumb: "https://img.youtube.com/vi/Y_YEgEOXtAM/hqdefault.jpg",
+    thumb: "auto",
     media: { type: "embed", src: scEmbed("https://soundcloud.com/thirty_3/the-call-below") },
     desc: "Single released on Bandcamp.",
     links: [
@@ -214,7 +214,7 @@ let PROJECTS = [
   {
     title: "Mislay (feat. Lidnesty)",
     kind: "solo",
-    thumb: "https://img.youtube.com/vi/tV5tmkoVEO0/hqdefault.jpg",
+    thumb: "auto",
     media: { type: "embed", src: scEmbed("https://soundcloud.com/thirty_3/mislay-feat-lidnesty") },
     desc: "Single featuring Lidnesty, also part of Memories of Noise.",
     links: [
@@ -371,38 +371,160 @@ function youtubeEmbed(url){
 }
 
 const scThumbCache = new Map();
+const ytThumbCache = new Map();
+
+function buildSoundCloudThumbCandidates(url){
+  if (!url) return [];
+  const [base, ...rest] = url.split('?');
+  const suffix = rest.length ? `?${rest.join('?')}` : '';
+  let cleaned = base.replace(/-t\d+x\d+(?=\.(?:jpg|jpeg|png|gif)$)/i, '');
+  cleaned = cleaned.replace(/-large(?=\.(?:jpg|jpeg|png|gif)$)/i, '');
+  cleaned = cleaned.replace(/-small(?=\.(?:jpg|jpeg|png|gif)$)/i, '');
+  cleaned = cleaned.replace(/-crop(?=\.(?:jpg|jpeg|png|gif)$)/i, '');
+  const originalVariant = base.replace(/-t\d+x\d+(?=\.(?:jpg|jpeg|png|gif)$)/i, '-original');
+  const candidates = [];
+  if (cleaned && cleaned !== base) candidates.push(cleaned + suffix);
+  if (originalVariant && originalVariant !== base) candidates.push(originalVariant + suffix);
+  const original = base + suffix;
+  if (!candidates.includes(original)) candidates.push(original);
+  return [...new Set(candidates)];
+}
+
+function ensureImage(url){
+  if (!url) return Promise.reject(new Error('Missing image url'));
+  if (typeof Image === 'undefined') return Promise.resolve(url);
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.decoding = 'async';
+    img.referrerPolicy = 'no-referrer';
+    img.onload = () => resolve(url);
+    img.onerror = () => reject(new Error('Image failed to load'));
+    img.src = url;
+  });
+}
 
 async function fetchSoundCloudThumb(scUrl){
   if (!scUrl) return '';
-  if (scThumbCache.has(scUrl)) return scThumbCache.get(scUrl);
-  try {
-    const o = await fetch(`https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(scUrl)}`).then(r=>r.json());
-    const thumb = o && o.thumbnail_url ? o.thumbnail_url.replace('-t500x500','-t300x300') : '';
-    scThumbCache.set(scUrl, thumb);
-    return thumb;
-  } catch (e) {
-    scThumbCache.set(scUrl, '');
-    return '';
+  const cached = scThumbCache.get(scUrl);
+  if (typeof cached === 'string') return cached;
+  if (cached && typeof cached.then === 'function') return cached;
+  const promise = (async () => {
+    try {
+      const res = await fetch(`https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(scUrl)}`);
+      if (!res.ok) throw new Error('SoundCloud oEmbed failed');
+      const data = await res.json();
+      const baseThumb = data && data.thumbnail_url ? data.thumbnail_url : '';
+      const candidates = buildSoundCloudThumbCandidates(baseThumb);
+      let attemptedBase = false;
+      let baseFailed = false;
+      for (const candidate of candidates){
+        const isBase = candidate === baseThumb;
+        if (isBase) attemptedBase = true;
+        try {
+          const confirmed = await ensureImage(candidate);
+          if (confirmed){
+            scThumbCache.set(scUrl, confirmed);
+            return confirmed;
+          }
+        } catch (err) {
+          if (isBase) baseFailed = true;
+        }
+      }
+      const fallback = (attemptedBase && baseFailed) ? '' : (baseThumb || '');
+      scThumbCache.set(scUrl, fallback);
+      return fallback;
+    } catch (e) {
+      scThumbCache.set(scUrl, '');
+      return '';
+    }
+  })();
+  scThumbCache.set(scUrl, promise);
+  return promise;
+}
+
+async function fetchYouTubeThumb(id){
+  if (!id) return '';
+  const cached = ytThumbCache.get(id);
+  if (typeof cached === 'string') return cached;
+  if (cached && typeof cached.then === 'function') return cached;
+  const maxRes = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+  const high = `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+  if (typeof Image === 'undefined') {
+    ytThumbCache.set(id, maxRes);
+    return maxRes;
   }
+  const promise = new Promise((resolve) => {
+    const settle = (value) => {
+      ytThumbCache.set(id, value);
+      resolve(value);
+    };
+    const probe = new Image();
+    probe.decoding = 'async';
+    probe.referrerPolicy = 'no-referrer';
+    probe.onload = () => settle(maxRes);
+    probe.onerror = () => {
+      const fallbackImg = new Image();
+      fallbackImg.decoding = 'async';
+      fallbackImg.referrerPolicy = 'no-referrer';
+      fallbackImg.onload = () => settle(high);
+      fallbackImg.onerror = () => settle('');
+      fallbackImg.src = high;
+    };
+    probe.src = maxRes;
+  });
+  ytThumbCache.set(id, promise);
+  return promise;
+}
+
+async function fetchYouTubeThumbForUrl(url){
+  const id = youtubeIdFrom(url || '');
+  if (!id) return '';
+  return fetchYouTubeThumb(id);
 }
 
 async function resolveThumb(p){
   if (p.thumb && p.thumb !== 'auto') return p.thumb;
   if (p.preview?.type === 'image' && p.preview?.src) return p.preview.src;
   if (p.media?.type === 'image' && p.media?.src) return p.media.src;
+
   const url = p.media?.src || '';
+  const tried = new Set();
+
+  const trySoundCloud = async (source) => {
+    if (!source || tried.has(source)) return '';
+    tried.add(source);
+    try {
+      const thumb = await fetchSoundCloudThumb(source);
+      return thumb || '';
+    } catch (err) {
+      return '';
+    }
+  };
+
+  const tryYouTube = async (source) => {
+    if (!source || tried.has(source)) return '';
+    tried.add(source);
+    try {
+      const thumb = await fetchYouTubeThumbForUrl(source);
+      return thumb || '';
+    } catch (err) {
+      return '';
+    }
+  };
 
   if (/youtube\.com|youtu\.be/.test(url)) {
-    const id = youtubeIdFrom(url);
-    if (id) return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+    const thumb = await tryYouTube(url);
+    if (thumb) return thumb;
   }
+
   if (/vimeo\.com/.test(url)) {
     try {
       const vimeoUrl = url.replace('https://player.vimeo.com/video/', 'https://vimeo.com/');
       const o = await fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(vimeoUrl)}`).then(r=>r.json());
       if (o && o.thumbnail_url) return o.thumbnail_url;
-    } catch(e){}
+    } catch (err) {}
   }
+
   if (/soundcloud\.com/.test(url) || /w\.soundcloud\.com\/player/.test(url)) {
     try {
       let sc = url;
@@ -410,11 +532,35 @@ async function resolveThumb(p){
         const parsed = new URL(url);
         const q = parsed.searchParams.get('url');
         if (q) sc = decodeURIComponent(q);
-      } catch {}
-      const thumb = await fetchSoundCloudThumb(sc);
+      } catch (err) {}
+      const thumb = await trySoundCloud(sc);
       if (thumb) return thumb;
-    } catch(e){}
+    } catch (err) {}
   }
+
+  const scCandidates = [];
+  if (p.setUrl) scCandidates.push(p.setUrl);
+  if (p.scUrl) scCandidates.push(p.scUrl);
+  (p.links || []).forEach(l => {
+    const href = l && l.href;
+    if (href && /soundcloud\.com/.test(href)) scCandidates.push(href);
+  });
+  for (const scSource of scCandidates) {
+    const thumb = await trySoundCloud(scSource);
+    if (thumb) return thumb;
+  }
+
+  const ytCandidates = [];
+  if (p.youtubeUrl) ytCandidates.push(p.youtubeUrl);
+  (p.links || []).forEach(l => {
+    const href = l && l.href;
+    if (href && (/youtube\.com/.test(href) || /youtu\.be/.test(href))) ytCandidates.push(href);
+  });
+  for (const ytSource of ytCandidates) {
+    const thumb = await tryYouTube(ytSource);
+    if (thumb) return thumb;
+  }
+
   return PLACEHOLDER;
 }
 
@@ -668,7 +814,7 @@ async function loadAutoProjects() {
       return out;
     }
     PROJECTS = dedupe([ ...auto, ...PROJECTS ]);
-  } catch {}
+  } catch (err) {}
 }
 
 async function loadMemoriesAlbum(){
@@ -684,20 +830,24 @@ async function loadMemoriesAlbum(){
       const scUrl = track.scUrl || '';
       const youtubeUrl = track.youtubeUrl || '';
       let thumb = track.thumb || '';
-      if (!thumb) thumb = await fetchSoundCloudThumb(scUrl);
+      if (!thumb && scUrl) thumb = await fetchSoundCloudThumb(scUrl);
+      if (!thumb && youtubeUrl) thumb = await fetchYouTubeThumbForUrl(youtubeUrl);
+      const primaryMedia = scUrl ? { type: 'embed', src: scEmbed(scUrl) } : (youtubeUrl ? { type: 'embed', src: youtubeEmbed(youtubeUrl) } : null);
+      const secondaryMedia = (scUrl && youtubeUrl) ? { type: 'embed', src: youtubeEmbed(youtubeUrl) } : null;
       return {
         title: track.title || 'Untitled',
         thumb: thumb || PLACEHOLDER,
         scUrl,
         youtubeUrl,
-        media: scUrl ? { type: 'embed', src: scEmbed(scUrl) } : null,
-        altMedia: youtubeUrl ? { type: 'embed', src: youtubeEmbed(youtubeUrl) } : null,
+        media: primaryMedia,
+        altMedia: secondaryMedia,
       };
     }));
 
     album.children = tracks;
 
-    const cover = (await fetchSoundCloudThumb(album.setUrl || MEMORIES_SET_URL)) || tracks[0]?.thumb;
+    const coverSource = album.setUrl || MEMORIES_SET_URL;
+    const cover = (coverSource ? await fetchSoundCloudThumb(coverSource) : '') || tracks[0]?.thumb;
     if (cover) {
       album.thumb = cover;
       album.preview = { type: 'image', src: cover };
