@@ -93,9 +93,17 @@
     .wk-preview{ background:#0b0f11; display:grid; place-items:center; min-height:280px; }
     @media (max-width:600px){
       .wk-modal{ align-items:flex-start; }
-      .wk-dialog{ width:100vw; height:100vh; max-height:none; border-radius:0; }
-      .wk-detail{ height:100%; overflow-y:auto; }
+      .wk-dialog{
+        width:100vw;
+        border-radius:0;
+        grid-template-columns:1fr;
+        height:auto;
+        max-height:92vh;
+      }
+      .wk-detail{ height:100%; overflow-y:auto; padding:14px; }
       .wk-preview{ min-height:220px; }
+      .wk-row .wk-chip, .wk-close{ font-size:11px; padding:5px 7px; }
+      .wk-actions{ flex-wrap:wrap; }
     }
     .wk-preview img, .wk-preview video, .wk-preview iframe{ width:100%; height:100%; object-fit:cover; border:0; }
     .wk-detail{ padding:18px 18px 20px; display:flex; flex-direction:column; gap:10px; }
@@ -141,6 +149,7 @@
 
     .wk-close{ border:1px solid var(--line); background:var(--chip); color:#fff; border-radius:8px; padding:6px 10px; cursor:pointer; font-size:13px; margin-left:auto; }
     .wk-close:hover{ background:var(--chipHover); border-color:#fff; }
+    #wkBackHome{ margin-left:0; }
   </style>
 </head>
 
@@ -173,14 +182,17 @@
 
   <dialog class="wk-modal" id="wkModal">
     <div class="wk-scrim" data-close></div>
-    <div class="wk-dialog">
-      <div class="wk-preview" id="wkPreview"></div>
-      <div class="wk-detail">
-        <div class="wk-detail-top">
-          <button class="wk-back" id="wkBack" type="button" data-close hidden>← Back to Work</button>
-          <button class="wk-close" type="button" data-close>Close</button>
-        </div>
-        <h3 id="wkTitle">Title</h3>
+      <div class="wk-dialog">
+        <div class="wk-preview" id="wkPreview"></div>
+        <div class="wk-detail">
+          <div class="wk-detail-top">
+            <button class="wk-back" id="wkBack" type="button" data-close hidden>← Back to Work</button>
+          </div>
+          <div class="wk-row" style="justify-content:space-between; margin:0 0 6px;">
+            <button class="wk-close" id="wkBackHome" type="button">← Back to Home</button>
+            <button class="wk-close" data-close type="button">Close</button>
+          </div>
+          <h3 id="wkTitle">Title</h3>
         <p id="wkDesc"></p>
         <div class="wk-row" id="wkLinks"></div>
         <div class="wk-tracks" id="wkTracks" hidden></div>
@@ -504,83 +516,52 @@ async function fetchYouTubeThumbForUrl(url){
   return fetchYouTubeThumb(id);
 }
 
+function tryImg(u){
+  return new Promise(res => {
+    const i = new Image();
+    i.onload = () => res(u);
+    i.onerror = () => res(null);
+    i.src = u;
+  });
+}
+
 async function resolveThumb(p){
   if (p.thumb && p.thumb !== 'auto') return p.thumb;
-  if (p.preview?.type === 'image' && p.preview?.src) return p.preview.src;
-  if (p.media?.type === 'image' && p.media?.src) return p.media.src;
+  if (!p.media || p.media.type !== 'embed') return PLACEHOLDER;
+  const url = p.media.src || '';
 
-  const url = p.media?.src || '';
-  const tried = new Set();
-
-  const trySoundCloud = async (source) => {
-    if (!source || tried.has(source)) return '';
-    tried.add(source);
-    try {
-      const thumb = await fetchSoundCloudThumb(source);
-      return thumb || '';
-    } catch (err) {
-      return '';
-    }
-  };
-
-  const tryYouTube = async (source) => {
-    if (!source || tried.has(source)) return '';
-    tried.add(source);
-    try {
-      const thumb = await fetchYouTubeThumbForUrl(source);
-      return thumb || '';
-    } catch (err) {
-      return '';
-    }
-  };
-
+  // YouTube
   if (/youtube\.com|youtu\.be/.test(url)) {
-    const thumb = await tryYouTube(url);
-    if (thumb) return thumb;
+    const id = youtubeIdFrom(url);
+    if (id) {
+      const hi = await tryImg(`https://img.youtube.com/vi/${id}/maxresdefault.jpg`);
+      return hi || `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+    }
   }
 
+  // Vimeo
   if (/vimeo\.com/.test(url)) {
     try {
       const vimeoUrl = url.replace('https://player.vimeo.com/video/', 'https://vimeo.com/');
       const o = await fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(vimeoUrl)}`).then(r=>r.json());
-      if (o && o.thumbnail_url) return o.thumbnail_url;
-    } catch (err) {}
+      if (o?.thumbnail_url) return o.thumbnail_url;
+    } catch(e){}
   }
 
+  // SoundCloud
   if (/soundcloud\.com/.test(url) || /w\.soundcloud\.com\/player/.test(url)) {
     try {
       let sc = url;
-      try {
-        const parsed = new URL(url);
-        const q = parsed.searchParams.get('url');
-        if (q) sc = decodeURIComponent(q);
-      } catch (err) {}
-      const thumb = await trySoundCloud(sc);
-      if (thumb) return thumb;
-    } catch (err) {}
-  }
-
-  const scCandidates = [];
-  if (p.setUrl) scCandidates.push(p.setUrl);
-  if (p.scUrl) scCandidates.push(p.scUrl);
-  (p.links || []).forEach(l => {
-    const href = l && l.href;
-    if (href && /soundcloud\.com/.test(href)) scCandidates.push(href);
-  });
-  for (const scSource of scCandidates) {
-    const thumb = await trySoundCloud(scSource);
-    if (thumb) return thumb;
-  }
-
-  const ytCandidates = [];
-  if (p.youtubeUrl) ytCandidates.push(p.youtubeUrl);
-  (p.links || []).forEach(l => {
-    const href = l && l.href;
-    if (href && (/youtube\.com/.test(href) || /youtu\.be/.test(href))) ytCandidates.push(href);
-  });
-  for (const ytSource of ytCandidates) {
-    const thumb = await tryYouTube(ytSource);
-    if (thumb) return thumb;
+      const q = new URL(url).searchParams.get('url');
+      if (q) sc = decodeURIComponent(q);
+      const o = await fetch(`https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(sc)}`).then(r=>r.json());
+      if (o?.thumbnail_url) {
+        return o.thumbnail_url
+          .replace('-t300x300', '-t500x500')
+          .replace('-large', '-t500x500')
+          .replace('-t120x120','-t500x500');
+      }
+    } catch(e){}
   }
 
   return PLACEHOLDER;
@@ -662,7 +643,7 @@ const descEl      = document.getElementById('wkDesc');
 const linksEl     = document.getElementById('wkLinks');
 const tracksEl    = document.getElementById('wkTracks');
 const backButton  = document.getElementById('wkBack');
-const closeButton = document.querySelector('.wk-close');
+const closeButton = document.querySelector('.wk-close[data-close]');
 let lastTriggerEl = null;
 
 function closeModal(){
@@ -871,6 +852,10 @@ document.addEventListener('keydown', (e)=>{
     e.preventDefault();
     closeModal();
   }
+});
+
+document.getElementById('wkBackHome')?.addEventListener('click', ()=>{
+  window.location.href = 'index.html';
 });
 
 /* ---------- (optional) merge auto-data om du kör scripts/sync.js ---------- */
