@@ -83,6 +83,13 @@ html, body{
 /* ge plats under topbaren */
 body.home{ padding-top:56px; }
 
+@media (max-width:480px){
+  .topbar{ height:52px; }
+  .topbar nav{ gap:16px; top:10px; }
+  .topbar nav a{ font-size:11px; letter-spacing:.06em; padding:6px 0; }
+  #logo3d-wrap{ left:10px; top:4px; width:100px; height:48px; }
+}
+
 /* ===============================
    Hero / content
 =================================*/

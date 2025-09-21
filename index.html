@@ -52,7 +52,6 @@
   <style>
     /* Gör toppbarens text lite mjukare på mobil */
     @media (max-width: 480px){
-      .topbar nav a{ font-size:12px; padding:6px 10px; }
       .subtitle{ font-size:16px; }
       .intro{ font-size:14px; }
       .mobile-overlay{ font-size:13px; }
@@ -131,8 +130,21 @@
     const ovl = document.getElementById('mobileOverlay');
     const v = document.getElementById('bgVideo');
     function needsTap(){ return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); }
-    function enableVideo(){
+
+    let overlayDismissed = false;
+    function dismissOverlay(){
+      if (overlayDismissed) return;
+      overlayDismissed = true;
       html.classList.remove('show-mobile-overlay');
+      if (ovl){
+        ovl.classList.add('fade-out');
+        ovl.style.pointerEvents = 'none';
+        setTimeout(()=>{ ovl.style.display = 'none'; }, 480);
+      }
+    }
+
+    function enableVideo(){
+      dismissOverlay();
       if (v && v.paused) { v.play().catch(()=>{}); }
     }
     if (needsTap()){
