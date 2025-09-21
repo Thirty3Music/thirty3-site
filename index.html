@@ -1,162 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Basics -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
 
-  <!-- SEO/OG/Twitter metas här... -->
+  <!-- Core SEO -->
+  <title>THIRTY3 — Official site</title>
+  <meta name="description" content="THIRTY3 — electronic artist/producer from Sweden. Distorted soul & ambient noise, sound design, collaborations, live AV." />
+  <link rel="canonical" href="https://thirty3music.github.io/thirty3-site/" />
+  <meta name="robots" content="index,follow" />
 
-  <link rel="stylesheet" href="style.css">
-</head>
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="THIRTY3" />
+  <meta property="og:title" content="THIRTY3 — Official site" />
+  <meta property="og:description" content="Electronic artist/producer from Sweden. Distorted soul & ambient noise." />
+  <meta property="og:url" content="https://thirty3music.github.io/thirty3-site/" />
+  <meta property="og:image" content="https://thirty3music.github.io/thirty3-site/image00015.jpeg" />
 
-<!-- Core SEO -->
-<title>THIRTY3 — Official site</title>
-<meta name="description" content="THIRTY3 — electronic artist/producer from Sweden. Distorted soul & ambient noise, sound design, collaborations and visual/live projects.">
-<link rel="canonical" href="https://thirty3music.github.io/thirty3-site/">
-<meta name="robots" content="index,follow">
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="THIRTY3 — Official site" />
+  <meta name="twitter:description" content="Electronic artist/producer from Sweden." />
+  <meta name="twitter:image" content="https://thirty3music.github.io/thirty3-site/image00015.jpeg" />
 
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="THIRTY3">
-<meta property="og:title" content="THIRTY3 — Official site">
-<meta property="og:description" content="Electronic artist/producer from Sweden.">
-<meta property="og:url" content="https://thirty3music.github.io/thirty3-site/">
-<meta property="og:image" content="https://thirty3music.github.io/thirty3-site/image00015.jpeg">
+  <!-- JSON-LD (Person) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": "https://thirty3music.github.io/thirty3-site/#person",
+    "name": "THIRTY3",
+    "alternateName": ["Thirty3"],
+    "description": "Electronic artist/producer from Sweden. Distorted soul & ambient noise.",
+    "disambiguatingDescription": "THIRTY3, electronic artist/producer from Sweden (not the US hardcore band or other artists named Thirty3).",
+    "url": "https://thirty3music.github.io/thirty3-site/",
+    "email": "mailto:thirty3contact@gmail.com",
+    "homeLocation": "Sweden",
+    "sameAs": [
+      "https://soundcloud.com/thirty_3",
+      "https://thirty3.bandcamp.com/",
+      "https://www.youtube.com/@thirty3473",
+      "https://www.instagram.com/_thirty3_/"
+    ]
+  }
+  </script>
 
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="THIRTY3 — Official site">
-<meta name="twitter:description" content="Electronic artist/producer from Sweden.">
-<meta name="twitter:image" content="https://thirty3music.github.io/thirty3-site/image00015.jpeg">
-
-<!-- JSON-LD: Person -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "@id": "https://thirty3music.github.io/thirty3-site/#person",
-  "name": "THIRTY3",
-  "alternateName": ["Thirty3"],
-  "description": "Electronic artist/producer from Sweden. Distorted soul & ambient noise.",
-  "disambiguatingDescription": "THIRTY3, electronic artist/producer from Sweden (not the US hardcore band or other artists named Thirty3).",
-  "url": "https://thirty3music.github.io/thirty3-site/",
-  "homeLocation": "Sweden",
-  "sameAs": [
-    "https://soundcloud.com/thirty_3",
-    "https://thirty3.bandcamp.com/",
-    "https://www.youtube.com/@thirty3473",
-    "https://www.instagram.com/_thirty3_/"
-  ]
-}
-</script>
-
-  <!-- TOPBAR-stil (tunna linjer + rutmönster + centrerad meny) -->
+  <!-- Small page-specific tweaks -->
   <style>
-    :root{
-      --ink:#e7eceb;
-      --line:rgba(255,255,255,.10);
-      --chip:rgba(255,255,255,.04);
-      --chipBorder:rgba(255,255,255,.18);
-      --chipHover:rgba(255,255,255,.12);
+    /* Gör toppbarens text lite mjukare på mobil */
+    @media (max-width: 480px){
+      .topbar nav a{ font-size:12px; padding:6px 10px; }
+      .subtitle{ font-size:16px; }
+      .intro{ font-size:14px; }
+      .mobile-overlay{ font-size:13px; }
     }
-    .topbar{
-      position:fixed; inset:0 0 auto 0; height:56px; z-index:9999;
-      display:flex; align-items:center; justify-content:center;
-      background:rgba(0,0,0,.18);
-      border-bottom:1px solid var(--line);
-      backdrop-filter:blur(2px);
-      /* subtilt 1px-rutmönster */
-      background-image:
-        linear-gradient(to bottom, rgba(255,255,255,.06), rgba(255,255,255,.06)),
-        repeating-linear-gradient(to right, rgba(255,255,255,.06) 0, rgba(255,255,255,.06) 1px, transparent 1px, transparent 12px),
-        repeating-linear-gradient(to bottom, rgba(255,255,255,.06) 0, rgba(255,255,255,.06) 1px, transparent 1px, transparent 12px);
-      background-blend-mode: overlay, normal, normal;
+    /* Säkerställ att kontaktlänken alltid är klickbar överst */
+    .topbar nav a[href^="mailto:"]{ border-color: var(--chipBorder); }
+    .topbar nav a[href^="mailto:"]:hover{ background: var(--chipHover); }
+    /* ”Tap to open”-lagret */
+    .mobile-overlay{
+      position:absolute; inset:0;
+      display:none; align-items:center; justify-content:center;
+      color:#fff; background:rgba(0,0,0,.28);
+      letter-spacing:.08em;
+      z-index:2;
+      user-select:none;
     }
-    #logo3d-wrap{ position:absolute; left:14px; top:6px; width:84px; height:44px; z-index:10001; pointer-events:none; }
-    #logo3d{ width:100%; height:100%; display:block; }
-    .topbar nav{ all:unset; display:flex; gap:12px; align-items:center; }
-    .topbar nav a{
-      all:unset; cursor:pointer;
-      font-family:'Courier New', monospace; font-weight:600;
-      font-size:13px; letter-spacing:.08em; color:#dfe4e6;
-      padding:7px 12px; line-height:1; border-radius:3px;
-      background:var(--chip); border:1px solid var(--chipBorder);
-      transition:background .15s ease, color .15s ease, border-color .15s ease;
-    }
-    .topbar nav a:hover{ background:var(--chipHover); color:#fff; border-color:rgba(255,255,255,.35); }
-
-    body.home{ padding-top:56px; }
+    .show-mobile-overlay .mobile-overlay{ display:flex; }
   </style>
 </head>
 
 <body class="home">
-  <!-- TOPPMENY -->
+  <!-- Top bar -->
   <header class="topbar">
-    <!-- Vänster: 3D-logga -->
-    <div id="logo3d-wrap">
-      <canvas id="logo3d"></canvas>
-    </div>
-    <!-- Mitten: länkar -->
-    <nav>
-      <a href="https://www.instagram.com/_thirty3_/" target="_blank">INSTAGRAM</a>
-      <a href="https://soundcloud.com/thirty_3" target="_blank">SOUNDCLOUD</a>
-      <a href="https://www.youtube.com/@thirty3473" target="_blank">YOUTUBE</a>
+    <div id="logo3d-wrap"><canvas id="logo3d"></canvas></div>
+    <nav aria-label="Primary">
+      <a href="https://www.instagram.com/_thirty3_/" target="_blank" rel="noopener">INSTAGRAM</a>
+      <a href="https://soundcloud.com/thirty_3" target="_blank" rel="noopener">SOUNDCLOUD</a>
+      <a href="https://www.youtube.com/@thirty3473" target="_blank" rel="noopener">YOUTUBE</a>
       <a href="work-test.html">WORK</a>
-      <a href="#contact">CONTACT</a>
+      <!-- Öppnar mailklient direkt -->
+      <a href="mailto:thirty3contact@gmail.com" aria-label="Email THIRTY3">CONTACT</a>
     </nav>
   </header>
 
-  <!-- HUVUDINNEHÅLL -->
+  <!-- Background video + overlay -->
   <main>
     <div class="video-wrapper">
-      <video autoplay muted loop playsinline preload="auto" class="bg-video" id="bg-video">
-        <source src="background.mp4" type="video/mp4">
-        <source src="background_high_quality.webm" type="video/webm">
+      <video autoplay muted loop playsinline preload="auto" class="bg-video" id="bgVideo">
+        <source src="background.mp4" type="video/mp4" />
+        <source src="background_high_quality.webm" type="video/webm" />
       </video>
-    </div>
-    <div class="overlay"></div>
-
-    <!-- Mobil overlay -->
-    <div class="mobile-overlay" id="mobileOverlay" onclick="enterSite()">
-      <div>tap to open</div>
+      <div class="overlay"></div>
+      <!-- Mobil overlay (tap to open) -->
+      <div class="mobile-overlay" id="mobileOverlay">tap to open</div>
     </div>
 
-    <!-- Mittinnehåll -->
-    <div class="content">
+    <!-- Center content -->
+    <section class="content" aria-label="Intro">
       <h1 class="glitch-title">T H I R T Y 3</h1>
       <p class="subtitle">noise // soul</p>
       <p class="intro" id="typing-text"></p>
-    </div>
+    </section>
+
+    <!-- Contact anchor (visuell sektion kvar om du länkar internt senare) -->
+    <section id="contact" style="display:none;"></section>
   </main>
 
-  <!-- FOOTER -->
-  <footer id="contact">
-    <p class="glitch-text" data-text="send a signal" onclick="glitchAndShow(this)">send a signal</p>
-    <div id="contactLinks">
-      <a href="mailto:thirty3music@gmail.com">→ thirty3music@gmail.com</a>
-      <a href="https://www.instagram.com/_thirty3_/" target="_blank">→ @_thirty3_</a>
-    </div>
-  </footer>
-
-  <!-- SCRIPTS (typning + mobil + glitch) -->
+  <!-- Scripts: typing + mobil + glitch -->
   <script>
     // Typing intro
-    const text = "sound over style – emotion over ego – music that says what I don't";
-    const target = document.getElementById("typing-text");
-    let index = 0;
-    function typeChar(){ if(index<text.length){ target.textContent += text.charAt(index); index++; setTimeout(typeChar,40); } }
-    window.addEventListener("load",()=>setTimeout(typeChar,1500));
+    const text = "sound over style — emotion over ego — music that says what I don't";
+    const target = document.getElementById('typing-text');
+    let idx = 0;
+    function typeChar(){
+      if(idx < text.length){ target.textContent += text.charAt(idx++); setTimeout(typeChar, 38); }
+    }
+    window.addEventListener('load', () => setTimeout(typeChar, 900));
 
-    // Mobile overlay
-    function isMobile(){ return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent); }
-    function enterSite(){ const o=document.getElementById('mobileOverlay'); o.classList.add('fade-out'); setTimeout(()=>{ o.style.display='none'; document.getElementById('bg-video').play(); },500); }
-    window.addEventListener("DOMContentLoaded",()=>{ if(isMobile()) document.getElementById("mobileOverlay").style.display="flex"; });
+    // Mobil overlay (kräv tap för att starta video på iOS om blockeras)
+    const html = document.documentElement;
+    const ovl = document.getElementById('mobileOverlay');
+    const v = document.getElementById('bgVideo');
+    function needsTap(){ return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); }
+    function enableVideo(){
+      html.classList.remove('show-mobile-overlay');
+      if (v && v.paused) { v.play().catch(()=>{}); }
+    }
+    if (needsTap()){
+      html.classList.add('show-mobile-overlay');
+      ovl.addEventListener('click', enableVideo, { passive:true });
+      // fallback: starta ändå efter kort delay om tillåtet
+      setTimeout(enableVideo, 1200);
+    }
 
-    // Glitch + reveal contacts
-    function glitchAndShow(el){ el.classList.add("glitching"); setTimeout(()=>{ el.classList.remove("glitching"); const links=document.getElementById("contactLinks"); links.style.opacity=1; links.style.height="auto"; },400); }
+    // Små glitch-effekter när sidan laddas
+    function glitchAndShow(el){ el.classList.add('glitching'); setTimeout(()=> el.classList.remove('glitching'), 600); }
+    window.addEventListener('DOMContentLoaded', ()=> glitchAndShow(document.querySelector('.glitch-title')));
   </script>
 
-  <!-- 3D LOGO (Three.js + OBJ) -->
+  <!-- 3D LOGO (Three.js + OBJLoader) -->
   <script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
   <script src="https://unpkg.com/three@0.159.0/examples/js/loaders/OBJLoader.js"></script>
   <script>
@@ -165,32 +151,34 @@
     if(!cvs) return;
 
     // Renderer
-    const renderer = new THREE.WebGLRenderer({ canvas:cvs, alpha:true, antialias:true });
+    const renderer = new THREE.WebGLRenderer({ canvas: cvs, alpha: true, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
-    // Scen + kamera
+    // Scene & camera
     const scene = new THREE.Scene();
-    const cam   = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-    cam.position.set(0,0,6);
+    const cam = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+    cam.position.set(0, 0, 3.2);
 
-    // Storlek
+    // Resize
     function resize(){
-      const w = cvs.clientWidth  || 96;
+      const w = cvs.clientWidth || 96;
       const h = cvs.clientHeight || 64;
-      renderer.setSize(w,h,false);
-      cam.aspect = w/h; cam.updateProjectionMatrix();
+      renderer.setSize(w, h, false);
+      cam.aspect = w / h;
+      cam.updateProjectionMatrix();
     }
     resize(); window.addEventListener('resize', resize);
 
-    // Ljus
+    // Lights
     scene.add(new THREE.AmbientLight(0xffffff, .85));
     const dir = new THREE.DirectionalLight(0xffffff, .9);
-    dir.position.set(2,3,4); scene.add(dir);
+    dir.position.set(2,3,4);
+    scene.add(dir);
 
-    // Fallback: liten wireframe-kub (visas direkt)
+    // Fallback (liten wireframe-kub)
     const fallback = new THREE.Mesh(
       new THREE.BoxGeometry(1,1,1),
-      new THREE.MeshStandardMaterial({ color:0x8aa0a6, metalness:.2, roughness:.6, wireframe:true })
+      new THREE.MeshStandardMaterial({ color:0x8ecceb, metalness:.2, roughness:.8, wireframe:true })
     );
     scene.add(fallback);
 
@@ -202,27 +190,26 @@
       requestAnimationFrame(tick);
     })();
 
-    // Hjälpare: autoskala + centrera objektet
-    function fitAndCenter(obj, targetDiameter=2.2){
+    // Hjälpare: autoskala + centrera objekt
+    function fitAndCenter(obj){
       const box = new THREE.Box3().setFromObject(obj);
       const sizeV = box.getSize(new THREE.Vector3());
       const maxDim = Math.max(sizeV.x, sizeV.y, sizeV.z) || 1;
       const center = box.getCenter(new THREE.Vector3());
       obj.position.sub(center);
-      obj.scale.setScalar(targetDiameter / maxDim);
+      obj.scale.setScalar(1.6 / maxDim);
       obj.rotation.set(0.2, 0.6, 0);
     }
 
-    // Ladda OBJ (fil i repo-roten – namnet är skiftlägeskänsligt!)
+    // Ladda OBJ (fil i repo-roten)
     const OBJ_URL = new URL('Thirty3_Live_Logo.obj', window.location.href).toString();
     const loader = new THREE.OBJLoader();
     loader.load(
       OBJ_URL,
-      (obj)=>{
+      (obj) =>{
         obj.traverse(m=>{
           if(m.isMesh){
-            // Eftersom ingen MTL – ge ett material
-            m.material = new THREE.MeshStandardMaterial({ color:0xe7eceb, metalness:.2, roughness:.35 });
+            m.material = new THREE.MeshStandardMaterial({ color:0x8ecceb, metalness:.2, roughness:.8 });
           }
         });
         fitAndCenter(obj);
@@ -231,7 +218,7 @@
         scene.add(obj);
       },
       undefined,
-      (err)=>{ console.error('OBJ load error:', err); }
+      (err)=>{ console.error('OBJ load error', err); }
     );
   })();
   </script>
