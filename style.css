@@ -42,23 +42,13 @@ html, body{
   left: 0;
   right: 0;
   height: 60px;
-  z-index: 10050;
+  z-index: 3000;
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(4px);
-
-  /* Endast horisontella linjer – glesa */
-  background:
-    linear-gradient(to bottom, rgba(0,0,0,.7), rgba(0,0,0,.35)),
-    repeating-linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.05) 0,
-      rgba(255,255,255,0.05) 1px,
-      transparent 1px,
-      transparent 120px
-    );
-  background-blend-mode: overlay;
+  background: linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.05));
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
 }
 
 /* 3D-logga till vänster */
@@ -86,27 +76,13 @@ html, body{
   padding:6px 14px;
   line-height:1;
   border:1px solid var(--chipBorder);
-  border-radius:999px;
+  border-radius:4px;
   background:var(--chip);
   display:inline-flex;
   align-items:center;
   justify-content:center;
   overflow:hidden;
   transition:background .18s ease, border-color .18s ease, color .18s ease;
-}
-
-.topbar nav a::after{
-  content:"";
-  position:absolute;
-  left:12%;
-  right:12%;
-  height:2px;
-  top:0;
-  background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.45) 50%, transparent 100%);
-  opacity:0;
-  transform:translateY(-140%);
-  pointer-events:none;
-  z-index:0;
 }
 
 .topbar nav a .nav-label{
@@ -124,43 +100,27 @@ html, body{
   color:#fff;
 }
 
+.topbar nav a:hover,
+.topbar nav a:focus-visible{
+  animation:topbarGlitch .18s linear;
+}
+
 .topbar nav a:focus-visible{
   box-shadow:0 0 0 1px rgba(255,255,255,.35);
 }
 
-@media (hover:hover){
-  .topbar nav a:hover .nav-label,
-  .topbar nav a:focus-visible .nav-label{
-    animation:navMicroGlitch 90ms steps(2, end) 1;
-  }
-
-  .topbar nav a:hover::after,
-  .topbar nav a:focus-visible::after{
-    animation:navScan 90ms linear 1;
-  }
-}
-
 @media (prefers-reduced-motion: reduce){
-  .topbar nav a:hover .nav-label,
-  .topbar nav a:focus-visible .nav-label,
-  .topbar nav a:hover::after,
-  .topbar nav a:focus-visible::after{
+  .topbar nav a:hover,
+  .topbar nav a:focus-visible{
     animation:none !important;
   }
 }
 
-@keyframes navMicroGlitch{
-  0%{ transform:translate3d(0,0,0); }
-  45%{ transform:translate3d(1px,0,0); }
-  55%{ transform:translate3d(-1px,0,0); }
-  100%{ transform:translate3d(0,0,0); }
-}
-
-@keyframes navScan{
-  0%{ opacity:0; transform:translateY(-140%); }
-  45%{ opacity:.35; transform:translateY(-20%); }
-  60%{ opacity:.3; transform:translateY(30%); }
-  100%{ opacity:0; transform:translateY(140%); }
+@keyframes topbarGlitch{
+  0%{ transform:translate(0,0); }
+  33%{ transform:translate(.3px,-.4px); }
+  66%{ transform:translate(-.4px,.3px); }
+  100%{ transform:translate(0,0); }
 }
 
 /* ge plats under topbaren */
