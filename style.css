@@ -36,33 +36,28 @@ html, body{
 /* ===============================
    Header / Topbar (centrerad meny + horisontella linjer)
 =================================*/
-.topbar {
-  position: sticky;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  z-index: 3000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.05));
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+.topbar{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:56px;
+  z-index:9999;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.05));
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
 }
-
-/* 3D-logga till vänster */
-#logo3d-wrap{
-  position:absolute; left:14px; top:6px;
-  width:120px; height:56px; z-index:10001;
-  pointer-events:none;
-}
-#logo3d{ width:100%; height:100%; display:block; }
 
 /* Meny i mitten */
 .topbar nav{
-  position:absolute; left:50%; top:14px; transform:translateX(-50%);
-  display:flex; gap:28px; align-items:center;
+  display:flex;
+  gap:28px;
+  align-items:center;
+  margin:0;
+  padding:6px 0;
   z-index:10000;
 }
 .topbar nav a{
@@ -123,14 +118,26 @@ html, body{
   100%{ transform:translate(0,0); }
 }
 
-/* ge plats under topbaren */
-body.home{ padding-top:56px; }
+/* ge plats under topbaren + bakgrundsbild */
+body.home{
+  padding-top:56px;
+  background-color:#0b0e10;
+  background-image:url("image00015.jpeg");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:cover;
+  background-attachment:fixed;
+}
+
+@media (max-width:768px){
+  body.home{ background-attachment:scroll; }
+}
 
 @media (max-width:480px){
   .topbar{ height:52px; }
-  .topbar nav{ gap:16px; top:10px; }
+  .topbar nav{ gap:16px; padding:8px 0 6px; }
   .topbar nav a{ font-size:11px; letter-spacing:.06em; padding:5px 8px; }
-  #logo3d-wrap{ left:10px; top:4px; width:100px; height:48px; }
+  body.home{ padding-top:52px; }
 }
 
 /* ===============================
@@ -320,10 +327,7 @@ body.work{ overflow-y:auto; background:#000; }
   .about-bio{ margin:0 auto; }
 }
 @media (max-width:700px){
-  .topbar{ height:50px; }
-  .topbar nav{ gap:14px; top:10px; }
+  .topbar nav{ gap:14px; }
   .topbar nav a{ font-size:12px; }
-  #logo3d-wrap{ display:none; } /* dölj 3D-logga på små skärmar */
-  body.home{ padding-top:50px; }
   body.about #about{ padding:90px 6vw 56px; }
 }
