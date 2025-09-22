@@ -39,10 +39,18 @@
       appearance:none; border:1px solid var(--line); background:var(--chip);
       color:#fff; font-size:13px; letter-spacing:.06em; font-weight:600;
       padding:8px 12px; border-radius:4px; cursor:pointer;
-      transition:transform .12s ease, background .12s ease, border-color .12s ease;
+      transition:background .15s ease, color .15s ease, border-color .15s ease, opacity .15s ease;
+      transform:none;
     }
-    .wk-tab[aria-pressed="true"]{ background:var(--chipHover); border-color:#fff; }
-    .wk-tab:hover{ transform:translateY(-1px); }
+    .wk-tab[aria-pressed="true"]{ background:var(--chipHover); border-color:#fff; color:#fff; }
+    .wk-tab:hover,
+    .wk-tab:focus,
+    .wk-tab:focus-visible{
+      background:var(--chipHover);
+      border-color:#fff;
+      color:#fff;
+      opacity:1;
+    }
 
     /* Grid */
     .wk-grid{ max-width:1100px; margin:0 auto 64px; padding:0 20px; display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; }
@@ -72,13 +80,21 @@
       padding:6px 10px;
       border-radius:4px;
       text-decoration:none;
-      transition:background .12s ease, border-color .12s ease;
+      transition:background .15s ease, color .15s ease, border-color .15s ease, opacity .15s ease;
+      transform:none;
       display:inline-flex;
       align-items:center;
       gap:6px;
       cursor:pointer;
     }
-    .wk-chip:hover{ background:var(--chipHover); border-color:#fff; }
+    .wk-chip:hover,
+    .wk-chip:focus,
+    .wk-chip:focus-visible{
+      background:var(--chipHover);
+      color:#fff;
+      border-color:#fff;
+      opacity:1;
+    }
     .wk-chip:focus-visible{ outline:2px solid rgba(255,255,255,.35); outline-offset:2px; }
     button.wk-chip{ font:inherit; }
 
@@ -253,8 +269,21 @@
     .track-row .title{ flex:1; font-size:13px; letter-spacing:.03em; color:var(--ink); }
     .track-row .badge{ font-size:10px; letter-spacing:.12em; text-transform:uppercase; border:1px solid var(--line); border-radius:999px; padding:2px 6px; background:rgba(255,255,255,.08); color:var(--ink); }
 
-    .wk-close{ border:1px solid var(--line); background:var(--chip); color:#fff; border-radius:8px; padding:6px 10px; cursor:pointer; font-size:13px; margin-left:auto; }
-    .wk-close:hover{ background:var(--chipHover); border-color:#fff; }
+    .wk-close{
+      border:1px solid var(--line);
+      background:var(--chip);
+      color:#fff;
+      border-radius:8px;
+      padding:6px 10px;
+      cursor:pointer;
+      font-size:13px;
+      margin-left:auto;
+      transition:background .15s ease, color .15s ease, border-color .15s ease, opacity .15s ease;
+      transform:none;
+    }
+    .wk-close:hover,
+    .wk-close:focus,
+    .wk-close:focus-visible{ background:var(--chipHover); border-color:#fff; color:#fff; opacity:1; }
   </style>
 </head>
 
@@ -501,14 +530,16 @@ let PROJECTS = [
     links: [ { label: "Watch (YouTube)", href: "https://www.youtube.com/watch?v=o9cvorFHGos" } ]
   },
   {
-    title: "Mitsubishi Facelift — N I T E F I S H",
+    title: "Mitsubishi Facelift — N I T E F I S H (ft. Thirty3)",
     kind: "collab",
     thumb: "auto",
     scUrl: "https://soundcloud.com/nitefishofficial/mitsubishi-facelift",
-    media: { type: "embed", src: scEmbed("https://soundcloud.com/nitefishofficial/mitsubishi-facelift") },
-    desc: "Produced · Mixed · Mastered by THIRTY3.",
+    media: {
+      type: "embed",
+      src: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nitefishofficial/mitsubishi-facelift&visual=true"
+    },
+    desc: "Collaboration single with N I T E F I S H.",
     links: [
-      { label: "Read (Kmag article)", href: "https://kmag.se/2024/06/09/n-i-t-e-f-i-s-h-slapper-singeln-mitsubishi-facelift-fran-kommande-ep/" },
       { label: "Listen (SoundCloud)", href: "https://soundcloud.com/nitefishofficial/mitsubishi-facelift" }
     ]
   },
