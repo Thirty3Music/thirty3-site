@@ -77,7 +77,8 @@ html, body{
   align-items:center;
   justify-content:center;
   overflow:hidden;
-  transition:background .18s ease, border-color .18s ease, color .18s ease;
+  transition:background .15s ease, color .15s ease, border-color .15s ease;
+  transform:none;
 }
 
 .topbar nav a .nav-label{
@@ -88,6 +89,7 @@ html, body{
 }
 
 .topbar nav a:hover,
+.topbar nav a:focus,
 .topbar nav a:focus-visible,
 .topbar nav a:active{
   background:var(--chipHover);
@@ -95,27 +97,8 @@ html, body{
   color:#fff;
 }
 
-.topbar nav a:hover,
-.topbar nav a:focus-visible{
-  animation:topbarGlitch .18s linear;
-}
-
 .topbar nav a:focus-visible{
   box-shadow:0 0 0 1px rgba(255,255,255,.35);
-}
-
-@media (prefers-reduced-motion: reduce){
-  .topbar nav a:hover,
-  .topbar nav a:focus-visible{
-    animation:none !important;
-  }
-}
-
-@keyframes topbarGlitch{
-  0%{ transform:translate(0,0); }
-  33%{ transform:translate(.3px,-.4px); }
-  66%{ transform:translate(-.4px,.3px); }
-  100%{ transform:translate(0,0); }
 }
 
 /* ge plats under topbaren + bakgrundsbild */
