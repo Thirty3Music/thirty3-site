@@ -60,6 +60,7 @@ html, body{
   padding:6px 0;
   z-index:10000;
 }
+/* Topbar – behåll rektangulära knappar och tajtare spacing på mobil */
 .topbar nav a{
   all:unset;
   cursor:pointer;
@@ -68,7 +69,7 @@ html, body{
   font-weight:600;
   font-size:13px;
   letter-spacing:.08em;
-  padding:6px 14px;
+  padding:6px 10px;
   line-height:1;
   border:1px solid var(--chipBorder);
   border-radius:4px;
@@ -116,11 +117,29 @@ body.home{
   body.home{ background-attachment:scroll; }
 }
 
+/* Smalare skärmar: minska typ & spacing och tillåt radbrytning */
 @media (max-width:480px){
-  .topbar{ height:52px; }
-  .topbar nav{ gap:16px; padding:8px 0 6px; }
-  .topbar nav a{ font-size:11px; letter-spacing:.06em; padding:5px 8px; }
-  body.home{ padding-top:52px; }
+  .topbar{ padding:6px 8px; height:auto; }
+  .topbar nav{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px 8px;
+    justify-content:center;
+    padding:0;
+  }
+  .topbar nav a{
+    padding:5px 9px;
+    font-size:12px;
+  }
+  body.home{ padding-top:56px; }
+}
+
+/* Extra smalt (t.ex. ~360px): ännu lite kompaktare */
+@media (max-width:360px){
+  .topbar nav a{
+    padding:4px 8px;
+    font-size:11.5px;
+  }
 }
 
 /* ===============================
