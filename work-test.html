@@ -5,23 +5,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>THIRTY3 — Work</title>
   <link rel="stylesheet" href="style.css"/>
+  <!-- JSON-LD: KTH Loops for Stagnation -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Event",
-    "name": "Samoota — In the Shadow of Three Suns (Exhibition)",
-    "startDate": "2025-01-20",
+    "name": "Loops for Stagnation — Workshop & DJ set",
+    "startDate": "2025-05-09",
     "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
     "eventStatus": "https://schema.org/EventScheduled",
-    "url": "https://www.trip.com/events/samoota-in-the-shadow-of-three-suns--art-gallery--exhibition-20250120/",
+    "location": {
+      "@type": "Place",
+      "name": "KTH NAVET",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Stockholm",
+        "addressCountry": "SE"
+      }
+    },
     "performer": {
-      "@type": "Person",
+      "@type": "MusicGroup",
       "name": "THIRTY3"
     },
     "organizer": {
       "@type": "Organization",
-      "name": "Samoota"
-    }
+      "name": "KTH NAVET"
+    },
+    "url": "https://www.kth.se/navet/for-students/student-led-activities/loops-for-stagnation-workshop-and-dj-set-1.1401240"
+  }
+  </script>
+
+  <!-- JSON-LD: RA Event -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "Thirty3 — RA Event",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "location": {
+      "@type": "Place",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Stockholm",
+        "addressCountry": "SE"
+      }
+    },
+    "performer": {
+      "@type": "MusicGroup",
+      "name": "THIRTY3"
+    },
+    "url": "https://ra.co/events/2266481"
+  }
+  </script>
+
+  <!-- JSON-LD: Samoota -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "Samoota — In the Shadow of Three Suns",
+    "startDate": "2025-02-15",
+    "eventStatus": "https://schema.org/EventCompleted",
+    "location": {
+      "@type": "Place",
+      "name": "Indra Gallery",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "London",
+        "addressCountry": "GB"
+      }
+    },
+    "performer": [
+      { "@type": "Person", "name": "in-soo" },
+      { "@type": "MusicGroup", "name": "Sweeep" },
+      { "@type": "MusicGroup", "name": "THIRTY3" }
+    ],
+    "description": "Audiovisual exhibition by Petter Schiölander at Indra Gallery with afterparty DJ sets by in-soo, Sweeep & Thirty3.",
+    "url": "https://www.trip.com/events/samoota-in-the-shadow-of-three-suns--art-gallery--exhibition-20250120/"
   }
   </script>
 
@@ -336,8 +396,60 @@
     </div>
   </section>
 
-  <section id="events" aria-label="Events">
-    <div id="events-wrap"></div>
+  <!-- Events -->
+  <section id="events" class="events" aria-label="Events">
+    <h3>Events</h3>
+
+    <!-- KTH: Loops for Stagnation — Workshop & DJ set -->
+    <article class="event-card upcoming">
+      <div class="event-main">
+        <h4 class="event-title">Loops for Stagnation — Workshop &amp; DJ set</h4>
+        <div class="event-meta">
+          <span class="event-where">KTH NAVET — Stockholm, Sweden</span>
+          <span class="event-when" data-date="2025-05-09">09 May 2025</span>
+        </div>
+      </div>
+      <div class="event-actions">
+        <a class="btn" href="https://www.kth.se/navet/for-students/student-led-activities/loops-for-stagnation-workshop-and-dj-set-1.1401240" target="_blank" rel="noopener">View details</a>
+      </div>
+    </article>
+
+    <!-- RA: new event -->
+    <article class="event-card upcoming">
+      <div class="event-main">
+        <h4 class="event-title">Thirty3 — RA Event</h4>
+        <div class="event-meta">
+          <span class="event-where">Stockholm, Sweden</span>
+          <span class="event-when" data-date="">TBD</span>
+        </div>
+      </div>
+      <div class="event-actions">
+        <a class="btn" href="https://ra.co/events/2266481" target="_blank" rel="noopener">View on Resident Advisor</a>
+      </div>
+    </article>
+
+    <!-- Past events header -->
+    <h4 class="events-subhead">Past events</h4>
+
+    <!-- Samoota: past -->
+    <article class="event-card past">
+      <div class="event-thumb">
+        <img src="data/images/samoota-poster.jpg" alt="Samoota — In the Shadow of Three Suns" onerror="this.style.display='none'">
+      </div>
+      <div class="event-main">
+        <h4 class="event-title">Samoota — In the Shadow of Three Suns</h4>
+        <p class="event-desc">
+          Audiovisual exhibition by Petter Schiölander at Indra Gallery with afterparty DJ sets by in-soo, Sweeep &amp; Thirty3.
+        </p>
+        <div class="event-meta">
+          <span class="event-where">Indra Gallery — London, UK</span>
+          <span class="event-when" data-date="2025-02-15">15 Feb 2025</span>
+        </div>
+      </div>
+      <div class="event-actions">
+        <a class="btn" href="https://www.trip.com/events/samoota-in-the-shadow-of-three-suns--art-gallery--exhibition-20250120/" target="_blank" rel="noopener">View details</a>
+      </div>
+    </article>
   </section>
 
   <section class="wk-grid" id="wkGrid" aria-live="polite"></section>
@@ -357,8 +469,6 @@
       </div>
     </div>
   </dialog>
-
-  <script src="scripts/events.js"></script>
 
   <script>
 /* =========================================================
