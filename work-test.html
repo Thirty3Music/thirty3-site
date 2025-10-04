@@ -107,13 +107,25 @@
     .wk-sub{ color:#dfe4e6; opacity:.85; margin:0 0 22px; line-height:1.5; }
 
     /* Tabs */
-    .wk-tabs{
-      display:flex; gap:10px; flex-wrap:wrap;
-      border-top:1px solid var(--line); border-bottom:1px solid var(--line);
-      padding:10px 0; margin-bottom:22px;
+    .filter-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      border-top:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      padding:10px 0;
+      margin-bottom:22px;
       background:repeating-linear-gradient(to bottom, rgba(255,255,255,.06) 0, rgba(255,255,255,.06) 1px, transparent 1px, transparent 42px);
       background-blend-mode:overlay;
     }
+    .filter-row .wk-tabs{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      flex:1 1 auto;
+    }
+    #eventsToggle{ margin-left:auto; }
     .wk-tab{
       appearance:none; border:1px solid var(--line); background:var(--chip);
       color:#fff; font-size:13px; letter-spacing:.06em; font-weight:600;
@@ -387,73 +399,86 @@
     <h1 class="wk-title">Work</h1>
     <p class="wk-sub">Solo pieces, collaborations and live/visual projects.</p>
 
-    <div class="wk-tabs" role="tablist" aria-label="Work categories">
-      <button class="wk-tab" aria-pressed="true" data-filter="all">All</button>
-      <button class="wk-tab" aria-pressed="false" data-filter="solo">Solo Projects</button>
-      <button class="wk-tab" aria-pressed="false" data-filter="remix">Remixes</button>
-      <button class="wk-tab" aria-pressed="false" data-filter="collab">Collabs</button>
-      <button class="wk-tab" aria-pressed="false" data-filter="live">Live / AV</button>
+    <div class="filter-row">
+      <div class="wk-tabs" role="tablist" aria-label="Work categories">
+        <button class="wk-tab" aria-pressed="true" data-filter="all">All</button>
+        <button class="wk-tab" aria-pressed="false" data-filter="solo">Solo Projects</button>
+        <button class="wk-tab" aria-pressed="false" data-filter="remix">Remixes</button>
+        <button class="wk-tab" aria-pressed="false" data-filter="collab">Collabs</button>
+        <button class="wk-tab" aria-pressed="false" data-filter="live">Live / AV</button>
+      </div>
+      <button id="eventsToggle"
+              class="chip chip--ghost"
+              aria-expanded="false"
+              aria-controls="eventsPanel">
+        Events
+        <span class="chev" aria-hidden="true"></span>
+      </button>
     </div>
   </section>
 
-  <!-- Events -->
-  <section id="events" class="events">
-    <h3 class="events-title">Events</h3>
+  <!-- Collapsible Events panel (start collapsed) -->
+  <section id="eventsPanel" class="events-panel" hidden>
+    <div class="events-panel__inner">
+      <div class="work-grid events-grid">
+        <!-- KTH -->
+        <article class="card event-card upcoming">
+          <div class="thumb-wrap">
+            <!-- valfri liten placeholder om du vill (eller lämna tomt) -->
+            <div class="thumb thumb--event" aria-hidden="true"></div>
+            <span class="date-badge">09 May 2025</span>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title">Loops for Stagnation — Workshop &amp; DJ set</h4>
+            <p class="card-meta">KTH NAVET — Stockholm, Sweden</p>
+            <a class="btn btn--ghost" target="_blank" rel="noopener"
+               href="https://www.kth.se/navet/for-students/student-led-activities/loops-for-stagnation-workshop-and-dj-set-1.1401240">
+              View details
+            </a>
+          </div>
+        </article>
 
-    <!-- Grid som matchar work-korten -->
-    <div class="work-grid events-grid">
-      <!-- KTH -->
-      <article class="card event-card upcoming">
-        <div class="thumb-wrap">
-          <!-- valfri liten placeholder om du vill (eller lämna tomt) -->
-          <div class="thumb thumb--event" aria-hidden="true"></div>
-          <span class="date-badge">09 May 2025</span>
-        </div>
-        <div class="card-body">
-          <h4 class="card-title">Loops for Stagnation — Workshop &amp; DJ set</h4>
-          <p class="card-meta">KTH NAVET — Stockholm, Sweden</p>
-          <a class="btn btn--ghost" target="_blank" rel="noopener"
-             href="https://www.kth.se/navet/for-students/student-led-activities/loops-for-stagnation-workshop-and-dj-set-1.1401240">
-            View details
-          </a>
-        </div>
-      </article>
+        <!-- RA (TBD) -->
+        <article class="card event-card upcoming">
+          <div class="thumb-wrap">
+            <div class="thumb thumb--event" aria-hidden="true"></div>
+            <span class="date-badge">TBD</span>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title">Thirty3 — RA Event</h4>
+            <p class="card-meta">Stockholm, Sweden</p>
+            <a class="btn btn--ghost" target="_blank" rel="noopener"
+               href="https://ra.co/events/2266481">View on Resident Advisor</a>
+          </div>
+        </article>
 
-      <!-- RA (TBD) -->
-      <article class="card event-card upcoming">
-        <div class="thumb-wrap">
-          <div class="thumb thumb--event" aria-hidden="true"></div>
-          <span class="date-badge">TBD</span>
-        </div>
-        <div class="card-body">
-          <h4 class="card-title">Thirty3 — RA Event</h4>
-          <p class="card-meta">Stockholm, Sweden</p>
-          <a class="btn btn--ghost" target="_blank" rel="noopener"
-             href="https://ra.co/events/2266481">View on Resident Advisor</a>
-        </div>
-      </article>
+        <!-- Samoota (past) -->
+        <article class="card event-card past">
+          <div class="thumb-wrap">
+            <img class="thumb" src="data/images/samoota-poster.jpg"
+                 alt="Samoota — In the Shadow of Three Suns"
+                 onerror="this.style.display='none'">
+            <span class="date-badge">15 Feb 2025</span>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title">Samoota — In the Shadow of Three Suns</h4>
+            <p class="card-desc">
+              Audiovisual exhibition by Petter Schiölander at Indra Gallery with
+              afterparty DJ sets by in-soo, Sweeep &amp; Thirty3.
+            </p>
+            <p class="card-meta">Indra Gallery — London, UK</p>
+            <a class="btn btn--ghost" target="_blank" rel="noopener"
+               href="https://www.trip.com/events/samoota-in-the-shadow-of-three-suns--art-gallery--exhibition-20250120/">
+              View details
+            </a>
+          </div>
+        </article>
+      </div>
 
-      <!-- Samoota (past) -->
-      <article class="card event-card past">
-        <div class="thumb-wrap">
-          <img class="thumb" src="data/images/samoota-poster.jpg"
-               alt="Samoota — In the Shadow of Three Suns"
-               onerror="this.style.display='none'">
-          <span class="date-badge">15 Feb 2025</span>
-        </div>
-        <div class="card-body">
-          <h4 class="card-title">Samoota — In the Shadow of Three Suns</h4>
-          <p class="card-desc">
-            Audiovisual exhibition by Petter Schiölander at Indra Gallery with
-            afterparty DJ sets by in-soo, Sweeep &amp; Thirty3.
-          </p>
-          <p class="card-meta">Indra Gallery — London, UK</p>
-          <a class="btn btn--ghost" target="_blank" rel="noopener"
-             href="https://www.trip.com/events/samoota-in-the-shadow-of-three-suns--art-gallery--exhibition-20250120/">
-            View details
-          </a>
-        </div>
-      </article>
+      <div class="events-panel__cta">
+        <a class="btn btn--ghost" target="_blank" rel="noopener"
+           href="https://ra.co/dj/thirty3">View all on RA</a>
+      </div>
     </div>
   </section>
 
@@ -1358,5 +1383,36 @@ async function loadMemoriesAlbum(){
   render();
 })();
   </script>
+
+  <script>
+(function () {
+  const btn = document.getElementById('eventsToggle');
+  const panel = document.getElementById('eventsPanel');
+
+  if (!btn || !panel) return;
+
+  const open = () => {
+    panel.hidden = false;
+    requestAnimationFrame(() => panel.classList.add('is-open'));
+    btn.setAttribute('aria-expanded', 'true');
+  };
+
+  const close = () => {
+    panel.classList.remove('is-open');
+    btn.setAttribute('aria-expanded', 'false');
+    panel.addEventListener('transitionend', function h(e){
+      if (e.propertyName === 'max-height') {
+        panel.hidden = true;
+        panel.removeEventListener('transitionend', h);
+      }
+    });
+  };
+
+  btn.addEventListener('click', () => {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    expanded ? close() : open();
+  });
+})();
+</script>
 </body>
 </html>
