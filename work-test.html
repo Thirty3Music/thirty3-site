@@ -397,59 +397,64 @@
   </section>
 
   <!-- Events -->
-  <section id="events" class="events" aria-label="Events">
-    <h3>Events</h3>
+  <section id="events" class="events">
+    <h3 class="events-title">Events</h3>
 
-    <!-- KTH: Loops for Stagnation — Workshop & DJ set -->
-    <article class="event-card upcoming">
-      <div class="event-main">
-        <h4 class="event-title">Loops for Stagnation — Workshop &amp; DJ set</h4>
-        <div class="event-meta">
-          <span class="event-where">KTH NAVET — Stockholm, Sweden</span>
-          <span class="event-when" data-date="2025-05-09">09 May 2025</span>
+    <!-- Grid som matchar work-korten -->
+    <div class="work-grid events-grid">
+      <!-- KTH -->
+      <article class="card event-card upcoming">
+        <div class="thumb-wrap">
+          <!-- valfri liten placeholder om du vill (eller lämna tomt) -->
+          <div class="thumb thumb--event" aria-hidden="true"></div>
+          <span class="date-badge">09 May 2025</span>
         </div>
-      </div>
-      <div class="event-actions">
-        <a class="btn" href="https://www.kth.se/navet/for-students/student-led-activities/loops-for-stagnation-workshop-and-dj-set-1.1401240" target="_blank" rel="noopener">View details</a>
-      </div>
-    </article>
-
-    <!-- RA: new event -->
-    <article class="event-card upcoming">
-      <div class="event-main">
-        <h4 class="event-title">Thirty3 — RA Event</h4>
-        <div class="event-meta">
-          <span class="event-where">Stockholm, Sweden</span>
-          <span class="event-when" data-date="">TBD</span>
+        <div class="card-body">
+          <h4 class="card-title">Loops for Stagnation — Workshop &amp; DJ set</h4>
+          <p class="card-meta">KTH NAVET — Stockholm, Sweden</p>
+          <a class="btn btn--ghost" target="_blank" rel="noopener"
+             href="https://www.kth.se/navet/for-students/student-led-activities/loops-for-stagnation-workshop-and-dj-set-1.1401240">
+            View details
+          </a>
         </div>
-      </div>
-      <div class="event-actions">
-        <a class="btn" href="https://ra.co/events/2266481" target="_blank" rel="noopener">View on Resident Advisor</a>
-      </div>
-    </article>
+      </article>
 
-    <!-- Past events header -->
-    <h4 class="events-subhead">Past events</h4>
-
-    <!-- Samoota: past -->
-    <article class="event-card past">
-      <div class="event-thumb">
-        <img src="data/images/samoota-poster.jpg" alt="Samoota — In the Shadow of Three Suns" onerror="this.style.display='none'">
-      </div>
-      <div class="event-main">
-        <h4 class="event-title">Samoota — In the Shadow of Three Suns</h4>
-        <p class="event-desc">
-          Audiovisual exhibition by Petter Schiölander at Indra Gallery with afterparty DJ sets by in-soo, Sweeep &amp; Thirty3.
-        </p>
-        <div class="event-meta">
-          <span class="event-where">Indra Gallery — London, UK</span>
-          <span class="event-when" data-date="2025-02-15">15 Feb 2025</span>
+      <!-- RA (TBD) -->
+      <article class="card event-card upcoming">
+        <div class="thumb-wrap">
+          <div class="thumb thumb--event" aria-hidden="true"></div>
+          <span class="date-badge">TBD</span>
         </div>
-      </div>
-      <div class="event-actions">
-        <a class="btn" href="https://www.trip.com/events/samoota-in-the-shadow-of-three-suns--art-gallery--exhibition-20250120/" target="_blank" rel="noopener">View details</a>
-      </div>
-    </article>
+        <div class="card-body">
+          <h4 class="card-title">Thirty3 — RA Event</h4>
+          <p class="card-meta">Stockholm, Sweden</p>
+          <a class="btn btn--ghost" target="_blank" rel="noopener"
+             href="https://ra.co/events/2266481">View on Resident Advisor</a>
+        </div>
+      </article>
+
+      <!-- Samoota (past) -->
+      <article class="card event-card past">
+        <div class="thumb-wrap">
+          <img class="thumb" src="data/images/samoota-poster.jpg"
+               alt="Samoota — In the Shadow of Three Suns"
+               onerror="this.style.display='none'">
+          <span class="date-badge">15 Feb 2025</span>
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">Samoota — In the Shadow of Three Suns</h4>
+          <p class="card-desc">
+            Audiovisual exhibition by Petter Schiölander at Indra Gallery with
+            afterparty DJ sets by in-soo, Sweeep &amp; Thirty3.
+          </p>
+          <p class="card-meta">Indra Gallery — London, UK</p>
+          <a class="btn btn--ghost" target="_blank" rel="noopener"
+             href="https://www.trip.com/events/samoota-in-the-shadow-of-three-suns--art-gallery--exhibition-20250120/">
+            View details
+          </a>
+        </div>
+      </article>
+    </div>
   </section>
 
   <section class="wk-grid" id="wkGrid" aria-live="polite"></section>
