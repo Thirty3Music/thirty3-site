@@ -1,18 +1,41 @@
 [
   {
-    "date": "2025-02-15",
     "title": "Samoota — In the Shadow of Three Suns (Exhibition, afterparty DJ: Thirty3)",
+    "subtitle": "",
+    "source": "trip",
+    "link": "https://www.trip.com/events/samoota-in-the-shadow-of-three-suns--art-gallery--exhibition-20250120/",
     "venue": "Indra Gallery",
     "city": "London",
-    "source": "Trip",
-    "url": "https://www.trip.com/events/samoota-in-the-shadow-of-three-suns--art-gallery--exhibition-20250120/"
+    "country": "United Kingdom",
+    "tags": ["Exhibition", "DJ"],
+    "date": "2025-02-15",
+    "time": "",
+    "performers": ["Thirty3"]
   },
   {
-    "date": "2024-11-16",
-    "title": "Thirty3 (DJ)",
-    "venue": "Example Club",
+    "title": "Loops for Stagnation — Workshop & DJ set",
+    "subtitle": "KTH NAVET / for students",
+    "source": "kth",
+    "link": "https://www.kth.se/navet/for-students/student-led-activities/loops-for-stagnation-workshop-and-dj-set-1.1401240",
+    "venue": "KTH (Navet)",
     "city": "Stockholm",
-    "source": "RA",
-    "url": "https://ra.co/events/1234567"
+    "country": "Sweden",
+    "tags": ["Workshop", "DJ", "Live / AV"],
+    "date": "",
+    "time": "",
+    "performers": ["Thirty3"]
+  },
+  {
+    "title": "Thirty3 — RA Event",
+    "subtitle": "",
+    "source": "ra",
+    "link": "https://ra.co/events/2266481",
+    "venue": "",
+    "city": "",
+    "country": "",
+    "tags": ["Live / AV"],
+    "date": "",
+    "time": "",
+    "performers": ["Thirty3"]
   }
 ]

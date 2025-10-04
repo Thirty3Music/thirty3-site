@@ -152,17 +152,26 @@ body.home{
 }
 .events-list{ list-style:none; margin:8px 0 0; padding:0; }
 .muted{ color:#9aa3aa; font-style:italic; }
-.evt{ display:grid; grid-template-columns:120px 1fr auto auto; gap:10px;
-     padding:10px 12px; border:1px solid rgba(255,255,255,.08); border-radius:8px;
-     background:rgba(0,0,0,.25); margin-bottom:8px; align-items:center; }
-.evt .d{ font-variant-numeric:tabular-nums; color:#cfd4d8; }
-.evt .t{ color:#e9ecef; }
-.evt .v{ color:#9aa3aa; }
-.evt .lnk{ justify-self:end; font-size:12px; border:1px solid rgba(255,255,255,.2);
-  padding:6px 10px; border-radius:6px; color:#e7e7e7; text-decoration:none; }
+.evt{ position:relative; display:flex; flex-direction:column; gap:12px;
+     padding:14px 16px; border:1px solid rgba(255,255,255,.08); border-radius:10px;
+     background:rgba(0,0,0,.25); margin-bottom:10px; }
+.evt-body{ display:flex; flex-direction:column; gap:6px; }
+.evt-title{ color:#e9ecef; font-size:16px; margin:0; }
+.evt-sub{ color:#cfd4d8; margin:0; font-size:14px; }
+.evt-meta{ color:#9aa3aa; margin:0; font-size:13px; letter-spacing:.01em; }
+.evt-link{ align-self:flex-start; font-size:12px; border:1px solid rgba(255,255,255,.2);
+  padding:6px 12px; border-radius:6px; color:#e7e7e7; text-decoration:none; background:rgba(0,0,0,.3); }
+.evt-link:hover{ border-color:rgba(121,230,224,.4); color:#79e6e0; }
+.evt-badge{ position:absolute; top:12px; right:16px; font-size:11px; letter-spacing:.04em;
+  padding:4px 8px; border-radius:999px; background:rgba(121,230,224,.15);
+  border:1px solid rgba(121,230,224,.4); color:#79e6e0; font-variant-numeric:tabular-nums; }
 .events-past summary{ cursor:pointer; margin-top:10px; color:#aeb7bd; }
-@media(max-width:600px){ .evt{ grid-template-columns:110px 1fr; }
-  .evt .v{ grid-column:1 / -2; } .evt .lnk{ grid-column:-2 / -1; } }
+@media(max-width:600px){
+  .evt{ padding:12px 14px; }
+  .evt-badge{ position:static; align-self:flex-end; margin-bottom:-4px; }
+  .evt{ gap:10px; }
+  .evt-link{ align-self:stretch; text-align:center; }
+}
 
 /* ===============================
    Hero / content
