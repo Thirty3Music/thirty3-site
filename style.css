@@ -142,6 +142,28 @@ body.home{
   }
 }
 
+#events{ margin:16px 0 24px; }
+.events-head{ display:flex; gap:10px; align-items:center; justify-content:space-between; }
+.events-title{ color:#79e6e0; letter-spacing:.04em; font-weight:600; }
+.chip{
+  display:inline-block; font-size:12px; padding:6px 10px;
+  border:1px solid rgba(255,255,255,.2); border-radius:999px;
+  background:rgba(0,0,0,.35); color:#ddd; text-decoration:none;
+}
+.events-list{ list-style:none; margin:8px 0 0; padding:0; }
+.muted{ color:#9aa3aa; font-style:italic; }
+.evt{ display:grid; grid-template-columns:120px 1fr auto auto; gap:10px;
+     padding:10px 12px; border:1px solid rgba(255,255,255,.08); border-radius:8px;
+     background:rgba(0,0,0,.25); margin-bottom:8px; align-items:center; }
+.evt .d{ font-variant-numeric:tabular-nums; color:#cfd4d8; }
+.evt .t{ color:#e9ecef; }
+.evt .v{ color:#9aa3aa; }
+.evt .lnk{ justify-self:end; font-size:12px; border:1px solid rgba(255,255,255,.2);
+  padding:6px 10px; border-radius:6px; color:#e7e7e7; text-decoration:none; }
+.events-past summary{ cursor:pointer; margin-top:10px; color:#aeb7bd; }
+@media(max-width:600px){ .evt{ grid-template-columns:110px 1fr; }
+  .evt .v{ grid-column:1 / -2; } .evt .lnk{ grid-column:-2 / -1; } }
+
 /* ===============================
    Hero / content
 =================================*/
