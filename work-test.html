@@ -396,8 +396,12 @@
 
   <section class="wk-hero">
     <p class="wk-eyebrow">SELECTED</p>
-    <h1 class="wk-title">Work</h1>
-    <p class="wk-sub">Solo pieces, collaborations and live/visual projects.</p>
+    <div class="work-intro">
+      <h1 class="wk-title">Work</h1>
+      <p class="wk-sub">Solo pieces, collaborations and live/visual projects.</p>
+
+      <a class="event-link" href="#events" aria-label="Jump to events">Events →</a>
+    </div>
 
     <div class="filter-row">
       <div class="wk-tabs" role="tablist" aria-label="Work categories">
@@ -410,7 +414,7 @@
       <button id="eventsToggle"
               class="chip chip--ghost"
               aria-expanded="false"
-              aria-controls="eventsPanel">
+              aria-controls="events">
         Events
         <span class="chev" aria-hidden="true"></span>
       </button>
@@ -418,7 +422,7 @@
   </section>
 
   <!-- Collapsible Events panel (start collapsed) -->
-  <section id="eventsPanel" class="events-panel" hidden>
+  <section id="events" class="events-panel" hidden>
     <div class="events-panel__inner">
       <div class="work-grid events-grid">
         <!-- KTH -->
@@ -1387,7 +1391,8 @@ async function loadMemoriesAlbum(){
   <script>
 (function () {
   const btn = document.getElementById('eventsToggle');
-  const panel = document.getElementById('eventsPanel');
+  const panel = document.getElementById('events');
+  const eventLink = document.querySelector('.event-link');
 
   if (!btn || !panel) return;
 
@@ -1412,6 +1417,25 @@ async function loadMemoriesAlbum(){
     const expanded = btn.getAttribute('aria-expanded') === 'true';
     expanded ? close() : open();
   });
+
+  if (eventLink) {
+    eventLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      if (btn.getAttribute('aria-expanded') !== 'true') {
+        open();
+      }
+      requestAnimationFrame(() => {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  }
+
+  if (window.location.hash === '#events') {
+    open();
+    requestAnimationFrame(() => {
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
 })();
 </script>
 </body>
