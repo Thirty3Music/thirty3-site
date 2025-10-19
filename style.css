@@ -11,10 +11,32 @@
 }
 
 html, body{
-  margin:0; padding:0; width:100%; height:100%;
+  margin:0; padding:0; width:100%; min-height:100%;
   font-family:'Courier New', monospace;
   background:#000; color:#fff;
-  overflow:hidden; /* låser startsidan – WORK öppnar scroll nedan */
+  overflow-x:hidden;
+}
+
+.nav{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:rgba(0,0,0,.62);
+  backdrop-filter:blur(12px);
+}
+
+.nav nav{display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem}
+.nav .spacer{flex:1}
+.nav a{border:1px solid rgba(255,255,255,.25);padding:.35rem .6rem;border-radius:.5rem;text-decoration:none;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.9rem;letter-spacing:.06em}
+.nav a:hover{border-color:rgba(255,255,255,.6)}
+.brand{border:none;font-weight:700;letter-spacing:.12em}
+.press-link{margin-left:.2rem}
+
+@media (max-width:640px){
+  .nav nav{flex-wrap:wrap;justify-content:flex-end}
+  .nav a{flex:1 1 calc(50% - .4rem);text-align:center}
+  .nav a:first-child{flex-basis:100%;justify-content:flex-start;text-align:left}
+  .nav .spacer{display:none}
 }
 
 /* ===============================
@@ -104,7 +126,6 @@ html, body{
 
 /* ge plats under topbaren + bakgrundsbild */
 body.home{
-  padding-top:56px;
   background-color:#0b0e10;
   background-image:url("image00015.jpeg");
   background-repeat:no-repeat;
@@ -117,31 +138,6 @@ body.home{
   body.home{ background-attachment:scroll; }
 }
 
-/* Smalare skärmar: minska typ & spacing och tillåt radbrytning */
-@media (max-width:480px){
-  .topbar{ padding:6px 8px; height:auto; }
-  .topbar nav{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px 8px;
-    justify-content:center;
-    padding:0;
-  }
-  .topbar nav a{
-    padding:5px 9px;
-    font-size:12px;
-  }
-  body.home{ padding-top:56px; }
-}
-
-/* Extra smalt (t.ex. ~360px): ännu lite kompaktare */
-@media (max-width:360px){
-  .topbar nav a{
-    padding:4px 8px;
-    font-size:11.5px;
-  }
-}
-
 .events{ margin-top:26px; }
 .events-title{
   margin:0 0 10px;
@@ -152,9 +148,10 @@ body.home{
 }
 
 .work-grid{
-  max-width:1100px;
-  margin:0 auto 64px;
-  padding:0 20px;
+  display:grid;
+  gap:1.2rem;
+  margin:2rem 0 0;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
 }
 
 /* Grid – exakt samma som work-grid */
@@ -334,26 +331,19 @@ body.home{
 /* ===============================
    Hero / content
 =================================*/
-.content{
-  position:absolute; inset:0;
-  display:grid; place-items:center;
-  z-index:2;
+.hero{
+  min-height:calc(100vh - 64px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   text-align:center;
+  gap:.8rem;
+  padding:2rem 1rem;
 }
-.glitch-title{
-  font-size:32px; letter-spacing:8px;
-  background:rgba(255,255,255,.05);
-  padding:6px 14px; border:1px solid #fff; display:inline-block;
-  margin-bottom:6px;
-}
-.subtitle{
-  font-size:14px; font-style:italic; opacity:.8;
-  margin:0 0 12px;
-}
-.intro{
-  font-size:16px; line-height:1.4;
-  background:rgba(0,0,0,.5); padding:10px 20px; display:inline-block;
-}
+.logo{font-size:1.6rem;letter-spacing:.4rem;margin:0}
+.tagline{opacity:.9;margin:.2rem 0}
+.sub{max-width:680px;opacity:.8;line-height:1.5;margin:0 auto}
 
 
 /* ===============================
@@ -524,13 +514,29 @@ body.work{ overflow-y:auto; background:#000; }
   body.about #about{ padding:90px 6vw 56px; }
 }
 
-/* --- Press (scopad, påverkar inte Work) --- */
-.press.container { max-width:1100px; margin:0 auto; padding:2rem; }
-.press-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:1rem; }
-.press-grid img { width:100%; height:100%; object-fit:cover; border-radius:12px; }
+/* Buttons */
+.btn{display:inline-block;padding:.55rem 1rem;border:1px solid rgba(255,255,255,.35);border-radius:.6rem;text-decoration:none;color:#fff;background:transparent}
+.btn:hover{border-color:rgba(255,255,255,.6)}
+.btn-ghost{background:transparent}
 
-/* --- Intro CTA på startsidan --- */
-.intro-bio { max-width:720px; margin:1rem auto .5rem; opacity:.9; }
-.intro-cta .btn { margin-right:.6rem; }
-.btn { display:inline-block; padding:.6rem 1rem; border:1px solid #99c; border-radius:10px; text-decoration:none; }
-.btn.btn-outline { background:transparent; }
+.embeds{max-width:900px;margin:2rem auto;display:grid;gap:1.2rem;padding:0 1.5rem;z-index:2;position:relative}
+.video{position:relative;aspect-ratio:16/9}
+.video iframe{position:absolute;inset:0;width:100%;height:100%}
+
+.work{max-width:900px;margin:4rem auto;padding:0 1.5rem 4rem}
+.work .back{display:inline-block;margin:.5rem 0 1rem;text-decoration:none;opacity:.8;color:#fff}
+.work-title{color:#fff;letter-spacing:.08em;margin-bottom:1rem;font-size:2.5rem}
+
+.contact{max-width:720px;margin:4rem auto;padding:0 1.5rem 4rem;text-align:center}
+.contact-actions{margin-top:1.5rem}
+.contact-actions .btn{
+  display:inline-block;padding:.6rem 1rem;border:1px solid rgba(255,255,255,.35);
+  border-radius:.6rem;text-decoration:none;color:#fff;background:transparent
+}
+
+.press{max-width:900px;margin:4rem auto;padding:0 1.5rem 4rem}
+.press-grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{border:1px solid rgba(255,255,255,.25);padding:1rem;border-radius:.75rem;text-decoration:none;color:#fff;background:rgba(0,0,0,.45)}
+.card:hover{border-color:rgba(255,255,255,.6)}
+.card a{color:#fff;text-decoration:underline}
+.card a:hover{text-decoration:none}

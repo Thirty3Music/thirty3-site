@@ -8,7 +8,7 @@
 
   <!-- Core SEO -->
   <title>THIRTY3 — Official site</title>
-  <meta name="description" content="Thirty3 — distorted soul, ambient noise & heavy club energy. Bookings: thirty3contact@gmail.com" />
+  <meta name="description" content="Thirty3 — distorted soul, ambient noise & heavy club energy. Bookings: thirty3@proton.me" />
   <link rel="canonical" href="https://thirty3music.github.io/thirty3-site/" />
   <meta name="robots" content="index,follow" />
 
@@ -26,25 +26,6 @@
   <meta name="twitter:description" content="Producer & DJ from Stockholm blending art music and club energy." />
   <meta name="twitter:image" content="https://thirty3music.github.io/thirty3-site/images/press/thirty3-press-1.jpg" />
 
-  <!-- Small page-specific tweaks -->
-  <style>
-    /* Gör toppbarens text lite mjukare på mobil */
-    @media (max-width: 480px){
-      .subtitle{ font-size:16px; }
-      .intro{ font-size:14px; }
-      .mobile-overlay{ font-size:13px; }
-    }
-    /* ”Tap to open”-lagret */
-    .mobile-overlay{
-      position:absolute; inset:0;
-      display:none; align-items:center; justify-content:center;
-      color:#fff; background:rgba(0,0,0,.28);
-      letter-spacing:.08em;
-      z-index:2;
-      user-select:none;
-    }
-    .show-mobile-overlay .mobile-overlay{ display:flex; }
-  </style>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -67,101 +48,38 @@
 </head>
 
 <body class="home">
-  <!-- Top bar -->
-  <header class="topbar">
-    <nav aria-label="Primary">
-      <a href="https://www.instagram.com/_thirty3_/" target="_blank" rel="noopener"><span class="nav-label">INSTAGRAM</span></a>
-      <a href="https://soundcloud.com/thirty_3" target="_blank" rel="noopener"><span class="nav-label">SOUNDCLOUD</span></a>
-      <a href="https://www.youtube.com/@thirty3473" target="_blank" rel="noopener"><span class="nav-label">YOUTUBE</span></a>
-      <a href="work-test.html"><span class="nav-label">WORK</span></a>
-      <!-- Öppnar mailklient direkt -->
-      <a href="mailto:thirty3contact@gmail.com" aria-label="Email THIRTY3"><span class="nav-label">CONTACT</span></a>
+  <header class="nav">
+    <nav>
+      <a class="brand" href="index.html">THIRTY3</a>
+      <div class="spacer"></div>
+      <a href="https://instagram.com/_thirty3_" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://soundcloud.com/thirty_3" target="_blank" rel="noopener">SoundCloud</a>
+      <a href="https://youtube.com/@thirty3473" target="_blank" rel="noopener">YouTube</a>
+      <a href="work.html">Work</a>
+      <a href="contact.html">Contact</a>
+      <a href="press.html" class="press-link">Press</a>
     </nav>
   </header>
-  <!-- Background video + overlay -->
-  <main>
-    <div class="video-wrapper">
-      <video autoplay muted loop playsinline preload="auto" class="bg-video" id="bgVideo">
-        <source src="background.mp4" type="video/mp4" />
-        <source src="background_high_quality.webm" type="video/webm" />
-      </video>
-      <div class="overlay"></div>
-      <!-- Mobil overlay (tap to open) -->
-      <div class="mobile-overlay" id="mobileOverlay">tap to open</div>
-    </div>
-
-    <!-- Center content -->
-    <section class="content" aria-label="Intro">
-      <h1 class="glitch-title">T H I R T Y 3</h1>
-      <p class="subtitle">noise // soul</p>
-      <p class="intro-bio">
-        Stockholm-based producer &amp; DJ blending distorted soul, ambient noise and heavy club energy.
-      </p>
-      <p class="intro-cta">
-        <a class="btn" href="press.html">Press</a>
-        <a class="btn btn-outline" href="mailto:thirty3contact@gmail.com">Book / Contact</a>
-      </p>
-      <p class="intro" id="typing-text"></p>
-    </section>
-
-    <!-- Contact anchor (visuell sektion kvar om du länkar internt senare) -->
-    <section id="contact" style="display:none;"></section>
-
-    <!-- About overlay (hidden unless body has .about) -->
-    <section id="about" aria-labelledby="about-title">
-      <div class="about-inner">
-        <div class="about-portrait" aria-hidden="true">
-          <span>portrait placeholder</span>
-        </div>
-        <div class="about-copy">
-          <h2 id="about-title">About THIRTY3</h2>
-          <p class="about-bio">Bio coming soon. This placeholder will be replaced with the official story.</p>
-        </div>
-      </div>
-    </section>
+  <main class="hero">
+    <h1 class="logo">T H I R T Y 3</h1>
+    <p class="tagline">raw noise, real emotion</p>
+    <p class="sub">Stockholm-based producer &amp; DJ blending distorted soul, ambient noise and heavy club energy.</p>
   </main>
 
-  <!-- Scripts: typing + mobil + glitch -->
-  <script>
-    // Typing intro
-    const text = "sound over style — emotion over ego — music that says what I don't";
-    const target = document.getElementById('typing-text');
-    let idx = 0;
-    function typeChar(){
-      if(idx < text.length){ target.textContent += text.charAt(idx++); setTimeout(typeChar, 38); }
-    }
-    window.addEventListener('load', () => setTimeout(typeChar, 900));
+  <section class="embeds">
+    <!-- SoundCloud -->
+    <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"
+      src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/thirty_3/mislay-feat-lidnesty&color=%23009fa0&auto_play=false&hide_related=false&show_comments=false&show_user=false&show_reposts=false&show_teaser=false">
+    </iframe>
 
-    // Mobil overlay (kräv tap för att starta video på iOS om blockeras)
-    const html = document.documentElement;
-    const ovl = document.getElementById('mobileOverlay');
-    const v = document.getElementById('bgVideo');
-    function needsTap(){ return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); }
-
-    let overlayDismissed = false;
-    function dismissOverlay(){
-      if (overlayDismissed) return;
-      overlayDismissed = true;
-      html.classList.remove('show-mobile-overlay');
-      if (ovl){
-        ovl.classList.add('fade-out');
-        ovl.style.pointerEvents = 'none';
-        setTimeout(()=>{ ovl.style.display = 'none'; }, 480);
-      }
-    }
-
-    function enableVideo(){
-      dismissOverlay();
-      if (v && v.paused) { v.play().catch(()=>{}); }
-    }
-    if (needsTap()){
-      html.classList.add('show-mobile-overlay');
-      ovl.addEventListener('click', enableVideo, { passive:true });
-      // fallback: starta ändå efter kort delay om tillåtet
-      setTimeout(enableVideo, 1200);
-    }
-
-  </script>
+    <!-- YouTube -->
+    <div class="video">
+      <iframe width="100%" height="420" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        src="https://www.youtube.com/embed/tV5tmkoVEO0">
+      </iframe>
+    </div>
+  </section>
 
 </body>
 </html>
