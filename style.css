@@ -582,3 +582,27 @@ body.contact-page{
   border:1px solid rgba(255,255,255,.18);
 }
 .press-gallery a:hover img{ border-color:rgba(255,255,255,.6); }
+
+/* --- Press: gör "Downloads" tydligare (framförallt desktop) --- */
+.press{padding-bottom:4rem}
+.press-grid{
+  margin-top:1.4rem;
+  margin-bottom:3rem;
+  padding:1rem;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:.75rem;
+  background:rgba(255,255,255,.02);
+}
+.pill{
+  font-weight:600;
+  letter-spacing:.02em;
+}
+.pill-block{
+  max-width:22rem;
+  margin:0 auto;
+}
+
+@media (min-width: 900px){
+  .press-grid{grid-template-columns:repeat(3,1fr);gap:1.2rem}
+  .press h2{scroll-margin-top:84px} /* landa snyggt om man hoppar till rubriken */
+}
