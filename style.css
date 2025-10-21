@@ -524,18 +524,13 @@ body.work{ overflow-y:auto; background:#000; }
   body.about #about{ padding:90px 6vw 56px; }
 }
 
-/* --- Press (scopad, påverkar inte Work) --- */
-.press.container { max-width:1100px; margin:0 auto; padding:2rem; }
-.press-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:1rem; }
-.press-grid img { width:100%; height:100%; object-fit:cover; border-radius:12px; }
-
 /* --- Intro CTA på startsidan --- */
 .intro-bio { max-width:720px; margin:1rem auto .5rem; opacity:.9; }
 .intro-cta .btn { margin-right:.6rem; }
 .btn { display:inline-block; padding:.6rem 1rem; border:1px solid #99c; border-radius:10px; text-decoration:none; }
 .btn.btn-outline { background:transparent; }
 
-/* Press: mobil scroll + pill style */
+/* Press layout */
 body.press-page,
 body.contact-page{
   overflow-y:auto !important;
@@ -548,11 +543,11 @@ body.contact-page{
   margin:2rem auto;
   padding:0 1rem;
 }
-.press-grid{
-  display:grid;
-  gap:1rem;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-}
+.press h1{ margin:.5rem 0 1rem; }
+.press h2{ margin:1.4rem 0 .6rem; }
+.press-contact a{ text-decoration:underline; }
+
+/* Pill buttons (downloads) */
 .pill{
   display:inline-block;
   padding:.55rem 1rem;
@@ -562,9 +557,28 @@ body.contact-page{
   color:#fff;
   text-align:center;
 }
-.pill:hover{
-  border-color:rgba(255,255,255,.6);
+.pill:hover{ border-color:rgba(255,255,255,.6); }
+.pill-block{ display:block; }
+
+/* Download grid */
+.press-grid{
+  display:grid;
+  gap:1rem;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
 }
-.pill-block{
+
+/* Image gallery */
+.press-gallery{
+  display:grid;
+  gap:1rem;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  margin:.5rem 0 1.2rem;
+}
+.press-gallery img{
+  width:100%;
+  height:auto;
   display:block;
+  border-radius:.6rem;
+  border:1px solid rgba(255,255,255,.18);
 }
+.press-gallery a:hover img{ border-color:rgba(255,255,255,.6); }
