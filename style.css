@@ -534,3 +534,37 @@ body.work{ overflow-y:auto; background:#000; }
 .intro-cta .btn { margin-right:.6rem; }
 .btn { display:inline-block; padding:.6rem 1rem; border:1px solid #99c; border-radius:10px; text-decoration:none; }
 .btn.btn-outline { background:transparent; }
+
+/* Press: mobil scroll + pill style */
+body.press-page,
+body.contact-page{
+  overflow-y:auto !important;
+  -webkit-overflow-scrolling:touch;
+  padding-top:56px;
+  background:#000;
+}
+.press{
+  max-width:980px;
+  margin:2rem auto;
+  padding:0 1rem;
+}
+.press-grid{
+  display:grid;
+  gap:1rem;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+}
+.pill{
+  display:inline-block;
+  padding:.55rem 1rem;
+  border:1px solid rgba(255,255,255,.28);
+  border-radius:.6rem;
+  text-decoration:none;
+  color:#fff;
+  text-align:center;
+}
+.pill:hover{
+  border-color:rgba(255,255,255,.6);
+}
+.pill-block{
+  display:block;
+}
