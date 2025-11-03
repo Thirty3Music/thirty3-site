@@ -490,17 +490,6 @@
   <div class="projects-grid">
     <section class="wk-grid" id="wkGrid" aria-live="polite"></section>
 
-    <!-- Marshall x Stockholm Surfboard Club (feat. Nitefish) -->
-    <div class="project-card collab">
-      <img src="marshall_x_surfclub.jpg" alt="Marshall x Stockholm Surfboard Club (feat. Nitefish)">
-      <div class="project-info">
-        <p class="category">collab</p>
-        <h3>Marshall x Stockholm Surfboard Club (feat. Nitefish)</h3>
-        <p>Unreleased Nitefish track (co-produced by Thirty3), featured during the Marshall x Stockholm Surfboard Club x Spice99 night. Captured live — energy, motion, noise.</p>
-        <a href="https://www.instagram.com/p/DQg4P0sjR7E/" target="_blank" rel="noopener">Watch (Instagram)</a>
-        <a href="https://www.instagram.com/nitefishofficial/" target="_blank" rel="noopener">Nitefish</a>
-      </div>
-    </div>
   </div>
 
   <dialog class="wk-modal" id="wkModal">
@@ -681,6 +670,17 @@ let PROJECTS = [
     externalUrl: "https://www.trip.com/events/samoota-in-the-shadow-of-three-suns--art-gallery--exhibition-20250120/",
     links: [
       { label: "View details", href: "https://www.trip.com/events/samoota-in-the-shadow-of-three-suns--art-gallery--exhibition-20250120/" }
+    ]
+  },
+  {
+    title: "Marshall × Stockholm Surfboard Club (feat. Nitefish)",
+    kind: "collab",
+    thumb: "marshall_x_surfclub.jpg",
+    preview: { type: "image", src: "marshall_x_surfclub.jpg" },
+    desc: "Unreleased Nitefish track (co-produced by Thirty3), featured during the Marshall x Stockholm Surfboard Club x Spice99 night. Captured live — energy, motion, noise.",
+    links: [
+      { label: "View details", href: "https://www.instagram.com/p/DQg4P0sjR7E/" },
+      { label: "Nitefish", href: "https://www.instagram.com/nitefishofficial/" }
     ]
   },
   {
@@ -987,7 +987,14 @@ function createCard(p){
   const meta = document.createElement('div');
   meta.className = 'wk-meta';
   const left = document.createElement('div');
-  const kind = document.createElement('div'); kind.className = 'wk-kind'; kind.textContent = (p.kind || 'solo');
+  const kind = document.createElement('div');
+  kind.className = 'wk-kind';
+  const baseKind = typeof p.kind === 'string' ? p.kind : 'solo';
+  const titleText = String(p.title || '');
+  const thumbText = String(p.thumb || '');
+  const forceCollab = /marshall|collab/i.test(titleText) || /marshall|collab/i.test(thumbText);
+  const kindLabel = forceCollab ? 'COLLAB' : baseKind.toUpperCase();
+  kind.textContent = kindLabel;
   const name = document.createElement('div');
   name.className = 'wk-name';
   if (isExternal) {
