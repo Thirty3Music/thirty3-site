@@ -1214,7 +1214,14 @@ function passesFilter(p){
 
 function render(){
   grid.innerHTML = '';
-  PROJECTS.filter(passesFilter).forEach(p => grid.appendChild(createCard(p)));
+
+  const sorted = PROJECTS
+    .filter(passesFilter)
+    .sort((a, b) => {
+      return new Date(b.date || 0) - new Date(a.date || 0);
+    });
+
+  sorted.forEach(p => grid.appendChild(createCard(p)));
 }
 
 tabs.forEach(btn=>{
