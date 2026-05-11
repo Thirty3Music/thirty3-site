@@ -7,43 +7,99 @@
   <link rel="stylesheet" href="style.css" />
 
   <!-- Core SEO -->
-  <title>THIRTY3 — Official site</title>
-  <!-- Basic SEO -->
-  <meta name="description" content="Thirty3 – Stockholm-based artist blending electronic textures with emotion. Noise // soul. Official website with music, visuals and contact.">
-  <meta name="keywords" content="Thirty3, electronic music, noise soul, Stockholm artist, experimental bass, ambient, Sweden producer">
+  <title>Thirty3 — Stockholm Electronic Producer & DJ</title>
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:title" content="Thirty3 — raw noise, real emotion">
-  <meta property="og:description" content="Official website of Thirty3, a Stockholm-based artist fusing noise and emotion through electronic sound.">
-  <meta property="og:image" content="https://thirty3music.github.io/assets/cover.jpg">
-  <meta property="og:url" content="https://thirty3music.github.io/">
-  <meta property="og:type" content="website">
+  <meta
+    name="description"
+    content="Official website of Thirty3, a Stockholm-based electronic producer and DJ from Sweden. Distorted soul, ambient noise, experimental club music, solo releases, visuals and collaborations with N I T E F I S H and SPICE99."
+  />
 
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Thirty3 — raw noise, real emotion">
-  <meta name="twitter:description" content="Electronic artist from Stockholm combining soul and chaos. Listen, watch, feel.">
-  <meta name="twitter:image" content="https://thirty3music.github.io/assets/cover.jpg">
+  <meta
+    name="keywords"
+    content="Thirty3, THIRTY3, Thirty3 Sweden, Thirty3 Stockholm, Stockholm producer, Swedish electronic artist, electronic music, ambient noise, distorted soul, experimental club music, N I T E F I S H, Nitefish, SPICE99, SPICE99 Recordings"
+  />
 
-  <!-- Robots -->
-  <meta name="robots" content="index, follow">
-  <meta name="description" content="Thirty3 — distorted soul, ambient noise & heavy club energy. Bookings: thirty3contact@gmail.com" />
+  <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://thirty3music.github.io/thirty3-site/" />
-  <meta name="robots" content="index,follow" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="THIRTY3" />
-  <meta property="og:title" content="Thirty3 — noise // soul" />
-  <meta property="og:description" content="Producer & DJ from Stockholm blending art music and club energy." />
+  <meta property="og:title" content="Thirty3 — Stockholm Electronic Producer & DJ" />
+  <meta
+    property="og:description"
+    content="Stockholm-based electronic producer and DJ. Solo work, visual projects and collaborations with N I T E F I S H and SPICE99."
+  />
   <meta property="og:url" content="https://thirty3music.github.io/thirty3-site/" />
-  <meta property="og:image" content="https://thirty3music.github.io/thirty3-site/images/press/thirty3-press-1.jpg" />
+  <meta
+    property="og:image"
+    content="https://thirty3music.github.io/thirty3-site/images/press/thirty3-press-1.jpg"
+  />
 
-  <!-- Twitter -->
+  <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Thirty3 — noise // soul" />
-  <meta name="twitter:description" content="Producer & DJ from Stockholm blending art music and club energy." />
-  <meta name="twitter:image" content="https://thirty3music.github.io/thirty3-site/images/press/thirty3-press-1.jpg" />
+  <meta name="twitter:title" content="Thirty3 — Stockholm Electronic Producer & DJ" />
+  <meta
+    name="twitter:description"
+    content="Distorted soul, ambient noise and experimental club energy from Stockholm."
+  />
+  <meta
+    name="twitter:image"
+    content="https://thirty3music.github.io/thirty3-site/images/press/thirty3-press-1.jpg"
+  />
+
+  <!-- Structured Data for Google -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MusicGroup",
+    "name": "Thirty3",
+    "alternateName": [
+      "THIRTY3",
+      "Thirty3 Sweden",
+      "Thirty3 Stockholm"
+    ],
+    "url": "https://thirty3music.github.io/thirty3-site/",
+    "description": "Thirty3 is a Stockholm-based electronic producer and DJ from Sweden, working with distorted soul, ambient noise and experimental club music. His work includes solo releases, visual projects and collaborations with N I T E F I S H and SPICE99.",
+    "genre": [
+      "Electronic",
+      "Ambient",
+      "Noise",
+      "Experimental",
+      "Club"
+    ],
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Stockholm, Sweden"
+    },
+    "sameAs": [
+      "https://open.spotify.com/artist/5ysVz3lhJomLapuhp6WVaQ",
+      "https://soundcloud.com/thirty_3",
+      "https://thirty3.bandcamp.com/",
+      "https://www.instagram.com/_thirty3_/",
+      "https://www.youtube.com/@thirty3473",
+      "https://music.apple.com/us/artist/thirty3/295001005",
+      "https://ra.co/dj/thirty3",
+      "https://spice99.world/label/"
+    ],
+    "knowsAbout": [
+      "SPICE99",
+      "SPICE99 Recordings",
+      "N I T E F I S H",
+      "Nitefish",
+      "electronic music production",
+      "mixing",
+      "mastering",
+      "Stockholm underground music",
+      "experimental club music"
+    ],
+    "memberOf": {
+      "@type": "Organization",
+      "name": "SPICE99",
+      "url": "https://spice99.world/"
+    }
+  }
+  </script>
 
   <!-- Small page-specific tweaks -->
   <style>
@@ -53,36 +109,25 @@
       .intro{ font-size:14px; }
       .mobile-overlay{ font-size:13px; }
     }
+
     /* ”Tap to open”-lagret */
     .mobile-overlay{
-      position:absolute; inset:0;
-      display:none; align-items:center; justify-content:center;
-      color:#fff; background:rgba(0,0,0,.28);
+      position:absolute;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      background:rgba(0,0,0,.28);
       letter-spacing:.08em;
       z-index:2;
       user-select:none;
     }
-    .show-mobile-overlay .mobile-overlay{ display:flex; }
+
+    .show-mobile-overlay .mobile-overlay{
+      display:flex;
+    }
   </style>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "MusicGroup",
-    "name": "THIRTY3",
-    "url": "https://thirty3music.github.io/thirty3-site/",
-    "genre": ["Electronic", "Ambient", "Noise", "Breakbeat", "Experimental"],
-    "description": "Electronic artist/producer from Sweden. Distorted soul & ambient noise, breakbeat and experimental.",
-    "foundingLocation": "Sweden",
-    "sameAs": [
-      "https://soundcloud.com/thirty_3",
-      "https://www.instagram.com/_thirty3_/",
-      "https://www.youtube.com/@thirty3noise",
-      "https://thirty3.bandcamp.com/"
-      /* "https://open.spotify.com/artist/XXXXXXXX",  // (valfritt – lägg till när klart)
-         "https://ra.co/dj/thirty3" */
-    ]
-  }
-  </script>
 </head>
 
 <body class="home">
